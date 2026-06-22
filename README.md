@@ -52,7 +52,7 @@ Then confirm with `java -version`.
 
 **Option A — Clone with Git (recommended):**
 
-    git clone https://github.com/YOURUSERNAME/CSGOSim.git
+    git clone https://github.com/Tenzukun/CSGO-Case-Simulator
 
 **Option B — Download manually:**
 1. Click the green **Code** button at the top of this repo
