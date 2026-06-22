@@ -89,7 +89,7 @@ You can chain `inv` and `reset` as many times as you want before rolling again.
 ### Rarity
 Based on real CS:GO case odds:
 
-| Rarity         | Color  | Chance |
+| Rarity         | Colour  | Chance |
 |----------------|--------|--------|
 | Rare Special   | GOLD   | 0.26%  |
 | Covert         | Red    | 0.64%  |
