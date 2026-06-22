@@ -5,18 +5,107 @@ Open crates, roll rarities, and see what skin you get — all based on
 real CS:GO drop rates. Your inventory persists between sessions so you
 can keep track of everything you've ever unboxed.
 
+A web version is also available — open `web/index.html` in any browser
+or visit the GitHub Pages link at the top of this repo.
+
 ---
 
-## How to Run
+## How to Run (Java Terminal Version)
 
-Make sure you have the [Java JDK](https://www.oracle.com/java/technologies/downloads/) installed.
+### Step 1 — Check if Java is installed
 
-1. Clone the repo or download `CrateOpening.java`
-2. Open a terminal and navigate to the `CSGOSim` folder
-3. Compile and run:
+Open a terminal and run:
+
+    java -version
+
+If you see a version number printed, Java is already installed — skip to Step 3.
+If you get an error like "command not found", continue to Step 2.
+
+---
+
+### Step 2 — Install the Java JDK
+
+**Windows:**
+1. Go to [https://www.oracle.com/java/technologies/downloads/](https://www.oracle.com/java/technologies/downloads/)
+2. Download the latest **JDK** installer for Windows (`.exe`)
+3. Run the installer and follow the prompts — default settings are fine
+4. Close and reopen your terminal, then run `java -version` to confirm it worked
+
+**Mac:**
+1. Option A — Download from Oracle same as above, but pick the macOS `.dmg` installer
+2. Option B — If you have Homebrew installed, run:
+
+       brew install openjdk
+
+3. Confirm with `java -version`
+
+**Linux:**
+
+    sudo apt update
+    sudo apt install default-jdk
+
+Then confirm with `java -version`.
+
+---
+
+### Step 3 — Get the files
+
+**Option A — Clone with Git (recommended):**
+
+    git clone https://github.com/YOURUSERNAME/CSGOSim.git
+
+**Option B — Download manually:**
+1. Click the green **Code** button at the top of this repo
+2. Click **Download ZIP**
+3. Extract the ZIP somewhere on your computer
+
+---
+
+### Step 4 — Open in VS Code
+
+1. Open VS Code
+2. Go to **File → Open Folder** and select the `CSGOSim` folder
+3. Open the terminal inside VS Code with **Ctrl + `** (backtick, top-left of keyboard)
+
+---
+
+### Step 5 — Navigate to the Java folder
+
+In the VS Code terminal, navigate to the right folder.
+
+**Windows example:**
+
+    cd C:\Users\YourName\Documents\CSGOSim\java
+
+**Mac/Linux example:**
+
+    cd ~/Documents/CSGOSim/java
+
+If you're not sure where the folder is, right-click it in VS Code's file explorer
+and select **Copy Path**, then paste it after `cd `.
+
+---
+
+### Step 6 — Compile and run
 
     javac CrateOpening.java
     java CrateOpening
+
+The program will launch immediately. Press ENTER when prompted to open your first crate.
+
+---
+
+### Troubleshooting
+
+**"javac is not recognized"** — Java was installed but not added to PATH.
+On Windows, search for "Edit the system environment variables", open it,
+go to Environment Variables, find `Path` under System Variables, click Edit,
+and add the path to your JDK's `bin` folder (e.g. `C:\Program Files\Java\jdk-21\bin`).
+Then restart your terminal.
+
+**"CrateOpening.java not found"** — You're in the wrong folder.
+Make sure your terminal is inside the `java` subfolder, not the root of the repo.
+Run `ls` (Mac/Linux) or `dir` (Windows) to see what files are in your current location.
 
 ---
 
@@ -43,7 +132,7 @@ Each crate opening rolls five things independently:
 
 | Roll     | What it decides                                   |
 |----------|---------------------------------------------------|
-| Rarity   | The colour tier of the item                        |
+| Rarity   | The colour tier of the item                       |
 | Skin     | The specific weapon and finish                    |
 | Exterior | The wear condition of the skin                    |
 | Float    | The exact float value within the exterior's range |
@@ -89,7 +178,7 @@ You can chain `inv` and `reset` as many times as you want before rolling again.
 ### Rarity
 Based on real CS:GO case odds:
 
-| Rarity         | Colour  | Chance |
+| Rarity         | Colour | Chance |
 |----------------|--------|--------|
 | Rare Special   | GOLD   | 0.26%  |
 | Covert         | Red    | 0.64%  |
@@ -203,19 +292,22 @@ When you type `quit` the program shows a full breakdown of the current session:
 
 ## Project Structure
 
-    Java/
-    └── CSGOSim/
-        ├── CrateOpening.java
-        ├── inventory.txt         <- auto-created on first roll
-        └── README.md
+    CSGOSim/
+    ├── java/
+    │   ├── CrateOpening.java
+    │   └── inventory.txt         <- auto-created on first roll
+    ├── web/
+    │   └── index.html            <- open in any browser, no install needed
+    ├── .gitignore
+    └── README.md
 
-### Methods at a glance
+### Methods at a glance (Java version)
 
 | Method                | Purpose                                         |
 |-----------------------|-------------------------------------------------|
 | `main()`              | Controls flow, loop, and session tracking       |
 | `printRolling()`      | Animated dot-by-dot rolling effect              |
-| `rollRarity()`        | Rolls the rarity tier using real CS:GO odds     |
+| `rollRarity()`        | Rolls the colour tier using real CS:GO odds     |
 | `rollSkin()`          | Picks a random skin from the matching pool      |
 | `rollWear()`          | Rolls the exterior condition                    |
 | `rollFloat()`         | Generates a float within the exterior's range   |
@@ -237,5 +329,6 @@ When you type `quit` the program shows a full breakdown of the current session:
 ---
 
 ## Built With
-- Java
+- Java (terminal version)
+- HTML / CSS / JavaScript (web version)
 - VS Code
