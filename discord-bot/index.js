@@ -136,6 +136,21 @@ client.on('interactionCreate', async interaction => {
             await interaction.reply({ content: 'Your inventory is already empty!', ephemeral: true });
         }
     }
+
+    // ---------------------------------------------------
+    // /support
+    // ---------------------------------------------------
+    else if (commandName === 'support') {
+        const embed = new EmbedBuilder()
+            .setColor(0xFF5E5B)
+            .setTitle('☕ Support nthn on Ko-fi')
+            .setDescription('If you enjoy the bot, consider buying me a coffee!\nIt helps keep the bot online and motivates future projects.')
+            .addFields({ name: 'Link', value: '[ko-fi.com/nthn_mp4](https://ko-fi.com/nthn_mp4)' })
+            .setFooter({ text: 'CS:GO Case Opening Simulator' })
+            .setTimestamp();
+
+        await interaction.reply({ embeds: [embed] });
+    }
 });
 
 function getRarityMessage(rarity) {

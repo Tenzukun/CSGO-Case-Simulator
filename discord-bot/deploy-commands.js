@@ -16,7 +16,11 @@ const commands = [
 
     new SlashCommandBuilder()
         .setName('reset')
-        .setDescription('Clear your entire inventory and stats.')
+        .setDescription('Clear your entire inventory and stats.'),
+
+    new SlashCommandBuilder()
+        .setName('support')
+        .setDescription('Support the developer on Ko-fi!')
 
 ].map(command => command.toJSON());
 
@@ -36,3 +40,4 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
         console.error('Error registering commands:', error);
     }
 })();
+

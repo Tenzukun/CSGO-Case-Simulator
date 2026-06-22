@@ -294,3 +294,10 @@ Based on CS:GO's float value distribution:
 - Railway (Discord bot hosting)
 - GitHub Pages (web hosting)
 - VS Code
+
+## Support
+
+If you enjoy the project, consider buying me a coffee!
+It helps keep the bot online and motivates future projects.
+
+[☕ Support on Ko-fi](https://ko-fi.com/nthn_mp4)

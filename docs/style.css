@@ -429,3 +429,21 @@ body {
         grid-template-columns: 1fr 1fr;
     }
 }
+
+/* --- Support --- */
+.support {
+    margin-top: 10px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.support a {
+    color: #8f98a0;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.support a:hover {
+    color: #c6d4df;
+}
