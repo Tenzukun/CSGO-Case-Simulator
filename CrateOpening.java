@@ -225,6 +225,7 @@ public class CrateOpening {
         System.out.println();
     }
 
+    // Rolls a colour tier based on real CS:GO case odds
     private static String rollRarity() {
         double roll = random.nextDouble() * 100;
 
@@ -235,6 +236,7 @@ public class CrateOpening {
         else                   return "Blue";
     }
 
+    // Returns a random skin from the pool matching the rolled colour tier
     private static String rollSkin(String rarity) {
         String[] pool;
 
@@ -284,6 +286,7 @@ public class CrateOpening {
         return pool[random.nextInt(pool.length)];
     }
 
+    // Rolls a wear exterior based on CS:GO float distribution
     private static String rollWear() {
         double roll = random.nextDouble() * 100;
 
@@ -294,6 +297,7 @@ public class CrateOpening {
         else                return "Battle-Scarred";
     }
 
+    // Rolls a special prefix — StatTrak, Souvenir, or nothing
     private static String rollPrefix() {
         double roll = random.nextDouble() * 100;
 
@@ -302,6 +306,7 @@ public class CrateOpening {
         else                return "";
     }
 
+    // Generates a float value within the correct range for the exterior
     private static double rollFloat(String wear) {
         double min, max;
 
@@ -321,9 +326,12 @@ public class CrateOpening {
     // -------------------------------------------------------
 
     private static void printFloatBar(double floatVal) {
+        // Zone label line — centred to bar zones below
         System.out.println("   FN  MW     FT     WW            BS");
+        // Bar with separators at zone boundaries
         System.out.println("  [===|===|=========|===|======================]");
 
+        // ^ marker pinned to the exact float position
         int barPos = floatToBarPos(floatVal);
         int col    = 3 + barPos;
         StringBuilder marker = new StringBuilder();
@@ -332,6 +340,7 @@ public class CrateOpening {
         System.out.println(marker.toString());
     }
 
+    // Maps a float value to its character position inside the bar
     private static int floatToBarPos(double floatVal) {
         floatVal = Math.max(0.0, Math.min(1.0, floatVal));
 
@@ -422,6 +431,7 @@ public class CrateOpening {
         }
     }
 
+    // Maps rarity to its official CS:GO tier name
     private static String getRarityTierName(String rarity) {
         switch (rarity) {
             case "GOLD":       return "Rare Special Item";
@@ -442,6 +452,7 @@ public class CrateOpening {
         }
     }
 
+    // Estimates market price based on skin, wear, and prefix
     private static double getSkinPrice(String skin, String wear, String prefix) {
         double base;
         String s = skin.replace("\u2605 ", "");

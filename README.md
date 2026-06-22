@@ -43,7 +43,7 @@ Each crate opening rolls five things independently:
 
 | Roll     | What it decides                                   |
 |----------|---------------------------------------------------|
-| Rarity   | The color tier of the item                        |
+| Rarity   | The colour tier of the item                        |
 | Skin     | The specific weapon and finish                    |
 | Exterior | The wear condition of the skin                    |
 | Float    | The exact float value within the exterior's range |
