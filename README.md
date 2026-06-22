@@ -52,7 +52,7 @@ Then confirm with `java -version`.
 
 **Option A — Clone with Git (recommended):**
 
-    git clone https://github.com/Tenzukun/CSGO-Case-Simulator
+    git clone https://github.com/YOURUSERNAME/CSGOSim.git
 
 **Option B — Download manually:**
 1. Click the green **Code** button at the top of this repo
@@ -61,37 +61,84 @@ Then confirm with `java -version`.
 
 ---
 
-### Step 4 — Open in VS Code
+### Step 4 — Open and run the file
 
-1. Open VS Code
-2. Go to **File → Open Folder** and select the `CSGOSim` folder
-3. Open the terminal inside VS Code with **Ctrl + `** (backtick, top-left of keyboard)
+You have two options depending on whether you want to use VS Code or just your system terminal.
 
 ---
 
-### Step 5 — Navigate to the Java folder
+#### Option A — Using VS Code (recommended)
 
-In the VS Code terminal, navigate to the right folder.
+VS Code is a free code editor that makes it easy to manage files and run terminal commands in one place.
 
-**Windows example:**
+**If you don't have VS Code:**
+1. Go to [https://code.visualstudio.com/](https://code.visualstudio.com/)
+2. Click **Download for Windows/Mac/Linux** depending on your OS
+3. Run the installer — default settings are fine
+4. Open VS Code once installation is complete
 
-    cd C:\Users\YourName\Documents\CSGOSim\java
+**Once VS Code is installed:**
+1. Go to **File → Open Folder**
+2. Navigate to and select the `CSGOSim` folder you downloaded or cloned
+3. Open the built-in terminal with **Ctrl + `** (backtick, the key above Tab on the left side of your keyboard). On Mac use **Cmd + `**
+4. In the terminal, navigate to the java folder:
 
-**Mac/Linux example:**
+   **Windows:**
 
-    cd ~/Documents/CSGOSim/java
+       cd java
 
-If you're not sure where the folder is, right-click it in VS Code's file explorer
-and select **Copy Path**, then paste it after `cd `.
+   **Mac/Linux:**
+
+       cd java
+
+5. Compile and run:
+
+       javac CrateOpening.java
+       java CrateOpening
 
 ---
 
-### Step 6 — Compile and run
+#### Option B — Using your system terminal (no VS Code needed)
 
-    javac CrateOpening.java
-    java CrateOpening
+**Windows — Command Prompt or PowerShell:**
+1. Press **Win + R**, type `cmd`, and hit Enter to open Command Prompt
+2. Navigate to the java folder. For example:
 
-The program will launch immediately. Press ENTER when prompted to open your first crate.
+       cd C:\Users\YourName\Downloads\CSGOSim\java
+
+3. Compile and run:
+
+       javac CrateOpening.java
+       java CrateOpening
+
+**Mac — Terminal:**
+1. Press **Cmd + Space**, type `Terminal`, and hit Enter
+2. Navigate to the java folder. For example:
+
+       cd ~/Downloads/CSGOSim/java
+
+3. Compile and run:
+
+       javac CrateOpening.java
+       java CrateOpening
+
+**Linux — Terminal:**
+1. Open your terminal application (usually Ctrl + Alt + T)
+2. Navigate to the java folder:
+
+       cd ~/Downloads/CSGOSim/java
+
+3. Compile and run:
+
+       javac CrateOpening.java
+       java CrateOpening
+
+---
+
+> **Not sure where your folder is?**
+> On Windows, right-click the `CSGOSim` folder in File Explorer and select **Copy as path**.
+> On Mac, right-click the folder, hold Option, and select **Copy as Pathname**.
+> Then paste it after `cd ` in your terminal.
 
 ---
 
@@ -298,6 +345,12 @@ When you type `quit` the program shows a full breakdown of the current session:
     │   └── inventory.txt         <- auto-created on first roll
     ├── web/
     │   └── index.html            <- open in any browser, no install needed
+    ├── discord-bot/
+    │   ├── index.js
+    │   ├── rolls.js
+    │   ├── storage.js
+    │   ├── deploy-commands.js
+    │   └── package.json
     ├── .gitignore
     └── README.md
 
@@ -331,4 +384,5 @@ When you type `quit` the program shows a full breakdown of the current session:
 ## Built With
 - Java (terminal version)
 - HTML / CSS / JavaScript (web version)
+- Discord.js (Discord bot)
 - VS Code
