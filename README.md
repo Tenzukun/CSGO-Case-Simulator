@@ -1,12 +1,48 @@
-# CS:GO Crate Opening Simulator
+# CS:GO Case Opening Simulator
 
-A terminal-based CS:GO case opening simulator written in Java.
-Open crates, roll rarities, and see what skin you get — all based on
-real CS:GO drop rates. Your inventory persists between sessions so you
-can keep track of everything you've ever unboxed.
+A CS:GO case opening simulator available in three versions — a Java terminal app,
+a web app, and a Discord bot. Open crates, roll rarities, and see what skin you
+get, all based on real CS:GO drop rates.
 
-A web version is also available — open `web/index.html` in any browser
-or visit the GitHub Pages link at the top of this repo.
+---
+
+## Play Now
+
+| Version      | Link                                                                 |
+|--------------|----------------------------------------------------------------------|
+| 🌐 Web App   | [tenzukun.github.io/CSGO-Case-Simulator](https://tenzukun.github.io/CSGO-Case-Simulator/) |
+| 🤖 Discord Bot | Invite link — add it to your server and use `/open`               |
+| 💻 Terminal  | Clone the repo and run locally (see instructions below)              |
+
+---
+
+## Features
+
+### All versions
+- Real CS:GO drop rates for rarity, exterior, and prefix
+- Full item details — name, type, rarity tier, exterior, float, seed, price
+- Float bar with zone labels (FN / MW / FT / WW / BS)
+- Estimated market price adjusted by wear and prefix
+- StatTrak™ kill counter when applicable
+- Persistent inventory across sessions
+
+### Web version only
+- Open 1x, 5x, or 10x at once
+- Quick Open toggle to skip the rolling animation
+- Multi-result grid highlighting the best item from a batch
+- Inventory and session stats panels
+- Fully mobile responsive
+
+### Discord bot only
+- `/open` — open a crate and get a full embed card
+- `/inventory` — view your rolled items
+- `/stats` — view your overall breakdown
+- `/reset` — clear your inventory
+
+### Terminal version only
+- Animated dot-by-dot rolling effect
+- Play again loop
+- Session summary on exit
 
 ---
 
@@ -52,7 +88,7 @@ Then confirm with `java -version`.
 
 **Option A — Clone with Git (recommended):**
 
-    git clone https://github.com/YOURUSERNAME/CSGOSim.git
+    git clone https://github.com/Tenzukun/CSGO-Case-Simulator.git
 
 **Option B — Download manually:**
 1. Click the green **Code** button at the top of this repo
@@ -63,13 +99,10 @@ Then confirm with `java -version`.
 
 ### Step 4 — Open and run the file
 
-You have two options depending on whether you want to use VS Code or just your system terminal.
-
----
-
 #### Option A — Using VS Code (recommended)
 
-VS Code is a free code editor that makes it easy to manage files and run terminal commands in one place.
+VS Code is a free code editor that makes it easy to manage files and run
+terminal commands in one place.
 
 **If you don't have VS Code:**
 1. Go to [https://code.visualstudio.com/](https://code.visualstudio.com/)
@@ -79,17 +112,12 @@ VS Code is a free code editor that makes it easy to manage files and run termina
 
 **Once VS Code is installed:**
 1. Go to **File → Open Folder**
-2. Navigate to and select the `CSGOSim` folder you downloaded or cloned
-3. Open the built-in terminal with **Ctrl + `** (backtick, the key above Tab on the left side of your keyboard). On Mac use **Cmd + `**
-4. In the terminal, navigate to the java folder:
+2. Navigate to and select the `CSGO-Case-Simulator` folder
+3. Open the built-in terminal with **Ctrl + `** (backtick, the key above Tab).
+   On Mac use **Cmd + `**
+4. Navigate to the terminal folder:
 
-   **Windows:**
-
-       cd java
-
-   **Mac/Linux:**
-
-       cd java
+       cd terminal
 
 5. Compile and run:
 
@@ -101,10 +129,10 @@ VS Code is a free code editor that makes it easy to manage files and run termina
 #### Option B — Using your system terminal (no VS Code needed)
 
 **Windows — Command Prompt or PowerShell:**
-1. Press **Win + R**, type `cmd`, and hit Enter to open Command Prompt
-2. Navigate to the java folder. For example:
+1. Press **Win + R**, type `cmd`, and hit Enter
+2. Navigate to the terminal folder:
 
-       cd C:\Users\YourName\Downloads\CSGOSim\java
+       cd C:\Users\YourName\Downloads\CSGO-Case-Simulator\terminal
 
 3. Compile and run:
 
@@ -113,9 +141,9 @@ VS Code is a free code editor that makes it easy to manage files and run termina
 
 **Mac — Terminal:**
 1. Press **Cmd + Space**, type `Terminal`, and hit Enter
-2. Navigate to the java folder. For example:
+2. Navigate to the terminal folder:
 
-       cd ~/Downloads/CSGOSim/java
+       cd ~/Downloads/CSGO-Case-Simulator/terminal
 
 3. Compile and run:
 
@@ -123,10 +151,10 @@ VS Code is a free code editor that makes it easy to manage files and run termina
        java CrateOpening
 
 **Linux — Terminal:**
-1. Open your terminal application (usually Ctrl + Alt + T)
-2. Navigate to the java folder:
+1. Open your terminal (usually Ctrl + Alt + T)
+2. Navigate to the terminal folder:
 
-       cd ~/Downloads/CSGOSim/java
+       cd ~/Downloads/CSGO-Case-Simulator/terminal
 
 3. Compile and run:
 
@@ -136,7 +164,7 @@ VS Code is a free code editor that makes it easy to manage files and run termina
 ---
 
 > **Not sure where your folder is?**
-> On Windows, right-click the `CSGOSim` folder in File Explorer and select **Copy as path**.
+> On Windows, right-click the folder in File Explorer and select **Copy as path**.
 > On Mac, right-click the folder, hold Option, and select **Copy as Pathname**.
 > Then paste it after `cd ` in your terminal.
 
@@ -151,59 +179,12 @@ and add the path to your JDK's `bin` folder (e.g. `C:\Program Files\Java\jdk-21\
 Then restart your terminal.
 
 **"CrateOpening.java not found"** — You're in the wrong folder.
-Make sure your terminal is inside the `java` subfolder, not the root of the repo.
+Make sure your terminal is inside the `terminal` subfolder, not the root of the repo.
 Run `ls` (Mac/Linux) or `dir` (Windows) to see what files are in your current location.
 
 ---
 
-## Features
-
-- Animated `Rolling...` effect that builds up dot by dot
-- Real CS:GO drop rates for rarity, exterior, and prefix
-- Full item card displayed after every roll
-- Float bar with zone labels (FN / MW / FT / WW / BS) and a marker pinned to your exact float
-- Estimated market price per item adjusted by wear and prefix
-- Randomly generated seed per item
-- Unique reaction message per rarity tier
-- Play again loop — keep opening crates until you type `quit`
-- Persistent inventory saved to `inventory.txt` — carries over between sessions
-- View your inventory at any time by typing `inv`
-- Reset your inventory at any time by typing `reset`
-- Session summary on exit showing all your rolls and your best item
-
----
-
-## How It Works
-
-Each crate opening rolls five things independently:
-
-| Roll     | What it decides                                   |
-|----------|---------------------------------------------------|
-| Rarity   | The colour tier of the item                       |
-| Skin     | The specific weapon and finish                    |
-| Exterior | The wear condition of the skin                    |
-| Float    | The exact float value within the exterior's range |
-| Prefix   | Whether it's StatTrak™, Souvenir, or neither      |
-
-The final item card looks like this:
-
-    =======================================
-      StatTrak™ AK-47 | Redline
-      Restricted · Field-Tested
-      Type   : Rifle
-    ---------------------------------------
-      Price  : ~$15.00
-    ---------------------------------------
-       FN  MW     FT     WW            BS
-      [===|===|=========|===|======================]
-                  ^
-      Float: 0.2341   Seed: 264
-      StatTrak: 42,711 Confirmed Kills
-    =======================================
-
----
-
-## Commands
+## Terminal Commands
 
 After each roll you will see this prompt:
 
@@ -213,10 +194,8 @@ After each roll you will see this prompt:
 |---------|-------------------------------------------|
 | ENTER   | Open another crate                        |
 | inv     | View your full inventory                  |
-| reset   | Clear your inventory (deletes the file)   |
+| reset   | Clear your inventory                      |
 | quit    | Exit and show your session summary        |
-
-You can chain `inv` and `reset` as many times as you want before rolling again.
 
 ---
 
@@ -288,96 +267,23 @@ Based on CS:GO's float value distribution:
 
 ---
 
-## Inventory
-
-Every item you roll is automatically saved to `inventory.txt` in the same folder.
-Type `inv` after any roll to view it:
-
-    =======================================
-          Your Inventory (3 items)
-    =======================================
-      #1   StatTrak™ AK-47 | Redline (Field-Tested)
-           Restricted (Purple) · Rifle
-           Float: 0.2341  Seed: 264  Price: ~$15.00
-      ---------------------------------------
-      #2   AWP | Hyper Beast (Factory New)
-           Classified (Pink) · Rifle
-           Float: 0.0312  Seed: 847  Price: ~$90.00
-      ---------------------------------------
-      #3   P250 | Sand Dune (Battle-Scarred)
-           Mil-Spec Grade (Blue) · Pistol
-           Float: 0.7823  Seed: 102  Price: ~$0.25
-    =======================================
-
-Type `reset` to wipe the inventory and start fresh.
-
----
-
-## Session Summary
-
-When you type `quit` the program shows a full breakdown of the current session:
-
-    =======================================
-               Session Summary             
-    =======================================
-      Crates Opened : 12
-    ---------------------------------------
-      GOLD          : 0
-      Rare (Red)    : 1
-      Pink          : 1
-      Purple        : 3
-      Blue          : 7
-    ---------------------------------------
-      Best Roll     : AWP | Dragon Lore (Minimal Wear)
-      Best Rarity   : Rare (Red)
-    =======================================
-
-    Thanks for playing! Good luck on your next case.
-    =======================================
-
----
-
 ## Project Structure
 
-    CSGOSim/
-    ├── java/
-    │   ├── CrateOpening.java
-    │   └── inventory.txt         <- auto-created on first roll
-    ├── web/
-    │   └── index.html            <- open in any browser, no install needed
+    CSGO-Case-Simulator/
+    ├── terminal/
+    │   └── CrateOpening.java        <- Java terminal version
     ├── discord-bot/
-    │   ├── index.js
-    │   ├── rolls.js
-    │   ├── storage.js
-    │   ├── deploy-commands.js
+    │   ├── index.js                 <- main bot file
+    │   ├── rolls.js                 <- CS:GO roll logic
+    │   ├── storage.js               <- inventory storage
+    │   ├── deploy-commands.js       <- slash command registration
     │   └── package.json
+    ├── docs/
+    │   ├── index.html               <- web version
+    │   ├── style.css
+    │   └── script.js
     ├── .gitignore
     └── README.md
-
-### Methods at a glance (Java version)
-
-| Method                | Purpose                                         |
-|-----------------------|-------------------------------------------------|
-| `main()`              | Controls flow, loop, and session tracking       |
-| `printRolling()`      | Animated dot-by-dot rolling effect              |
-| `rollRarity()`        | Rolls the colour tier using real CS:GO odds     |
-| `rollSkin()`          | Picks a random skin from the matching pool      |
-| `rollWear()`          | Rolls the exterior condition                    |
-| `rollFloat()`         | Generates a float within the exterior's range   |
-| `rollPrefix()`        | Rolls StatTrak™, Souvenir, or nothing           |
-| `getSkinPrice()`      | Estimates market price adjusted by wear/prefix  |
-| `getWeaponType()`     | Maps the skin name to a weapon category         |
-| `getRarityTierName()` | Maps rarity to its CS:GO tier label             |
-| `getRarityRank()`     | Scores rarity 1–5 for best item tracking        |
-| `getRarityMessage()`  | Returns a unique reaction per rarity tier       |
-| `printFloatBar()`     | Draws the float bar with zone labels and marker |
-| `floatToBarPos()`     | Maps a float value to its bar character offset  |
-| `saveToInventory()`   | Appends a rolled item to inventory.txt          |
-| `loadInventory()`     | Reads inventory.txt into a list                 |
-| `printInventory()`    | Displays the full inventory                     |
-| `resetInventory()`    | Deletes inventory.txt                           |
-| `printSessionStats()` | Displays the session summary on quit            |
-| `printBanner()`       | Prints the header on startup                    |
 
 ---
 
@@ -385,4 +291,6 @@ When you type `quit` the program shows a full breakdown of the current session:
 - Java (terminal version)
 - HTML / CSS / JavaScript (web version)
 - Discord.js (Discord bot)
+- Railway (Discord bot hosting)
+- GitHub Pages (web hosting)
 - VS Code
