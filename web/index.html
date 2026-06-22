@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS:GO Case Opening Simulator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="banner">
+        <h1>CS:GO Case Opening</h1>
+        <p>Think you can hit the gold? Give it a shot.</p>
+    </div>
+
+    <div class="card">
+        <div class="open-btns">
+            <button class="open-btn" id="openBtn">Open 1x</button>
+            <button class="open-btn" id="open5Btn">Open 5x</button>
+            <button class="open-btn" id="open10Btn">Open 10x</button>
+        </div>
+        <div class="quick-toggle">
+            <label class="toggle-label">
+                <span>⚡ Quick Open</span>
+                <input type="checkbox" id="quickToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+
+        <div class="rolling-text" id="rollingText"></div>
+
+        <div class="item-card" id="itemCard">
+            <div class="item-header" id="itemHeader">
+                <div class="item-name" id="itemName"></div>
+                <div class="item-subtitle" id="itemSubtitle"></div>
+            </div>
+            <div class="item-body">
+                <div class="float-bar-container">
+                    <div class="float-labels">
+                        <span>FN</span>
+                        <span>MW</span>
+                        <span>FT</span>
+                        <span>WW</span>
+                        <span>BS</span>
+                    </div>
+                    <div class="float-bar">
+                        <div class="float-marker" id="floatMarker"></div>
+                    </div>
+                </div>
+                <div class="item-row"><span>Type</span>    <span id="iType"></span></div>
+                <div class="item-row"><span>Rarity</span>  <span id="iRarity"></span></div>
+                <div class="item-row"><span>Exterior</span><span id="iExterior"></span></div>
+                <div class="item-row"><span>Float</span>   <span id="iFloat"></span></div>
+                <div class="item-row"><span>Seed</span>    <span id="iSeed"></span></div>
+                <div class="item-row"><span>Price</span>   <span id="iPrice"></span></div>
+                <div class="item-row" id="stRow" style="display:none">
+                    <span>StatTrak™</span><span id="iKills"></span>
+                </div>
+            </div>
+            <div class="multi-results" id="multiResults"></div>
+        </div>
+    </div>
+
+    <div class="secondary-btns">
+        <button class="secondary-btn" id="invBtn">🎒 Inventory</button>
+        <button class="secondary-btn" id="statsBtn">📊 Stats</button>
+    </div>
+
+    <div class="panel" id="invPanel">
+        <h2>Your Inventory</h2>
+        <div id="invList"></div>
+        <button class="reset-btn" id="resetBtn">🗑️ Reset Inventory</button>
+    </div>
+
+    <div class="panel" id="statsPanel">
+        <h2>Session Stats</h2>
+        <div class="stats-grid" id="statsGrid"></div>
+        <div class="item-row">
+            <span>Best Roll</span>
+            <span id="bestRoll">None yet</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
