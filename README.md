@@ -11,7 +11,7 @@ get, all based on real CS:GO drop rates.
 | Version      | Link                                                                 |
 |--------------|----------------------------------------------------------------------|
 | 🌐 Web App   | [tenzukun.github.io/CSGO-Case-Simulator](https://tenzukun.github.io/CSGO-Case-Simulator/) |
-| 🤖 Discord Bot | Invite link — add it to your server and use `/open`               |
+| 🤖 Discord Bot | [Invite to your server](https://discord.com/oauth2/authorize?client_id=1518623546513952818&permissions=2147502080&integration_type=0&scope=bot+applications.commands) — use `/open` to open a crate |             |
 | 💻 Terminal  | Clone the repo and run locally (see instructions below)              |
 
 ---
