@@ -1,2 +1,5 @@
 inventory.txt
 *.class
+.env
+node_modules/
+data/
