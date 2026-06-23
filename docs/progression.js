@@ -148,29 +148,31 @@ function renderLevelDetails() {
     if (!el) return;
 
     const currentLevel = getLevel();
-    const xp       = getXP();
-    const xpInto   = xp - totalXPForLevel(currentLevel);
-    const needed   = xpForLevel(currentLevel);
-    const remaining = needed - xpInto;
+    const xp           = getXP();
+    const xpInto       = xp - totalXPForLevel(currentLevel);
+    const needed       = xpForLevel(currentLevel);
+    const remaining    = needed - xpInto;
 
-    // Build display list: milestones + always include currentLevel
-    const milestones = [1, 5, 10, 15, 20, 25, 30, 35, 40, 50];
+    // Show all case-unlock levels + standard milestones + current level
+    const caseUnlockLevels = CASES.map(c => c.unlockLevel).filter(l => l > 1);
+    const baseMilestones   = [1, 10, 20, 30, 40, 50];
+    const milestones       = [...new Set([...baseMilestones, ...caseUnlockLevels])].sort((a, b) => a - b);
+
     const displayLevels = milestones.includes(currentLevel)
         ? milestones
         : [...milestones, currentLevel].sort((a, b) => a - b);
 
-    let rows = displayLevels.map(lvl => {
-        const mult      = 1 + (lvl - 1) * 0.05;
-        const fishPct   = Math.round((mult - 1) * 100);
-        const multLabel = mult.toFixed(2);
+    const rows = displayLevels.map(lvl => {
+        const mult       = (1 + (lvl - 1) * 0.05).toFixed(2);
+        const fishPct    = Math.round(((1 + (lvl - 1) * 0.05) - 1) * 100);
         const caseUnlock = CASES.find(c => c.unlockLevel === lvl);
 
-        let perks = [];
+        const perks = [];
         if (caseUnlock) perks.push(`${caseUnlock.icon} ${caseUnlock.name} unlocked`);
-        perks.push(`Weekly ${multLabel}x`);
+        perks.push(`Weekly ${mult}x`);
         perks.push(`Fishing +${fishPct}%`);
 
-        const stateClass = lvl < currentLevel ? 'is-past'
+        const stateClass = lvl < currentLevel  ? 'is-past'
                          : lvl === currentLevel ? 'is-current'
                          : 'is-future';
 
