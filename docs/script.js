@@ -518,4 +518,4 @@ updateBalanceDisplay();
 updateLevelDisplay();
 renderCaseGrid();
 initWeekly();
-initUsernameModal();
+initAuth();

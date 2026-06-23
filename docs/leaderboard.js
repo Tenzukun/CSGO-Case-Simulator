@@ -10,62 +10,14 @@ function setUsername(name) {
     localStorage.setItem('csgo_username', name.trim());
 }
 
-function initUsernameModal() {
-    const modal  = document.getElementById('usernameModal');
-    const input  = document.getElementById('usernameInput');
-    const submit = document.getElementById('usernameSubmit');
-
-    if (getUsername()) {
-        modal.classList.add('hidden');
-        return;
-    }
-
-    modal.classList.remove('hidden');
-
-    const doConfirm = async () => {
-        const val = input.value.trim();
-        if (!val) { input.focus(); return; }
-
-        submit.disabled    = true;
-        submit.textContent = 'Checking...';
-
-        // Check Firebase for existing save data
-        const existing = await loadPlayerFromCloud(val);
-
-        if (existing && existing.level && existing.level > 1) {
-            // Show the load-data prompt
-            document.getElementById('modalStateEnter').classList.add('hidden');
-            document.getElementById('modalStateLoad').classList.remove('hidden');
-            document.getElementById('modalLoadDesc').textContent =
-                `Found saved data for "${val}" (Level ${existing.level}, ${(existing.cases || 0).toLocaleString()} cases opened). Load it?`;
-
-            document.getElementById('loadDataBtn').onclick = () => {
-                applyCloudData(val, existing);
-                modal.classList.add('hidden');
-                location.reload();
-            };
-
-            document.getElementById('startFreshBtn').onclick = () => {
-                setUsername(val);
-                modal.classList.add('hidden');
-                updateLbUsernameDisplay();
-                schedulePush();
-            };
-        } else {
-            setUsername(val);
-            modal.classList.add('hidden');
-            updateLbUsernameDisplay();
-            schedulePush();
-        }
-    };
-
-    submit.addEventListener('click', doConfirm);
-    input.addEventListener('keydown', e => { if (e.key === 'Enter') doConfirm(); });
-}
-
 function updateLbUsernameDisplay() {
     const el = document.getElementById('lbUsernameDisplay');
-    if (el) el.innerHTML = `Playing as <b>${getUsername() || '?'}</b>`;
+    if (!el) return;
+    if (typeof isGuest === 'function' && isGuest()) {
+        el.innerHTML = `Playing as <b>Guest</b>`;
+    } else {
+        el.innerHTML = `Playing as <b>${getUsername() || '?'}</b>`;
+    }
 }
 
 // -------------------------------------------------------
@@ -120,6 +72,7 @@ function schedulePush() {
 async function pushLeaderboard() {
     const username = getUsername();
     if (!username || !FIREBASE_URL) return;
+    if (typeof isGuest === 'function' && isGuest()) return;
 
     const stats = getLbStats();
 

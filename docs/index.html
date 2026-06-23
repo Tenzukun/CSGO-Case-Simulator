@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="achievements.css">
     <link rel="stylesheet" href="weekly.css">
     <link rel="stylesheet" href="alerts.css">
+    <link rel="stylesheet" href="auth.css">
     <link rel="stylesheet" href="mobile.css">
     <style>
         .secondary-btn.active {
@@ -46,23 +47,39 @@
         <button class="ach-popup-close" id="achPopupClose">✕</button>
     </div>
 
-    <!-- Username Modal -->
-    <div class="modal-overlay hidden" id="usernameModal">
-        <div class="modal">
-            <!-- State 1: Enter username -->
-            <div id="modalStateEnter">
-                <h2>👋 Welcome!</h2>
-                <p>Set a username to appear on the leaderboard. If you've played before, enter the same username to load your progress on this device.</p>
-                <input type="text" id="usernameInput" placeholder="Enter username..." maxlength="20" autocomplete="off">
-                <button class="modal-btn" id="usernameSubmit">Continue</button>
+    <!-- Auth Modal -->
+    <div class="auth-overlay hidden" id="authOverlay">
+        <div class="auth-modal">
+            <div class="auth-header">
+                <div class="auth-title">🎰 CS:GO Case Simulator</div>
+                <div class="auth-subtitle">Sign in to save your progress and appear on the leaderboard</div>
             </div>
-            <!-- State 2: Load or start fresh -->
-            <div id="modalStateLoad" class="hidden">
-                <h2>👋 Welcome back!</h2>
-                <p id="modalLoadDesc"></p>
-                <button class="modal-btn" id="loadDataBtn">Load My Data</button>
-                <button class="modal-btn modal-btn-secondary" id="startFreshBtn">Start Fresh</button>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="authSignInTab">Sign In</button>
+                <button class="auth-tab" id="authSignUpTab">Create Account</button>
             </div>
+
+            <!-- Sign In Form -->
+            <div id="authSignInForm">
+                <input type="text" id="authSignInUsername" placeholder="Username" maxlength="20" autocomplete="off">
+                <input type="password" id="authSignInPassword" placeholder="Password" maxlength="50">
+                <div class="auth-error" id="authSignInError"></div>
+                <button class="auth-btn" id="authSignInBtn">Sign In</button>
+            </div>
+
+            <!-- Create Account Form -->
+            <div id="authSignUpForm" class="hidden">
+                <input type="text" id="authSignUpUsername" placeholder="Username (3–20 chars, letters/numbers/_)" maxlength="20" autocomplete="off">
+                <input type="password" id="authSignUpPassword" placeholder="Password (min 4 characters)" maxlength="50">
+                <input type="password" id="authSignUpConfirm" placeholder="Confirm password" maxlength="50">
+                <div class="auth-error" id="authSignUpError"></div>
+                <button class="auth-btn" id="authSignUpBtn">Create Account</button>
+            </div>
+
+            <div class="auth-divider"><span>or</span></div>
+            <button class="auth-guest-btn" id="authGuestBtn">Play as Guest</button>
+            <p class="auth-guest-note">Guest progress won't be saved and won't appear on the leaderboard</p>
         </div>
     </div>
 
@@ -193,7 +210,10 @@
             <h2>🏆 Leaderboard</h2>
             <div class="lb-header">
                 <span class="lb-username-display" id="lbUsernameDisplay"></span>
-                <button class="lb-refresh-btn" id="lbRefreshBtn">↻ Refresh</button>
+                <div style="display:flex;gap:6px;align-items:center;">
+                    <button class="lb-refresh-btn" id="lbRefreshBtn">↻ Refresh</button>
+                    <button class="lb-signout-btn" id="signOutBtn">Sign Out</button>
+                </div>
             </div>
             <div class="lb-tabs">
                 <button class="lb-tab active" data-tab="coins">💰 Total Earned</button>
@@ -324,6 +344,7 @@
     <script src="rolls.js"></script>
     <script src="progression.js"></script>
     <script src="leaderboard.js"></script>
+    <script src="auth.js"></script>
     <script src="fishing.js"></script>
     <script src="achievements.js"></script>
     <script src="weekly.js"></script>
