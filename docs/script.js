@@ -230,7 +230,9 @@ function setButtons(disabled) {
 async function doOpen(count = 1) {
     if (!selectedCase) return;
 
-    const totalCost = selectedCase.cost * count;
+    const cb        = (typeof getCaseBonus === 'function') ? getCaseBonus() : {};
+    const discount  = cb.costDiscount || 0;
+    const totalCost = Math.floor(selectedCase.cost * count * (1 - discount));
     if (!spendCoins(totalCost)) {
         alert(`You need ${totalCost.toLocaleString()} coins to open ${count} case${count > 1 ? 's' : ''}. You have ${getCoins().toLocaleString()} coins.`);
         return;
@@ -251,7 +253,7 @@ async function doOpen(count = 1) {
             saveItem(result);
             updateStats(result);
             addLbCase(result);
-            addXP(XP_PER_RARITY[result.rarity] || 10);
+            addXP(Math.round((XP_PER_RARITY[result.rarity] || 10) * (cb.xpMult || 1)));
             checkCaseAchievements(result);
             if (result.rarity === 'GOLD') pushGoldAlert(result.fullItem, selectedCase.name);
             rollingText.textContent = getRarityMessage(result.rarity);
@@ -265,7 +267,7 @@ async function doOpen(count = 1) {
                 saveItem(r);
                 updateStats(r);
                 addLbCase(r);
-                addXP(XP_PER_RARITY[r.rarity] || 10);
+                addXP(Math.round((XP_PER_RARITY[r.rarity] || 10) * (cb.xpMult || 1)));
                 checkCaseAchievements(r);
                 if (r.rarity === 'GOLD') pushGoldAlert(r.fullItem, selectedCase.name);
             });
@@ -574,7 +576,8 @@ function renderStats() {
 
 const PAGES = [
     'page-cases', 'page-inventory', 'page-fishing',
-    'page-achievements', 'page-weekly', 'page-howtoplay', 'page-leaderboard'
+    'page-achievements', 'page-weekly', 'page-howtoplay',
+    'page-leaderboard', 'page-upgrades'
 ];
 
 function switchPage(pageId) {
@@ -587,6 +590,7 @@ function switchPage(pageId) {
     if (pageId === 'page-achievements') renderAchievements();
     if (pageId === 'page-weekly')       renderWeeklyPage();
     if (pageId === 'page-inventory')    renderInventory();
+    if (pageId === 'page-upgrades')     renderUpgradesPage();
     if (pageId === 'page-leaderboard') {
         if (typeof updateLbUsernameDisplay === 'function') updateLbUsernameDisplay();
         if (typeof renderLeaderboard      === 'function') renderLeaderboard();
@@ -695,3 +699,5 @@ renderCaseGrid();
 initWeekly();
 initAuth();
 initAccountPanel();
+initFishingSkillTree();
+initUpgradesPage();

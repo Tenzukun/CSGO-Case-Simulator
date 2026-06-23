@@ -5,46 +5,15 @@
 function rand()    { return Math.random() * 100; }
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-// Rarity odds scale with case cost.
-// Cheapest case (200 coins) = base odds.
-// Most expensive case (75,000 coins) = ~3x better gold odds.
-// Scaling is logarithmic so mid-tier cases feel meaningfully better
-// without premium cases feeling broken.
-//
-// Odds at base (luck = 0) → max (luck = 1):
-//   Gold:   0.26% → 0.75%
-//   Red:    0.64% → 1.50%
-//   Pink:   3.20% → 6.00%
-//   Purple: 15.98% → 22.00%
-//   Blue:   remainder
-
-function rollRarity(caseData) {
-    const cost = caseData ? caseData.cost : 200;
-
-    // luck: 0 at 200 coins, 1 at 75,000 coins (log scale)
-    const luck = Math.log(cost / 200) / Math.log(375);
-
-    const gold   = 0.26  + luck * 0.49;
-    const red    = 0.64  + luck * 0.86;
-    const pink   = 3.20  + luck * 2.80;
-    const purple = 15.98 + luck * 6.02;
-
-    const r = rand();
-    if (r < gold)                       return 'GOLD';
-    if (r < gold + red)                 return 'Rare (Red)';
-    if (r < gold + red + pink)          return 'Pink';
-    if (r < gold + red + pink + purple) return 'Purple';
-    return 'Blue';
-}
-
-// Returns the actual displayed odds for a given case (matches rollRarity)
+// Returns display odds for a given case (shown in View Case Contents)
 function getCaseOdds(caseData) {
     const cost = caseData ? caseData.cost : 200;
     const luck = Math.log(cost / 200) / Math.log(375);
+    const cb   = (typeof getCaseBonus === 'function') ? getCaseBonus() : {};
 
-    const gold   = 0.26  + luck * 0.49;
-    const red    = 0.64  + luck * 0.86;
-    const pink   = 3.20  + luck * 2.80;
+    const gold   = 0.26  + luck * 0.49  + (cb.goldBoost  || 0);
+    const red    = 0.64  + luck * 0.86  + (cb.redBoost   || 0);
+    const pink   = 3.20  + luck * 2.80  + (cb.pinkBoost  || 0);
     const purple = 15.98 + luck * 6.02;
     const blue   = 100 - gold - red - pink - purple;
 
@@ -55,6 +24,25 @@ function getCaseOdds(caseData) {
         'Purple':     purple.toFixed(2) + '%',
         'Blue':       blue.toFixed(2)   + '%'
     };
+}
+
+// Rarity roll: scales with case cost + case upgrade bonuses
+function rollRarity(caseData) {
+    const cost = caseData ? caseData.cost : 200;
+    const luck = Math.log(cost / 200) / Math.log(375);
+    const cb   = (typeof getCaseBonus === 'function') ? getCaseBonus() : {};
+
+    const gold   = 0.26  + luck * 0.49  + (cb.goldBoost  || 0);
+    const red    = 0.64  + luck * 0.86  + (cb.redBoost   || 0);
+    const pink   = 3.20  + luck * 2.80  + (cb.pinkBoost  || 0);
+    const purple = 15.98 + luck * 6.02;
+
+    const r = rand();
+    if (r < gold)                       return 'GOLD';
+    if (r < gold + red)                 return 'Rare (Red)';
+    if (r < gold + red + pink)          return 'Pink';
+    if (r < gold + red + pink + purple) return 'Purple';
+    return 'Blue';
 }
 
 function rollWear() {
@@ -110,6 +98,11 @@ function openCrate(caseData) {
     const tier      = RARITY_TIERS[rarity];
     const fullName  = prefix ? `${prefix} ${skin}` : skin;
     const fullItem  = `${fullName} (${wear})`;
-    const coins     = Math.round(parseFloat(price) * COINS_PER_DOLLAR);
+
+    // Apply case value upgrades
+    const cb         = (typeof getCaseBonus === 'function') ? getCaseBonus() : {};
+    const valueMult  = rarity === 'GOLD' ? (cb.goldValueMult || 1) : (cb.valueMult || 1);
+    const coins      = Math.round(parseFloat(price) * COINS_PER_DOLLAR * valueMult);
+
     return { rarity, skin, wear, prefix, floatVal, seed, price, type, tier, fullName, fullItem, coins };
 }

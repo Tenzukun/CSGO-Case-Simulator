@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="weekly.css">
     <link rel="stylesheet" href="alerts.css">
     <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="fishing-skills.css">
     <link rel="stylesheet" href="mobile.css">
 </head>
 <body>
@@ -120,6 +121,7 @@
             <button class="sidebar-item" data-page="weekly">🎁 Weekly</button>
             <button class="sidebar-item" data-page="howtoplay">❓ How to Play</button>
             <div class="sidebar-divider"></div>
+            <button class="sidebar-item" data-page="upgrades">⚙️ Upgrades</button>
             <button class="sidebar-item" data-page="leaderboard">🏆 Leaderboard</button>
             <a href="https://ko-fi.com/nthn_mp4" target="_blank" class="sidebar-item">☕ Ko-fi</a>
         </nav>
@@ -180,8 +182,8 @@
                                 <span>StatTrak™</span><span id="iKills"></span>
                             </div>
                         </div>
+                        <div class="multi-results" id="multiResults"></div>
                     </div>
-                    <div class="multi-results" id="multiResults"></div>
                 </div>
             </div>
         </div>
@@ -288,6 +290,21 @@
             </div>
         </div>
 
+        <!-- Page: Upgrades -->
+        <div class="page hidden" id="page-upgrades">
+            <h2 class="page-heading">⚙️ Upgrades</h2>
+            <div class="upgrade-tabs">
+                <button class="upgrade-tab-btn active" data-utab="cases">🎰 Case Upgrades</button>
+                <button class="upgrade-tab-btn" data-utab="fishing">🎣 Fishing Upgrades</button>
+            </div>
+            <div id="upgradeTab-cases" class="upgrade-tab-content">
+                <div id="caseSkillContainer"></div>
+            </div>
+            <div id="upgradeTab-fishing" class="upgrade-tab-content hidden">
+                <div id="fishSkillContainer"></div>
+            </div>
+        </div>
+
         <!-- Page: Leaderboard -->
         <div class="page hidden" id="page-leaderboard">
             <h2 class="page-heading">🏆 Leaderboard</h2>
@@ -382,6 +399,9 @@
     <script src="leaderboard.js"></script>
     <script src="auth.js"></script>
     <script src="fishing.js"></script>
+    <script src="fishing-skills.js"></script>
+    <script src="case-skills.js"></script>
+    <script src="upgrades.js"></script>
     <script src="achievements.js"></script>
     <script src="weekly.js"></script>
     <script src="alerts.js"></script>

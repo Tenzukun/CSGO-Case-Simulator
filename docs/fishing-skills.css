@@ -1,0 +1,331 @@
+/* -------------------------------------------------------
+   Fishing Skill Tree
+------------------------------------------------------- */
+
+.fs-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 0;
+    background: none;
+    border: none;
+    border-top: 1px solid #2a3f5f;
+    color: #c6d4df;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 20px;
+    transition: color 0.2s;
+}
+
+.fs-toggle-btn:hover { color: #fff; }
+
+#fishSkillTree { margin-top: 16px; }
+
+/* -------------------------------------------------------
+   Active bonus bar
+------------------------------------------------------- */
+
+.fs-bonus-bar {
+    background: #1b2838;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+}
+
+.fs-bonus-empty {
+    color: #8f98a0;
+    font-size: 0.82rem;
+    text-align: center;
+}
+
+.fs-bonus-label {
+    font-size: 0.68rem;
+    font-weight: bold;
+    color: #4b69ff;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 8px;
+}
+
+.fs-bonus-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.fs-tag {
+    background: #16202d;
+    border: 1px solid #2a3f5f;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 0.78rem;
+    color: #c6d4df;
+}
+
+/* -------------------------------------------------------
+   Root node row
+------------------------------------------------------- */
+
+.fs-root-row {
+    display: flex;
+    justify-content: center;
+}
+
+/* Root → branches connector */
+.fs-root-line {
+    position: relative;
+    height: 30px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.fs-root-h {
+    width: 66%;
+    height: 0;
+    border-bottom: 2px dashed #2a3f5f;
+    position: relative;
+}
+
+.fs-root-h::before,
+.fs-root-h::after,
+.fs-root-h > span {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 2px;
+    height: 30px;
+    background: #2a3f5f;
+}
+
+.fs-root-h::before { left: 0; }
+.fs-root-h::after  { right: 0; }
+
+/* Center vertical from root */
+.fs-root-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 30px;
+    background: #2a3f5f;
+}
+
+/* -------------------------------------------------------
+   Three branches
+------------------------------------------------------- */
+
+.fs-branches {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    align-items: start;
+}
+
+.fs-branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fs-branch-label {
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #8f98a0;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Vertical connector between nodes */
+.fs-vline {
+    width: 2px;
+    height: 20px;
+    background: #2a3f5f;
+    flex-shrink: 0;
+}
+
+/* -------------------------------------------------------
+   Skill nodes
+------------------------------------------------------- */
+
+.fs-node {
+    width: 100%;
+    background: #16202d;
+    border: 2px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 12px 10px;
+    text-align: center;
+    transition: transform 0.15s, border-color 0.2s;
+    position: relative;
+}
+
+/* Root node */
+.fs-root {
+    max-width: 200px;
+    border-color: #e4ae39 !important;
+    background: linear-gradient(135deg, #1e2d1e 0%, #1b2838 100%);
+}
+
+/* Unlocked */
+.fs-unlocked {
+    border-color: #e4ae39;
+    background: linear-gradient(135deg, #1e2810 0%, #16202d 100%);
+    box-shadow: 0 0 12px rgba(228, 174, 57, 0.2);
+}
+
+.fs-unlocked .fs-node {
+    border-color: #e4ae39;
+    background: linear-gradient(135deg, #1e2810 0%, #16202d 100%);
+    box-shadow: 0 0 12px rgba(228, 174, 57, 0.2);
+}
+
+.fs-node.fs-unlocked {
+    border-color: #e4ae39;
+    background: linear-gradient(135deg, #1e2810 0%, #16202d 100%);
+    box-shadow: 0 0 12px rgba(228, 174, 57, 0.2);
+}
+
+/* Available */
+.fs-node.fs-available {
+    border-color: #4b69ff;
+    cursor: default;
+}
+
+.fs-node.fs-available:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(75, 105, 255, 0.2);
+}
+
+/* Locked */
+.fs-node.fs-locked {
+    opacity: 0.45;
+}
+
+/* Node contents */
+.fs-icon {
+    font-size: 1.6rem;
+    margin-bottom: 6px;
+    line-height: 1;
+}
+
+.fs-name {
+    font-size: 0.82rem;
+    font-weight: bold;
+    color: #c6d4df;
+    margin-bottom: 5px;
+}
+
+.fs-desc {
+    font-size: 0.72rem;
+    color: #8f98a0;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+/* Footer states */
+.fs-unlock-btn {
+    width: 100%;
+    padding: 6px 8px;
+    background: #4b69ff;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: inherit;
+}
+
+.fs-unlock-btn:hover { background: #3a56d4; }
+
+.fs-unlocked-badge,
+.fs-unlocked {
+    font-size: 0.75rem;
+    color: #e4ae39;
+    font-weight: bold;
+}
+
+.fs-locked {
+    font-size: 0.72rem;
+    color: #8f98a0;
+}
+
+/* -------------------------------------------------------
+   Legend
+------------------------------------------------------- */
+
+.fs-legend {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid #2a3f5f;
+}
+
+.fs-leg {
+    font-size: 0.75rem;
+}
+
+.fs-leg.unlocked { color: #e4ae39; }
+.fs-leg.available { color: #4b69ff; }
+.fs-leg.locked    { color: #4a5568; }
+
+/* -------------------------------------------------------
+   Mobile
+------------------------------------------------------- */
+
+@media (max-width: 600px) {
+    .fs-branches {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .fs-root-h { width: 0; }
+
+    .fs-node { max-width: 100%; }
+}
+
+/* -------------------------------------------------------
+   Upgrades Page Tabs
+------------------------------------------------------- */
+
+.upgrade-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #2a3f5f;
+    padding-bottom: 0;
+}
+
+.upgrade-tab-btn {
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #8f98a0;
+    font-size: 0.88rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: -1px;
+    font-family: inherit;
+}
+
+.upgrade-tab-btn.active {
+    color: #4b69ff;
+    border-bottom-color: #4b69ff;
+}
+
+.upgrade-tab-btn:hover:not(.active) { color: #c6d4df; }
+
+.upgrade-tab-content.hidden { display: none; }
