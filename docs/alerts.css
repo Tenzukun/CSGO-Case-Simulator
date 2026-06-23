@@ -1,0 +1,116 @@
+/* -------------------------------------------------------
+   Gold Drop Alert — side notification
+------------------------------------------------------- */
+
+.gold-alert {
+    position: fixed;
+    bottom: 28px;
+    right: 24px;
+    z-index: 9000;
+    background: linear-gradient(135deg, #1e2d1e 0%, #1b2838 60%);
+    border: 1px solid #e4ae39;
+    border-radius: 10px;
+    padding: 14px 16px;
+    max-width: 300px;
+    width: calc(100vw - 48px);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    box-shadow: 0 4px 24px rgba(228, 174, 57, 0.35);
+    pointer-events: none;
+}
+
+.gold-alert.hidden {
+    display: none;
+}
+
+.gold-alert.slide-in {
+    animation: gaSlideIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.gold-alert.slide-out {
+    animation: gaSlideOut 0.35s ease-in forwards;
+}
+
+@keyframes gaSlideIn {
+    from { transform: translateX(calc(100% + 32px)); opacity: 0; }
+    to   { transform: translateX(0);                 opacity: 1; }
+}
+
+@keyframes gaSlideOut {
+    from { transform: translateX(0);                 opacity: 1; }
+    to   { transform: translateX(calc(100% + 32px)); opacity: 0; }
+}
+
+.gold-alert-icon {
+    font-size: 2rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.gold-alert-content {
+    min-width: 0;
+}
+
+.gold-alert-label {
+    font-size: 0.68rem;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    color: #e4ae39;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.gold-alert-user {
+    font-size: 0.85rem;
+    color: #8f98a0;
+    margin-bottom: 3px;
+}
+
+.gold-alert-user strong {
+    color: #c6d4df;
+}
+
+.gold-alert-item {
+    font-size: 0.88rem;
+    font-weight: bold;
+    color: #e4ae39;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gold-alert-case {
+    font-size: 0.75rem;
+    color: #8f98a0;
+}
+
+/* Mobile: anchor to bottom-centre instead of bottom-right */
+@media (max-width: 480px) {
+    .gold-alert {
+        bottom: 16px;
+        right: 50%;
+        transform: translateX(50%);
+        max-width: 340px;
+        width: calc(100vw - 32px);
+    }
+
+    .gold-alert.slide-in {
+        animation: gaSlideInMobile 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .gold-alert.slide-out {
+        animation: gaSlideOutMobile 0.35s ease-in forwards;
+    }
+
+    @keyframes gaSlideInMobile {
+        from { transform: translateX(50%) translateY(120%); opacity: 0; }
+        to   { transform: translateX(50%) translateY(0);    opacity: 1; }
+    }
+
+    @keyframes gaSlideOutMobile {
+        from { transform: translateX(50%) translateY(0);    opacity: 1; }
+        to   { transform: translateX(50%) translateY(120%); opacity: 0; }
+    }
+}

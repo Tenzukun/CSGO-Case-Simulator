@@ -253,6 +253,7 @@ async function doOpen(count = 1) {
         addLbCase(result);
         addXP(XP_PER_RARITY[result.rarity] || 10);
         checkCaseAchievements(result);
+        if (result.rarity === 'GOLD') pushGoldAlert(result.fullItem, selectedCase.name);
         rollingText.textContent = getRarityMessage(result.rarity);
     } else {
         const results = Array.from({ length: count }, () => openCrate(selectedCase));
@@ -272,6 +273,7 @@ async function doOpen(count = 1) {
             addLbCase(r);
             addXP(XP_PER_RARITY[r.rarity] || 10);
             checkCaseAchievements(r);
+            if (r.rarity === 'GOLD') pushGoldAlert(r.fullItem, selectedCase.name);
         });
 
         multiResults.classList.add('visible');
@@ -392,7 +394,7 @@ function renderInventory() {
                     ${isFav ? '⭐' : '☆'}
                 </button>
                 <div class="inventory-item-info">
-                    <div class="inventory-item-name">${item.fullItem}</div>
+                    <div class="inventory-item-name">#${inv.length - i} ${item.fullItem}</div>
                     <div class="inventory-item-detail">${item.tier} · ${item.type} · Float: ${item.float} · ~$${item.price}</div>
                 </div>
                 <button class="sell-btn" onclick="sellItem(${realIndex})">
@@ -441,7 +443,7 @@ function renderStats() {
         <div class="stat-box"><div class="stat-label">🔵 Blue</div><div class="stat-value">${s.blue}</div></div>
         <div class="stat-box"><div class="stat-label">Balance</div><div class="stat-value">${getCoins().toLocaleString()}</div></div>
     `;
-
+    document.getElementById('bestRoll').textContent = s.bestItem;
 }
 
 // -------------------------------------------------------

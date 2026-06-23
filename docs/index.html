@@ -12,9 +12,21 @@
     <link rel="stylesheet" href="progression.css">
     <link rel="stylesheet" href="achievements.css">
     <link rel="stylesheet" href="weekly.css">
+    <link rel="stylesheet" href="alerts.css">
     <link rel="stylesheet" href="mobile.css">
 </head>
 <body>
+
+    <!-- Gold Drop Alert -->
+    <div class="gold-alert hidden" id="goldAlert">
+        <div class="gold-alert-icon">🟡</div>
+        <div class="gold-alert-content">
+            <div class="gold-alert-label">🌟 Gold Drop!</div>
+            <div class="gold-alert-user" id="goldAlertUser"></div>
+            <div class="gold-alert-item" id="goldAlertItem"></div>
+            <div class="gold-alert-case" id="goldAlertCase"></div>
+        </div>
+    </div>
 
     <!-- Achievement Popup -->
     <div class="achievement-popup hidden" id="achievementPopup">
@@ -156,10 +168,10 @@
         <!-- Inventory Panel -->
         <div class="panel" id="invPanel">
             <h2>Your Inventory</h2>
+            <div id="invList"></div>
             <div class="inv-actions">
                 <button class="sell-all-btn" id="sellAllBtn">💰 Sell All</button>
             </div>
-            <div id="invList"></div>
         </div>
 
         <!-- Stats Panel -->
@@ -311,6 +323,7 @@
     <script src="fishing.js"></script>
     <script src="achievements.js"></script>
     <script src="weekly.js"></script>
+    <script src="alerts.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
