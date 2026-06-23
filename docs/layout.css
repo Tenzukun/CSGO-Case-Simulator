@@ -229,6 +229,17 @@
     border-bottom: 1px solid #2a3f5f;
 }
 
+/* Centre case screens within the wide content area */
+#caseSelectScreen,
+#caseOpenScreen {
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.screen-title {
+    text-align: center;
+}
+
 /* -------------------------------------------------------
    Account Panel (right slide-in)
 ------------------------------------------------------- */
