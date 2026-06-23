@@ -241,53 +241,55 @@ async function doOpen(count = 1) {
     multiResults.classList.remove('visible');
     multiResults.innerHTML = '';
 
-    if (!quickOpen) await animateRolling();
+    try {
+        if (!quickOpen) await animateRolling();
 
-    if (count === 1) {
-        const result = openCrate(selectedCase);
-        displayItem(result);
-        saveItem(result);
-        updateStats(result);
-        addLbCase(result);
-        addXP(XP_PER_RARITY[result.rarity] || 10);
-        checkCaseAchievements(result);
-        if (result.rarity === 'GOLD') pushGoldAlert(result.fullItem, selectedCase.name);
-        rollingText.textContent = getRarityMessage(result.rarity);
-    } else {
-        const results = Array.from({ length: count }, () => openCrate(selectedCase));
-        let best      = results[0];
-        let bestRank  = RARITY_RANKS[results[0].rarity];
+        if (count === 1) {
+            const result = openCrate(selectedCase);
+            displayItem(result);
+            saveItem(result);
+            updateStats(result);
+            addLbCase(result);
+            addXP(XP_PER_RARITY[result.rarity] || 10);
+            checkCaseAchievements(result);
+            if (result.rarity === 'GOLD') pushGoldAlert(result.fullItem, selectedCase.name);
+            rollingText.textContent = getRarityMessage(result.rarity);
+        } else {
+            const results = Array.from({ length: count }, () => openCrate(selectedCase));
+            let best      = results[0];
+            let bestRank  = RARITY_RANKS[results[0].rarity];
 
-        for (const r of results) {
-            if (RARITY_RANKS[r.rarity] > bestRank) { bestRank = RARITY_RANKS[r.rarity]; best = r; }
-        }
+            for (const r of results) {
+                if (RARITY_RANKS[r.rarity] > bestRank) { bestRank = RARITY_RANKS[r.rarity]; best = r; }
+            }
 
-        displayItem(best);
-        rollingText.textContent = getRarityMessage(best.rarity); // removed "Best of X:" prefix
+            displayItem(best);
+            rollingText.textContent = getRarityMessage(best.rarity);
 
-        results.forEach(r => {
-            saveItem(r);
-            updateStats(r);
-            addLbCase(r);
-            addXP(XP_PER_RARITY[r.rarity] || 10);
-            checkCaseAchievements(r);
-            if (r.rarity === 'GOLD') pushGoldAlert(r.fullItem, selectedCase.name);
-        });
+            results.forEach(r => {
+                saveItem(r);
+                updateStats(r);
+                addLbCase(r);
+                addXP(XP_PER_RARITY[r.rarity] || 10);
+                checkCaseAchievements(r);
+                if (r.rarity === 'GOLD') pushGoldAlert(r.fullItem, selectedCase.name);
+            });
 
-        multiResults.classList.add('visible');
-        multiResults.innerHTML = results.map(r => `
-            <div class="multi-result-card ${r === best ? 'highlight' : ''}">
-                <div class="multi-result-header ${RARITY_CLASSES[r.rarity]}">${r.fullName}</div>
-                <div class="multi-result-body">
-                    <div>Exterior: <span>${r.wear}</span></div>
-                    <div>Float: <span>${r.floatVal}</span></div>
-                    <div>Value: <span>${r.coins.toLocaleString()} coins</span></div>
+            multiResults.classList.add('visible');
+            multiResults.innerHTML = results.map(r => `
+                <div class="multi-result-card ${r === best ? 'highlight' : ''}">
+                    <div class="multi-result-header ${RARITY_CLASSES[r.rarity]}">${r.fullName}</div>
+                    <div class="multi-result-body">
+                        <div>Exterior: <span>${r.wear}</span></div>
+                        <div>Float: <span>${r.floatVal}</span></div>
+                        <div>Value: <span>${r.coins.toLocaleString()} coins</span></div>
+                    </div>
                 </div>
-            </div>
-        `).join('');
+            `).join('');
+        }
+    } finally {
+        setButtons(false);
     }
-
-    setButtons(false);
 }
 
 openBtn.addEventListener('click',   () => doOpen(1));
@@ -326,7 +328,7 @@ function saveItem(result) {
         price:    result.price,    coins:  result.coins
     });
     localStorage.setItem('csgo_inventory', JSON.stringify(inv));
-    if (document.getElementById('invPanel').classList.contains('visible')) renderInventory();
+    if (document.getElementById('page-inventory') && !document.getElementById('page-inventory').classList.contains('hidden')) renderInventory();
 }
 
 function sellItem(index) {
