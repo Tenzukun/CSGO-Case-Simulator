@@ -245,6 +245,7 @@ async function doOpen(count = 1) {
         if (!quickOpen) await animateRolling();
 
         if (count === 1) {
+            // Single open — show full item card
             const result = openCrate(selectedCase);
             displayItem(result);
             saveItem(result);
@@ -254,18 +255,12 @@ async function doOpen(count = 1) {
             checkCaseAchievements(result);
             if (result.rarity === 'GOLD') pushGoldAlert(result.fullItem, selectedCase.name);
             rollingText.textContent = getRarityMessage(result.rarity);
+
         } else {
+            // Multi open — roll all, save all, show full grid
             const results = Array.from({ length: count }, () => openCrate(selectedCase));
-            let best      = results[0];
-            let bestRank  = RARITY_RANKS[results[0].rarity];
 
-            for (const r of results) {
-                if (RARITY_RANKS[r.rarity] > bestRank) { bestRank = RARITY_RANKS[r.rarity]; best = r; }
-            }
-
-            displayItem(best);
-            rollingText.textContent = getRarityMessage(best.rarity);
-
+            // Save every item to inventory and update stats
             results.forEach(r => {
                 saveItem(r);
                 updateStats(r);
@@ -275,17 +270,27 @@ async function doOpen(count = 1) {
                 if (r.rarity === 'GOLD') pushGoldAlert(r.fullItem, selectedCase.name);
             });
 
-            multiResults.classList.add('visible');
-            multiResults.innerHTML = results.map(r => `
-                <div class="multi-result-card ${r === best ? 'highlight' : ''}">
-                    <div class="multi-result-header ${RARITY_CLASSES[r.rarity]}">${r.fullName}</div>
-                    <div class="multi-result-body">
-                        <div>Exterior: <span>${r.wear}</span></div>
-                        <div>Float: <span>${r.floatVal}</span></div>
-                        <div>Value: <span>${r.coins.toLocaleString()} coins</span></div>
+            // Show rarity message for the best roll
+            const best = results.reduce((b, r) =>
+                (RARITY_RANKS[r.rarity] || 0) > (RARITY_RANKS[b.rarity] || 0) ? r : b
+            , results[0]);
+            rollingText.textContent = getRarityMessage(best.rarity);
+
+            // Build the full grid — all items, 5 per row
+            multiResults.innerHTML = results.map(r => {
+                const rarityColor = (RARITY_ODDS[r.rarity] || {}).colour || '#c6d4df';
+                return `
+                    <div class="multi-result-card">
+                        <div class="multi-result-header ${RARITY_CLASSES[r.rarity]}">${r.fullName}</div>
+                        <div class="multi-result-body">
+                            <div>${r.wear}</div>
+                            <div>Float: ${r.floatVal}</div>
+                            <div class="result-value" style="color:${rarityColor}">${r.coins.toLocaleString()} coins</div>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+            multiResults.classList.add('visible');
         }
     } finally {
         setButtons(false);
