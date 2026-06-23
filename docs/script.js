@@ -379,11 +379,18 @@ function sellAll() {
 }
 
 // -------------------------------------------------------
-// Inventory Sort / Filter State
+// Inventory Sort / Filter / Pagination State
 // -------------------------------------------------------
 
-let invSortBy      = 'newest';
+let invSortBy       = 'newest';
 let invFilterRarity = 'all';
+let invPage         = 0;
+const INV_PER_PAGE  = 9;
+
+function invChangePage(dir) {
+    invPage += dir;
+    renderInventory();
+}
 
 function ensureInvControls() {
     if (document.getElementById('invControls')) return;
@@ -415,22 +422,34 @@ function ensureInvControls() {
 
     document.getElementById('invSort').addEventListener('change', e => {
         invSortBy = e.target.value;
+        invPage   = 0;
         renderInventory();
     });
     document.getElementById('invFilter').addEventListener('change', e => {
         invFilterRarity = e.target.value;
+        invPage         = 0;
         renderInventory();
     });
 }
 
+function ensureInvPagination() {
+    if (document.getElementById('invPagination')) return;
+    const pag   = document.createElement('div');
+    pag.id        = 'invPagination';
+    pag.className = 'inv-pagination';
+    const invList = document.getElementById('invList');
+    invList.parentNode.insertBefore(pag, invList.nextSibling);
+}
+
 function renderInventory() {
     ensureInvControls();
+    ensureInvPagination();
 
     const inv     = getInventory();
     const favs    = getFavourites();
     const invList = document.getElementById('invList');
+    const pagEl   = document.getElementById('invPagination');
 
-    // Restore control values after re-render
     const sortEl   = document.getElementById('invSort');
     const filterEl = document.getElementById('invFilter');
     if (sortEl)   sortEl.value   = invSortBy;
@@ -438,6 +457,7 @@ function renderInventory() {
 
     if (inv.length === 0) {
         invList.innerHTML = '<p class="empty-msg">No items yet. Open a case first!</p>';
+        if (pagEl) pagEl.innerHTML = '';
         return;
     }
 
@@ -451,31 +471,28 @@ function renderInventory() {
 
     // Sort
     switch (invSortBy) {
-        case 'newest':
-            items.reverse();
-            break;
-        case 'oldest':
-            break;
-        case 'value-desc':
-            items.sort((a, b) => (b.coins || 0) - (a.coins || 0));
-            break;
-        case 'value-asc':
-            items.sort((a, b) => (a.coins || 0) - (b.coins || 0));
-            break;
-        case 'rarity-desc':
-            items.sort((a, b) => (RARITY_RANKS[b.rarity] || 0) - (RARITY_RANKS[a.rarity] || 0));
-            break;
-        case 'rarity-asc':
-            items.sort((a, b) => (RARITY_RANKS[a.rarity] || 0) - (RARITY_RANKS[b.rarity] || 0));
-            break;
+        case 'newest':     items.reverse(); break;
+        case 'oldest':     break;
+        case 'value-desc': items.sort((a, b) => (b.coins || 0) - (a.coins || 0)); break;
+        case 'value-asc':  items.sort((a, b) => (a.coins || 0) - (b.coins || 0)); break;
+        case 'rarity-desc': items.sort((a, b) => (RARITY_RANKS[b.rarity] || 0) - (RARITY_RANKS[a.rarity] || 0)); break;
+        case 'rarity-asc':  items.sort((a, b) => (RARITY_RANKS[a.rarity] || 0) - (RARITY_RANKS[b.rarity] || 0)); break;
     }
 
     if (items.length === 0) {
         invList.innerHTML = '<p class="empty-msg">No items match this filter.</p>';
+        if (pagEl) pagEl.innerHTML = '';
         return;
     }
 
-    invList.innerHTML = items.map(item => {
+    // Pagination
+    const totalPages = Math.ceil(items.length / INV_PER_PAGE);
+    if (invPage >= totalPages) invPage = totalPages - 1;
+    if (invPage < 0)           invPage = 0;
+
+    const pageItems = items.slice(invPage * INV_PER_PAGE, (invPage + 1) * INV_PER_PAGE);
+
+    invList.innerHTML = pageItems.map(item => {
         const isFav       = item.id && favs.includes(item.id);
         const rarityColor = (RARITY_ODDS[item.rarity] || {}).colour || '#c6d4df';
         return `
@@ -495,6 +512,19 @@ function renderInventory() {
             </div>
         `;
     }).join('');
+
+    // Pagination controls
+    if (pagEl) {
+        if (totalPages <= 1) {
+            pagEl.innerHTML = '';
+        } else {
+            pagEl.innerHTML = `
+                <button class="inv-page-btn" onclick="invChangePage(-1)" ${invPage === 0 ? 'disabled' : ''}>← Prev</button>
+                <span class="inv-page-info">Page ${invPage + 1} of ${totalPages} · ${items.length} items</span>
+                <button class="inv-page-btn" onclick="invChangePage(1)" ${invPage >= totalPages - 1 ? 'disabled' : ''}>Next →</button>
+            `;
+        }
+    }
 }
 
 // -------------------------------------------------------
