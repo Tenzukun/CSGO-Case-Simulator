@@ -289,10 +289,45 @@ function checkDailyReward() {
     if (lastClaim === today) {
         dailyBtn.disabled    = true;
         dailyBtn.textContent = '🎁 Come back tomorrow!';
+        startDailyCountdown();
     } else {
         dailyBtn.disabled    = false;
         dailyBtn.textContent = '🎁 Daily Reward';
+        clearDailyCountdown();
     }
+}
+
+let dailyCountdownInterval = null;
+
+function clearDailyCountdown() {
+    if (dailyCountdownInterval) clearInterval(dailyCountdownInterval);
+    const el = document.getElementById('dailyCountdown');
+    if (el) el.textContent = '';
+}
+
+function startDailyCountdown() {
+    let el = document.getElementById('dailyCountdown');
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'dailyCountdown';
+        el.className = 'daily-countdown';
+        document.getElementById('dailyBtn').after(el);
+    }
+
+    const tick = () => {
+        const now        = new Date();
+        const midnight   = new Date(now);
+        midnight.setHours(24, 0, 0, 0);
+        const diff       = midnight - now;
+        const h          = String(Math.floor(diff / 3600000)).padStart(2, '0');
+        const m          = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+        const s          = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+        el.textContent   = `Next reward in: ${h}:${m}:${s}`;
+    };
+
+    tick();
+    if (dailyCountdownInterval) clearInterval(dailyCountdownInterval);
+    dailyCountdownInterval = setInterval(tick, 1000);
 }
 
 document.getElementById('dailyBtn').addEventListener('click', () => {
@@ -517,7 +552,47 @@ function selectCase(id) {
     document.getElementById('multiResults').innerHTML = '';
     document.getElementById('multiResults').classList.remove('visible');
     document.getElementById('rollingText').textContent = '';
+
+    // Reset contents panel
+    const contentsEl = document.getElementById('caseContents');
+    contentsEl.classList.remove('visible');
+    document.getElementById('caseContentsToggle').textContent = '📋 View Case Contents ▾';
+    renderCaseContents(c);
 }
+
+const RARITY_ODDS = {
+    'GOLD':       { label: 'Gold — Rare Special',  chance: '0.26%',  colour: '#e4ae39' },
+    'Rare (Red)': { label: 'Red — Covert',         chance: '0.64%',  colour: '#eb4b4b' },
+    'Pink':       { label: 'Pink — Classified',    chance: '3.20%',  colour: '#d32ce6' },
+    'Purple':     { label: 'Purple — Restricted',  chance: '15.98%', colour: '#8847ff' },
+    'Blue':       { label: 'Blue — Mil-Spec',      chance: '79.92%', colour: '#4b69ff' }
+};
+
+function renderCaseContents(c) {
+    const contentsEl = document.getElementById('caseContents');
+    contentsEl.innerHTML = Object.entries(c.skins).map(([rarity, skins]) => {
+        const info = RARITY_ODDS[rarity];
+        return `
+            <div class="case-rarity-group">
+                <div class="case-rarity-label" style="background:${info.colour}22; color:${info.colour}">
+                    <span>${info.label}</span>
+                    <span>${info.chance}</span>
+                </div>
+                <div class="case-skin-list">
+                    ${skins.map(s => `<div class="case-skin-item">• ${s}</div>`).join('')}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+document.getElementById('caseContentsToggle').addEventListener('click', () => {
+    const contentsEl = document.getElementById('caseContents');
+    const toggle     = document.getElementById('caseContentsToggle');
+    const isOpen     = contentsEl.classList.contains('visible');
+    contentsEl.classList.toggle('visible', !isOpen);
+    toggle.textContent = isOpen ? '📋 View Case Contents ▾' : '📋 Hide Case Contents ▴';
+});
 
 document.getElementById('backBtn').addEventListener('click', () => {
     document.getElementById('caseOpenScreen').classList.add('hidden');
@@ -776,6 +851,10 @@ function saveItem(result) {
         coins:    result.coins
     });
     localStorage.setItem('csgo_inventory', JSON.stringify(inv));
+    // Auto-update inventory panel if it's open
+    if (document.getElementById('invPanel').classList.contains('visible')) {
+        renderInventory();
+    }
 }
 
 function sellItem(index) {
@@ -788,6 +867,16 @@ function sellItem(index) {
     inv.splice(index, 1);
     localStorage.setItem('csgo_inventory', JSON.stringify(inv));
     addCoins(item.coins);
+    renderInventory();
+}
+
+function sellAll() {
+    const inv = getInventory();
+    if (inv.length === 0) return;
+    const total = inv.reduce((sum, item) => sum + (item.coins || 0), 0);
+    if (!confirm(`Sell all ${inv.length} items for ${total.toLocaleString()} coins?`)) return;
+    localStorage.removeItem('csgo_inventory');
+    addCoins(total);
     renderInventory();
 }
 
@@ -879,6 +968,8 @@ resetBtn.addEventListener('click', () => {
     }
 });
 
+document.getElementById('sellAllBtn').addEventListener('click', sellAll);
+
 document.getElementById('supportBtn').addEventListener('click', () => {
     window.open('https://ko-fi.com/nthn_mp4', '_blank');
 });
@@ -904,22 +995,42 @@ function rollFishCatch() {
 
     if (roll < 50) {
         const coins = Math.floor(Math.random() * 151) + 50;
-        return { name: '💰 Found some coins', value: coins, cssClass: 'catch-coins' };
+        return { type: 'coins', name: '💰 Found some coins', value: coins, cssClass: 'catch-coins' };
     } else if (roll < 75) {
         const coins = Math.floor(Math.random() * 301) + 200;
-        return { name: '💰 Nice haul!', value: coins, cssClass: 'catch-coins' };
+        return { type: 'coins', name: '💰 Nice haul!', value: coins, cssClass: 'catch-coins' };
     } else if (roll < 90) {
-        const item = JUNK_ITEMS[Math.floor(Math.random() * JUNK_ITEMS.length)];
+        const item  = JUNK_ITEMS[Math.floor(Math.random() * JUNK_ITEMS.length)];
         const coins = Math.floor(Math.random() * 101) + 50;
-        return { name: `🪣 ${item}`, value: coins, cssClass: 'catch-junk' };
+        return { type: 'junk', name: `🪣 ${item}`, value: coins, cssClass: 'catch-junk' };
     } else if (roll < 98) {
-        const item = RARE_JUNK_ITEMS[Math.floor(Math.random() * RARE_JUNK_ITEMS.length)];
+        const item  = RARE_JUNK_ITEMS[Math.floor(Math.random() * RARE_JUNK_ITEMS.length)];
         const coins = Math.floor(Math.random() * 301) + 200;
-        return { name: `✨ ${item}`, value: coins, cssClass: 'catch-rare' };
+        return { type: 'rare', name: `✨ ${item}`, value: coins, cssClass: 'catch-rare' };
     } else {
-        const skin = ALL_SKINS[Math.floor(Math.random() * ALL_SKINS.length)];
-        const coins = Math.floor(Math.random() * 500) + 100;
-        return { name: `🔫 ${skin}`, value: coins, cssClass: 'catch-skin' };
+        // Pick a random case and roll a real skin from it
+        const casePool  = CASES[Math.floor(Math.random() * CASES.length)];
+        const rarity    = rollRarity();
+        const pool      = casePool.skins[rarity] || casePool.skins['Blue'];
+        const skin      = pool[Math.floor(Math.random() * pool.length)];
+        const wear      = rollWear();
+        const prefix    = rollPrefix();
+        const floatVal  = rollFloat(wear);
+        const seed      = Math.floor(Math.random() * 1000) + 1;
+        const basePrice = casePool.prices[skin] || 1;
+        const wearMult  = { 'Factory New': 1.50, 'Minimal Wear': 1.20, 'Field-Tested': 1.00, 'Well-Worn': 0.70, 'Battle-Scarred': 0.50 }[wear] || 1;
+        const pfxMult   = prefix === 'StatTrak™' ? 1.5 : prefix === 'Souvenir' ? 1.3 : 1.0;
+        const price     = (basePrice * wearMult * pfxMult).toFixed(2);
+        const coins     = Math.round(parseFloat(price) * COINS_PER_DOLLAR);
+        const type      = getWeaponType(skin);
+        const tier      = RARITY_TIERS[rarity];
+        const fullName  = prefix ? `${prefix} ${skin}` : skin;
+        const fullItem  = `${fullName} (${wear})`;
+
+        return {
+            type: 'skin', name: `🔫 ${fullItem}`, value: coins, cssClass: 'catch-skin',
+            skinItem: { fullItem, rarity, tier, type, float: floatVal, seed, price, coins }
+        };
     }
 }
 
@@ -949,9 +1060,14 @@ document.getElementById('fishBtn').addEventListener('click', () => {
     if (!isOpen) renderFishLog();
 });
 
-const fishPanel   = document.getElementById('fishPanel');
-const castBtn     = document.getElementById('castBtn');
-const fishStatus  = document.getElementById('fishStatus');
+document.getElementById('fishClearBtn').addEventListener('click', () => {
+    fishLog.length = 0;
+    renderFishLog();
+});
+
+const fishPanel  = document.getElementById('fishPanel');
+const castBtn    = document.getElementById('castBtn');
+const fishStatus = document.getElementById('fishStatus');
 
 castBtn.addEventListener('click', () => {
     castBtn.disabled = true;
@@ -968,6 +1084,17 @@ castBtn.addEventListener('click', () => {
 
             addCoins(result.value);
             addLbCoins(result.value);
+
+            // If it's a skin, save it to inventory
+            if (result.type === 'skin' && result.skinItem) {
+                const inv = getInventory();
+                inv.push(result.skinItem);
+                localStorage.setItem('csgo_inventory', JSON.stringify(inv));
+                if (document.getElementById('invPanel').classList.contains('visible')) {
+                    renderInventory();
+                }
+            }
+
             renderFishLog();
             fishStatus.textContent = `${result.name} — +${result.value.toLocaleString()} coins!`;
             castBtn.disabled = false;

@@ -53,6 +53,9 @@
                 </label>
             </div>
 
+            <div class="case-contents-toggle" id="caseContentsToggle">📋 View Case Contents ▾</div>
+            <div class="case-contents" id="caseContents"></div>
+
             <div class="rolling-text" id="rollingText"></div>
 
             <div class="item-card" id="itemCard">
@@ -100,7 +103,10 @@
     <div class="panel" id="invPanel">
         <h2>Your Inventory</h2>
         <div id="invList"></div>
-        <button class="reset-btn" id="resetBtn">🗑️ Reset Inventory</button>
+        <div class="inv-actions">
+            <button class="sell-all-btn" id="sellAllBtn">💰 Sell All</button>
+            <button class="reset-btn" id="resetBtn">🗑️ Reset Inventory</button>
+        </div>
     </div>
 
     <div class="panel" id="fishPanel">
@@ -108,7 +114,21 @@
         <p class="fish-desc">Cast your line and see what bites. Catch coins, junk, or maybe something rare...</p>
         <button class="cast-btn" id="castBtn">🎣 Cast Line</button>
         <div class="fish-status" id="fishStatus"></div>
+        <div class="fish-log-header">
+            <span class="fish-log-title">Catch Log</span>
+            <button class="fish-clear-btn" id="fishClearBtn">✕ Clear</button>
+        </div>
         <div class="fish-log" id="fishLog"></div>
+        <div class="fish-odds">
+            <div class="fish-odds-title">Catch Chances</div>
+            <div class="fish-odds-list">
+                <div class="fish-odds-row"><span>💰 Small coins (50–200)</span><span>50%</span></div>
+                <div class="fish-odds-row"><span>💰 Big coins (200–500)</span><span>25%</span></div>
+                <div class="fish-odds-row"><span>🪣 Junk item (50–150 coins)</span><span>15%</span></div>
+                <div class="fish-odds-row"><span>✨ Rare junk (200–500 coins)</span><span>8%</span></div>
+                <div class="fish-odds-row highlight"><span>🔫 Random skin</span><span>2%</span></div>
+            </div>
+        </div>
     </div>
 
     <div class="panel" id="lbPanel">
@@ -130,9 +150,9 @@
     <div class="panel" id="statsPanel">
         <h2>Session Stats</h2>
         <div class="stats-grid" id="statsGrid"></div>
-        <div class="item-row">
-            <span>Best Roll</span>
-            <span id="bestRoll">None yet</span>
+        <div class="stat-best-roll">
+            <span class="stat-label">Best Roll</span>
+            <span class="stat-best-value" id="bestRoll">None yet</span>
         </div>
     </div>
 

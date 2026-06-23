@@ -881,6 +881,189 @@ body {
     margin-top: 2px;
 }
 
+/* --- Inventory Actions --- */
+.inv-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.sell-all-btn {
+    flex: 1;
+    padding: 8px 16px;
+    background-color: #1a6b3c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.sell-all-btn:hover {
+    background-color: #145730;
+}
+
+/* --- Stats Best Roll --- */
+.stat-best-roll {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 0;
+    border-top: 1px solid #2a3f5f;
+    margin-top: 4px;
+    font-size: 0.9rem;
+    gap: 12px;
+}
+
+.stat-best-roll .stat-label {
+    color: #8f98a0;
+    white-space: nowrap;
+}
+
+.stat-best-value {
+    color: #c6d4df;
+    font-weight: bold;
+    text-align: right;
+}
+
+/* --- Fishing Log Header --- */
+.fish-log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.fish-log-title {
+    font-size: 0.85rem;
+    color: #8f98a0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.fish-clear-btn {
+    background: none;
+    border: 1px solid #2a3f5f;
+    color: #8f98a0;
+    padding: 3px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.fish-clear-btn:hover {
+    border-color: #eb4b4b;
+    color: #eb4b4b;
+}
+
+/* --- Fishing Odds --- */
+.fish-odds {
+    margin-top: 16px;
+    border-top: 1px solid #2a3f5f;
+    padding-top: 14px;
+}
+
+.fish-odds-title {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #8f98a0;
+    margin-bottom: 8px;
+}
+
+.fish-odds-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.fish-odds-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.83rem;
+    padding: 5px 8px;
+    border-radius: 4px;
+    color: #8f98a0;
+}
+
+.fish-odds-row span:last-child {
+    font-weight: bold;
+    color: #c6d4df;
+}
+
+.fish-odds-row.highlight {
+    background: rgba(235, 75, 75, 0.1);
+    color: #eb4b4b;
+}
+
+.fish-odds-row.highlight span:last-child {
+    color: #eb4b4b;
+}
+
+/* --- Case Contents --- */
+.case-contents-toggle {
+    text-align: center;
+    font-size: 0.83rem;
+    color: #8f98a0;
+    cursor: pointer;
+    padding: 8px 0;
+    transition: color 0.2s;
+    user-select: none;
+}
+
+.case-contents-toggle:hover {
+    color: #c6d4df;
+}
+
+.case-contents {
+    display: none;
+    margin-bottom: 16px;
+}
+
+.case-contents.visible {
+    display: block;
+}
+
+.case-rarity-group {
+    margin-bottom: 10px;
+}
+
+.case-rarity-label {
+    font-size: 0.78rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 8px;
+    border-radius: 3px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.case-skin-list {
+    padding: 0 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.case-skin-item {
+    font-size: 0.82rem;
+    color: #8f98a0;
+    padding: 2px 0;
+}
+
+/* --- Daily Countdown --- */
+.daily-countdown {
+    font-size: 0.78rem;
+    color: #8f98a0;
+    text-align: center;
+    margin-top: 6px;
+}
+
 /* --- Mobile --- */
 @media (max-width: 480px) {
     .banner h1 {
