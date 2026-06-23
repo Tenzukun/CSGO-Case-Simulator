@@ -462,6 +462,7 @@ function switchPage(pageId) {
         tab.classList.toggle('active', tab.dataset.page === pageId.replace('page-', ''));
     });
     ALL_PANELS.forEach(id => document.getElementById(id).classList.remove('visible'));
+    clearSecondaryActive();
     if (pageId === 'page-achievements') renderAchievements();
     if (pageId === 'page-weekly') renderWeeklyPage();
 }
@@ -474,13 +475,28 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
 // Panel Toggles
 // -------------------------------------------------------
 
-const ALL_PANELS = ['invPanel', 'statsPanel', 'lbPanel', 'levelPanel'];
+const ALL_PANELS    = ['invPanel', 'statsPanel', 'lbPanel', 'levelPanel'];
+const PANEL_BTN_MAP = {
+    invPanel:   'invBtn',
+    statsPanel: 'statsBtn',
+    lbPanel:    'lbBtn',
+    levelPanel: 'levelBtn'
+};
+
+function clearSecondaryActive() {
+    Object.values(PANEL_BTN_MAP).forEach(id => {
+        document.getElementById(id)?.classList.remove('active');
+    });
+}
 
 function openPanel(panelId, onOpen) {
     const isOpen = document.getElementById(panelId).classList.contains('visible');
     ALL_PANELS.forEach(id => document.getElementById(id).classList.remove('visible'));
+    clearSecondaryActive();
     if (!isOpen) {
         document.getElementById(panelId).classList.add('visible');
+        const btnId = PANEL_BTN_MAP[panelId];
+        if (btnId) document.getElementById(btnId).classList.add('active');
         if (onOpen) onOpen();
     }
 }
