@@ -1,0 +1,28 @@
+/* --- Mobile --- */
+@media (max-width: 480px) {
+    .banner h1 {
+        font-size: 1.4rem;
+        letter-spacing: 2px;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .open-btn {
+        font-size: 1rem;
+    }
+
+    .multi-results {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .case-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .balance-bar {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}

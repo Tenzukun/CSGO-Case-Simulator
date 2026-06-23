@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CS:GO Case Opening Simulator</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="cases.css">
+    <link rel="stylesheet" href="inventory.css">
+    <link rel="stylesheet" href="fishing.css">
+    <link rel="stylesheet" href="leaderboard.css">
+    <link rel="stylesheet" href="progression.css">
+    <link rel="stylesheet" href="mobile.css">
 </head>
 <body>
 
@@ -46,171 +52,187 @@
         </div>
     </div>
 
-    <!-- Case Selection Screen -->
-    <div id="caseSelectScreen">
-        <h2 class="screen-title">Select a Case</h2>
-        <div class="case-grid" id="caseGrid"></div>
-    </div>
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <button class="nav-tab active" data-page="cases">🎰 Cases</button>
+        <button class="nav-tab" data-page="fishing">🎣 Fishing</button>
+        <button class="nav-tab" data-page="howtoplay">❓ How to Play</button>
+    </nav>
 
-    <!-- Case Opening Screen -->
-    <div id="caseOpenScreen" class="hidden">
-        <button class="back-btn" id="backBtn">← Back to Cases</button>
-        <div class="card">
-            <div class="case-info" id="caseInfo"></div>
-            <div class="open-btns">
-                <button class="open-btn" id="openBtn">Open 1x</button>
-                <button class="open-btn" id="open5Btn">Open 5x</button>
-                <button class="open-btn" id="open10Btn">Open 10x</button>
-            </div>
-            <div class="quick-toggle">
-                <label class="toggle-label">
-                    <span>⚡ Quick Open</span>
-                    <input type="checkbox" id="quickToggle">
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
+    <!-- Page: Cases -->
+    <div class="page" id="page-cases">
 
-            <div class="case-contents-toggle" id="caseContentsToggle">📋 View Case Contents ▾</div>
-            <div class="case-contents" id="caseContents"></div>
+        <!-- Case Selection Screen -->
+        <div id="caseSelectScreen">
+            <h2 class="screen-title">Select a Case</h2>
+            <div class="case-grid" id="caseGrid"></div>
+        </div>
 
-            <div class="rolling-text" id="rollingText"></div>
-
-            <div class="item-card" id="itemCard">
-                <div class="item-header" id="itemHeader">
-                    <div class="item-name" id="itemName"></div>
-                    <div class="item-subtitle" id="itemSubtitle"></div>
+        <!-- Case Opening Screen -->
+        <div id="caseOpenScreen" class="hidden">
+            <button class="back-btn" id="backBtn">← Back to Cases</button>
+            <div class="card">
+                <div class="case-info" id="caseInfo"></div>
+                <div class="open-btns">
+                    <button class="open-btn" id="openBtn">Open 1x</button>
+                    <button class="open-btn" id="open5Btn">Open 5x</button>
+                    <button class="open-btn" id="open10Btn">Open 10x</button>
                 </div>
-                <div class="item-body">
-                    <div class="float-bar-container">
-                        <div class="float-labels">
-                            <span>FN</span><span>MW</span><span>FT</span><span>WW</span><span>BS</span>
+                <div class="quick-toggle">
+                    <label class="toggle-label">
+                        <span>⚡ Quick Open</span>
+                        <input type="checkbox" id="quickToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="case-contents-toggle" id="caseContentsToggle">📋 View Case Contents ▾</div>
+                <div class="case-contents" id="caseContents"></div>
+
+                <div class="rolling-text" id="rollingText"></div>
+
+                <div class="item-card" id="itemCard">
+                    <div class="item-header" id="itemHeader">
+                        <div class="item-name" id="itemName"></div>
+                        <div class="item-subtitle" id="itemSubtitle"></div>
+                    </div>
+                    <div class="item-body">
+                        <div class="float-bar-container">
+                            <div class="float-labels">
+                                <span>FN</span><span>MW</span><span>FT</span><span>WW</span><span>BS</span>
+                            </div>
+                            <div class="float-bar">
+                                <div class="float-marker" id="floatMarker"></div>
+                            </div>
                         </div>
-                        <div class="float-bar">
-                            <div class="float-marker" id="floatMarker"></div>
+                        <div class="item-row"><span>Type</span>    <span id="iType"></span></div>
+                        <div class="item-row"><span>Rarity</span>  <span id="iRarity"></span></div>
+                        <div class="item-row"><span>Exterior</span><span id="iExterior"></span></div>
+                        <div class="item-row"><span>Float</span>   <span id="iFloat"></span></div>
+                        <div class="item-row"><span>Seed</span>    <span id="iSeed"></span></div>
+                        <div class="item-row"><span>Price</span>   <span id="iPrice"></span></div>
+                        <div class="item-row" id="stRow" style="display:none">
+                            <span>StatTrak™</span><span id="iKills"></span>
                         </div>
                     </div>
-                    <div class="item-row"><span>Type</span>    <span id="iType"></span></div>
-                    <div class="item-row"><span>Rarity</span>  <span id="iRarity"></span></div>
-                    <div class="item-row"><span>Exterior</span><span id="iExterior"></span></div>
-                    <div class="item-row"><span>Float</span>   <span id="iFloat"></span></div>
-                    <div class="item-row"><span>Seed</span>    <span id="iSeed"></span></div>
-                    <div class="item-row"><span>Price</span>   <span id="iPrice"></span></div>
-                    <div class="item-row" id="stRow" style="display:none">
-                        <span>StatTrak™</span><span id="iKills"></span>
-                    </div>
+                    <div class="multi-results" id="multiResults"></div>
                 </div>
-                <div class="multi-results" id="multiResults"></div>
+            </div>
+        </div>
+
+        <!-- Inventory, Stats, Leaderboard -->
+        <div class="secondary-btns">
+            <button class="secondary-btn" id="invBtn">🎒 Inventory</button>
+            <button class="secondary-btn" id="statsBtn">📊 Stats</button>
+            <button class="secondary-btn" id="lbBtn">🏆 Leaderboard</button>
+            <button class="secondary-btn" id="supportBtn">☕ Ko-fi</button>
+        </div>
+
+        <div class="panel" id="invPanel">
+            <h2>Your Inventory</h2>
+            <div id="invList"></div>
+            <div class="inv-actions">
+                <button class="sell-all-btn" id="sellAllBtn">💰 Sell All</button>
+                <button class="reset-btn" id="resetBtn">🗑️ Reset Inventory</button>
+            </div>
+        </div>
+
+        <div class="panel" id="statsPanel">
+            <h2>Session Stats</h2>
+            <div class="stats-grid" id="statsGrid"></div>
+            <div class="stat-best-roll">
+                <span class="stat-label">Best Roll</span>
+                <span class="stat-best-value" id="bestRoll">None yet</span>
+            </div>
+        </div>
+
+        <div class="panel" id="lbPanel">
+            <h2>🏆 Leaderboard</h2>
+            <div class="lb-header">
+                <span class="lb-username-display" id="lbUsernameDisplay"></span>
+                <button class="lb-refresh-btn" id="lbRefreshBtn">↻ Refresh</button>
+            </div>
+            <div class="lb-tabs">
+                <button class="lb-tab active" data-tab="coins">💰 Total Earned</button>
+                <button class="lb-tab" data-tab="cases">📦 Cases</button>
+                <button class="lb-tab" data-tab="item">🎯 Best Item</button>
+                <button class="lb-tab" data-tab="level">⭐ Level</button>
+            </div>
+            <div class="lb-list" id="lbList">
+                <p class="empty-msg">Loading...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Page: Fishing -->
+    <div class="page hidden" id="page-fishing">
+        <div class="fishing-page">
+            <h2 class="screen-title">🎣 Fishing</h2>
+            <p class="fish-desc">Cast your line and see what bites. Catch coins, junk, or maybe something rare...</p>
+            <button class="cast-btn" id="castBtn">🎣 Cast Line</button>
+            <div class="fish-status" id="fishStatus"></div>
+            <div class="fish-log-header">
+                <span class="fish-log-title">Catch Log</span>
+                <button class="fish-clear-btn" id="fishClearBtn">✕ Clear</button>
+            </div>
+            <div class="fish-log" id="fishLog"></div>
+            <div class="fish-odds">
+                <div class="fish-odds-title">Catch Chances</div>
+                <div class="fish-odds-list">
+                    <div class="fish-odds-row"><span>💰 Small coins (50–200)</span><span>50%</span></div>
+                    <div class="fish-odds-row"><span>💰 Big coins (200–500)</span><span>25%</span></div>
+                    <div class="fish-odds-row"><span>🪣 Junk item (50–150 coins)</span><span>15%</span></div>
+                    <div class="fish-odds-row"><span>✨ Rare junk (200–500 coins)</span><span>8%</span></div>
+                    <div class="fish-odds-row highlight"><span>🔫 Random skin</span><span>2%</span></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Inventory, Stats, Fishing, Leaderboard, Support -->
-    <div class="secondary-btns">
-        <button class="secondary-btn" id="invBtn">🎒 Inventory</button>
-        <button class="secondary-btn" id="statsBtn">📊 Stats</button>
-        <button class="secondary-btn" id="fishBtn">🎣 Fishing</button>
-        <button class="secondary-btn" id="lbBtn">🏆 Leaderboard</button>
-        <button class="secondary-btn" id="tutBtn">❓ How to Play</button>
-        <button class="secondary-btn" id="supportBtn">☕ Ko-fi</button>
-    </div>
+    <!-- Page: How to Play -->
+    <div class="page hidden" id="page-howtoplay">
+        <div class="howtoplay-page">
+            <h2 class="screen-title">❓ How to Play</h2>
 
-    <div class="panel" id="invPanel">
-        <h2>Your Inventory</h2>
-        <div id="invList"></div>
-        <div class="inv-actions">
-            <button class="sell-all-btn" id="sellAllBtn">💰 Sell All</button>
-            <button class="reset-btn" id="resetBtn">🗑️ Reset Inventory</button>
-        </div>
-    </div>
-
-    <div class="panel" id="fishPanel">
-        <h2>🎣 Fishing</h2>
-        <p class="fish-desc">Cast your line and see what bites. Catch coins, junk, or maybe something rare...</p>
-        <button class="cast-btn" id="castBtn">🎣 Cast Line</button>
-        <div class="fish-status" id="fishStatus"></div>
-        <div class="fish-log-header">
-            <span class="fish-log-title">Catch Log</span>
-            <button class="fish-clear-btn" id="fishClearBtn">✕ Clear</button>
-        </div>
-        <div class="fish-log" id="fishLog"></div>
-        <div class="fish-odds">
-            <div class="fish-odds-title">Catch Chances</div>
-            <div class="fish-odds-list">
-                <div class="fish-odds-row"><span>💰 Small coins (50–200)</span><span>50%</span></div>
-                <div class="fish-odds-row"><span>💰 Big coins (200–500)</span><span>25%</span></div>
-                <div class="fish-odds-row"><span>🪣 Junk item (50–150 coins)</span><span>15%</span></div>
-                <div class="fish-odds-row"><span>✨ Rare junk (200–500 coins)</span><span>8%</span></div>
-                <div class="fish-odds-row highlight"><span>🔫 Random skin</span><span>2%</span></div>
+            <div class="tut-section">
+                <div class="tut-heading">🎰 Opening Cases</div>
+                <p>Select a case from the Cases tab. Each case costs coins to open. You'll roll for a skin of a random rarity. Blue is most common, Gold is the rarest. Higher rarity drops give more XP and are worth more coins.</p>
             </div>
-        </div>
-    </div>
 
-    <div class="panel" id="lbPanel">
-        <h2>🏆 Leaderboard</h2>
-        <div class="lb-header">
-            <span class="lb-username-display" id="lbUsernameDisplay"></span>
-            <button class="lb-refresh-btn" id="lbRefreshBtn">↻ Refresh</button>
-        </div>
-        <div class="lb-tabs">
-            <button class="lb-tab active" data-tab="coins">💰 Total Earned</button>
-            <button class="lb-tab" data-tab="cases">📦 Cases</button>
-            <button class="lb-tab" data-tab="item">🎯 Best Item</button>
-            <button class="lb-tab" data-tab="level">⭐ Level</button>
-        </div>
-        <div class="lb-list" id="lbList">
-            <p class="empty-msg">Loading...</p>
-        </div>
-    </div>
-
-    <div class="panel" id="tutPanel">
-        <h2>❓ How to Play</h2>
-
-        <div class="tut-section">
-            <div class="tut-heading">🎰 Opening Cases</div>
-            <p>Select a case from the main screen. Each case costs coins to open. You'll roll for a skin of a random rarity — Blue is most common, Gold is the rarest. Higher rarity drops give more XP and are worth more coins.</p>
-        </div>
-
-        <div class="tut-section">
-            <div class="tut-heading">💰 Earning Coins</div>
-            <p>Coins come from three sources: selling items from your inventory, claiming your daily reward (resets at midnight), and fishing. The more you level up, the bigger your daily reward and fishing payouts get.</p>
-        </div>
-
-        <div class="tut-section">
-            <div class="tut-heading">🎣 Fishing</div>
-            <p>Open the Fishing tab and hit Cast Line. Something bites within a couple of seconds. You can catch coins, junk items worth coins, rare junk, or — at a 2% chance — a real skin that goes straight into your inventory.</p>
-        </div>
-
-        <div class="tut-section">
-            <div class="tut-heading">⭐ Levelling Up</div>
-            <p>You earn XP every time you open a case or go fishing. The XP bar in the header fills up, and when it's full you level up. Higher rarity drops give more XP. Levelling up unlocks new cases, increases your daily reward, and boosts fishing payouts.</p>
-            <div class="tut-xp-table">
-                <div class="tut-xp-row"><span>🔵 Blue drop</span><span>10 XP</span></div>
-                <div class="tut-xp-row"><span>🟣 Purple drop</span><span>25 XP</span></div>
-                <div class="tut-xp-row"><span>🩷 Pink drop</span><span>75 XP</span></div>
-                <div class="tut-xp-row"><span>🔴 Red drop</span><span>200 XP</span></div>
-                <div class="tut-xp-row"><span>🟡 Gold drop</span><span>500 XP</span></div>
-                <div class="tut-xp-row"><span>🎣 Fishing catch</span><span>5–100 XP</span></div>
-                <div class="tut-xp-row"><span>🎁 Daily reward</span><span>100 XP</span></div>
+            <div class="tut-section">
+                <div class="tut-heading">💰 Earning Coins</div>
+                <p>Coins come from three sources: selling items from your inventory, claiming your daily reward (resets at midnight), and fishing. The more you level up, the bigger your daily reward and fishing payouts get.</p>
             </div>
-        </div>
 
-        <div class="tut-section">
-            <div class="tut-heading">🔒 Case Unlocks</div>
-            <p>The first four cases are available from the start. Four more unlock as you level up — Spectrum at Level 5, Prisma at Level 15, Glove at Level 25, and the Classified Case at Level 40.</p>
-        </div>
+            <div class="tut-section">
+                <div class="tut-heading">🎣 Fishing</div>
+                <p>Head to the Fishing tab and hit Cast Line. Something bites within a couple of seconds. You can catch coins, junk items worth coins, rare junk, or a real skin (2% chance) that goes straight into your inventory.</p>
+            </div>
 
-        <div class="tut-section">
-            <div class="tut-heading">🏆 Leaderboard</div>
-            <p>Set your username on your first visit. Your stats are tracked automatically and pushed to a shared leaderboard your friends can see. Compete across four categories: Total Earned, Cases Opened, Best Item, and Level.</p>
-        </div>
-    </div>
+            <div class="tut-section">
+                <div class="tut-heading">⭐ Levelling Up</div>
+                <p>You earn XP every time you open a case or go fishing. The XP bar in the header fills up and when full you level up. Higher rarity drops give more XP. Levelling up unlocks new cases, increases your daily reward, and boosts fishing payouts.</p>
+                <div class="tut-xp-table">
+                    <div class="tut-xp-row"><span>🔵 Blue drop</span><span>10 XP</span></div>
+                    <div class="tut-xp-row"><span>🟣 Purple drop</span><span>25 XP</span></div>
+                    <div class="tut-xp-row"><span>🩷 Pink drop</span><span>75 XP</span></div>
+                    <div class="tut-xp-row"><span>🔴 Red drop</span><span>200 XP</span></div>
+                    <div class="tut-xp-row"><span>🟡 Gold drop</span><span>500 XP</span></div>
+                    <div class="tut-xp-row"><span>🎣 Fishing catch</span><span>5–100 XP</span></div>
+                    <div class="tut-xp-row"><span>🎁 Daily reward</span><span>100 XP</span></div>
+                </div>
+            </div>
 
-    <div class="panel" id="statsPanel">
-        <h2>Session Stats</h2>
-        <div class="stats-grid" id="statsGrid"></div>
-        <div class="stat-best-roll">
-            <span class="stat-label">Best Roll</span>
-            <span class="stat-best-value" id="bestRoll">None yet</span>
+            <div class="tut-section">
+                <div class="tut-heading">🔒 Case Unlocks</div>
+                <p>The first four cases are available from the start. Four more unlock as you level up: Spectrum at Level 5, Prisma at Level 15, Glove at Level 25, and the Classified Case at Level 40.</p>
+            </div>
+
+            <div class="tut-section">
+                <div class="tut-heading">🏆 Leaderboard</div>
+                <p>Set your username on your first visit. Your stats are tracked automatically and pushed to a shared leaderboard your friends can see. Compete across four categories: Total Earned, Cases Opened, Best Item, and Level.</p>
+            </div>
         </div>
     </div>
 
@@ -218,7 +240,7 @@
         <a href="https://ko-fi.com/nthn_mp4" target="_blank">☕ Support on Ko-fi</a>
     </div>
 
-    <!-- Scripts — load order matters -->
+    <!-- Scripts: load order matters -->
     <script src="data.js"></script>
     <script src="rolls.js"></script>
     <script src="progression.js"></script>

@@ -144,7 +144,7 @@ function selectCase(id) {
     document.getElementById('caseSelectScreen').classList.add('hidden');
     document.getElementById('caseOpenScreen').classList.remove('hidden');
     document.getElementById('caseInfo').innerHTML =
-        `${c.icon} ${c.name} — <span>💰 ${c.cost.toLocaleString()} coins per open</span>`;
+        `${c.icon} ${c.name} <span>💰 ${c.cost.toLocaleString()} coins per open</span>`;
 
     document.getElementById('itemCard').classList.remove('visible');
     document.getElementById('multiResults').innerHTML = '';
@@ -458,10 +458,31 @@ function renderStats() {
 }
 
 // -------------------------------------------------------
+// Page Navigation
+// -------------------------------------------------------
+
+const PAGES = ['page-cases', 'page-fishing', 'page-howtoplay'];
+
+function switchPage(pageId) {
+    PAGES.forEach(id => {
+        document.getElementById(id).classList.toggle('hidden', id !== pageId);
+    });
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.page === pageId.replace('page-', ''));
+    });
+    // Close any open panels when switching pages
+    ALL_PANELS.forEach(id => document.getElementById(id).classList.remove('visible'));
+}
+
+document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', () => switchPage(`page-${tab.dataset.page}`));
+});
+
+// -------------------------------------------------------
 // Panel Toggles
 // -------------------------------------------------------
 
-const ALL_PANELS = ['invPanel', 'statsPanel', 'fishPanel', 'lbPanel', 'tutPanel'];
+const ALL_PANELS = ['invPanel', 'statsPanel', 'lbPanel'];
 
 function openPanel(panelId, onOpen) {
     const isOpen = document.getElementById(panelId).classList.contains('visible');
@@ -474,7 +495,6 @@ function openPanel(panelId, onOpen) {
 
 invBtn.addEventListener('click',   () => openPanel('invPanel',   renderInventory));
 statsBtn.addEventListener('click', () => openPanel('statsPanel', renderStats));
-document.getElementById('tutBtn').addEventListener('click', () => openPanel('tutPanel'));
 
 resetBtn.addEventListener('click', () => {
     if (confirm('Are you sure you want to clear your entire inventory?')) {

@@ -1,0 +1,359 @@
+/* --- Screen Title --- */
+.screen-title {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #8f98a0;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* --- Case Selection Grid --- */
+#caseSelectScreen {
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 20px;
+}
+
+.case-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+}
+
+.case-card {
+    background-color: #16202d;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 20px 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.case-card:hover {
+    border-color: #4b69ff;
+    transform: translateY(-2px);
+}
+
+.case-card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.case-card-name {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #c6d4df;
+    margin-bottom: 6px;
+}
+
+.case-card-cost {
+    font-size: 0.85rem;
+    color: #e4ae39;
+    font-weight: bold;
+}
+
+.case-card-desc {
+    font-size: 0.78rem;
+    color: #8f98a0;
+    margin-top: 6px;
+}
+
+.case-card.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.case-card.locked:hover {
+    border-color: #2a3f5f;
+    transform: none;
+}
+
+/* --- Hidden --- */
+.hidden {
+    display: none !important;
+}
+
+/* --- Back Button --- */
+.back-btn {
+    background: none;
+    border: none;
+    color: #8f98a0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-bottom: 16px;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.back-btn:hover {
+    color: #c6d4df;
+}
+
+/* --- Case Opening Screen --- */
+#caseOpenScreen {
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 20px;
+}
+
+.case-info {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #8f98a0;
+}
+
+.case-info span {
+    color: #e4ae39;
+    font-weight: bold;
+}
+
+/* --- Main Card --- */
+.card {
+    background-color: #16202d;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 30px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* --- Multi open buttons --- */
+.open-btns {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.open-btns .open-btn {
+    margin-bottom: 0;
+    flex: 1;
+    font-size: 0.95rem;
+    padding: 12px 6px;
+}
+
+/* --- Open Button --- */
+.open-btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    background-color: #4b69ff;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 24px;
+}
+
+.open-btn:hover {
+    background-color: #3a56d4;
+}
+
+.open-btn:disabled {
+    background-color: #2a3f5f;
+    cursor: not-allowed;
+}
+
+/* --- Quick open toggle --- */
+.quick-toggle {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #8f98a0;
+}
+
+.toggle-label input {
+    display: none;
+}
+
+.toggle-slider {
+    width: 42px;
+    height: 22px;
+    background-color: #2a3f5f;
+    border-radius: 11px;
+    position: relative;
+    transition: background-color 0.2s;
+}
+
+.toggle-slider::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background-color: #fff;
+    border-radius: 50%;
+    top: 3px;
+    left: 3px;
+    transition: left 0.2s;
+}
+
+.toggle-label input:checked + .toggle-slider {
+    background-color: #4b69ff;
+}
+
+.toggle-label input:checked + .toggle-slider::after {
+    left: 23px;
+}
+
+/* --- Rolling Animation --- */
+.rolling-text {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #8f98a0;
+    min-height: 30px;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+/* --- Item Card --- */
+.item-card {
+    display: none;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.item-card.visible {
+    display: block;
+}
+
+.item-header {
+    padding: 16px;
+    text-align: center;
+}
+
+.item-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.item-subtitle {
+    font-size: 0.9rem;
+    color: #c6d4df;
+}
+
+.item-body {
+    background-color: #1b2838;
+    padding: 16px;
+}
+
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #2a3f5f;
+    font-size: 0.9rem;
+}
+
+.item-row:last-child {
+    border-bottom: none;
+}
+
+.item-row span:first-child {
+    color: #8f98a0;
+}
+
+.item-row span:last-child {
+    color: #c6d4df;
+    font-weight: bold;
+}
+
+/* --- Float Bar --- */
+.float-bar-container {
+    padding: 12px 0;
+    border-bottom: 1px solid #2a3f5f;
+}
+
+.float-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #8f98a0;
+    margin-bottom: 6px;
+}
+
+.float-bar {
+    position: relative;
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(to right, #4b69ff, #8847ff, #d32ce6, #eb4b4b, #b0c3d9);
+    margin-bottom: 6px;
+}
+
+.float-marker {
+    position: absolute;
+    top: -4px;
+    width: 4px;
+    height: 16px;
+    background-color: #fff;
+    border-radius: 2px;
+    transform: translateX(-50%);
+    transition: left 0.5s ease;
+}
+
+/* --- Rarity Colours --- */
+.rarity-gold   { background-color: #e4ae39; }
+.rarity-red    { background-color: #eb4b4b; }
+.rarity-pink   { background-color: #d32ce6; }
+.rarity-purple { background-color: #8847ff; }
+.rarity-blue   { background-color: #4b69ff; }
+
+/* --- Multi results grid --- */
+.multi-results {
+    display: none;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.multi-results.visible {
+    display: grid;
+}
+
+.multi-result-card {
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.multi-result-card.highlight {
+    outline: 2px solid #fff;
+}
+
+.multi-result-header {
+    padding: 8px;
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.multi-result-body {
+    background-color: #1b2838;
+    padding: 8px;
+    font-size: 0.78rem;
+}
+
+.multi-result-body div {
+    color: #8f98a0;
+    margin-bottom: 2px;
+}
+
+.multi-result-body span {
+    color: #c6d4df;
+}

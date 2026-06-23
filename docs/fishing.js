@@ -76,14 +76,12 @@ function renderFishLog() {
 // Fishing Event Listeners
 // -------------------------------------------------------
 
-document.getElementById('fishBtn').addEventListener('click', () => openPanel('fishPanel', renderFishLog));
-
 document.getElementById('fishClearBtn').addEventListener('click', () => {
     fishLog.length = 0;
     renderFishLog();
 });
 
-const fishPanel  = document.getElementById('fishPanel');
+const fishPanel  = document.getElementById('page-fishing');
 const castBtn    = document.getElementById('castBtn');
 const fishStatus = document.getElementById('fishStatus');
 
@@ -115,7 +113,7 @@ castBtn.addEventListener('click', () => {
             }
 
             renderFishLog();
-            fishStatus.textContent = `${result.name} — +${result.value.toLocaleString()} coins!`;
+            fishStatus.textContent = `${result.name}  +${result.value.toLocaleString()} coins!`;
             castBtn.disabled = false;
         }, 600);
     }, waitMs);

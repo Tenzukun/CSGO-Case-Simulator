@@ -37,7 +37,7 @@ function initUsernameModal() {
 
 function updateLbUsernameDisplay() {
     const el = document.getElementById('lbUsernameDisplay');
-    if (el) el.innerHTML = `Playing as <b>${getUsername() || '—'}</b>`;
+    if (el) el.innerHTML = `Playing as <b>${getUsername() || '?'}</b>`;
 }
 
 // -------------------------------------------------------

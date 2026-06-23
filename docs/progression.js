@@ -1,5 +1,5 @@
 // -------------------------------------------------------
-// Progression — XP & Level System
+// Progression: XP and Level System
 // -------------------------------------------------------
 
 const XP_PER_RARITY = {
@@ -96,7 +96,7 @@ function getLevelPerkText(level) {
     const unlocked = CASES.find(c => c.unlockLevel === level);
     if (unlocked)  return `${unlocked.icon} ${unlocked.name} unlocked!`;
 
-    return `Keep grinding — more rewards ahead!`;
+    return `Keep grinding, more rewards ahead!`;
 }
 
 function showLevelUp(level) {
