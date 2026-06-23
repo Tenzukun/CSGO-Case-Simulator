@@ -187,7 +187,7 @@
 .inv-actions {
     display: flex;
     gap: 10px;
-    margin-top: 14px;
+    margin-bottom: 14px;
 }
 
 .sell-all-btn {

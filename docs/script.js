@@ -382,8 +382,9 @@ function renderInventory() {
     }
 
     invList.innerHTML = inv.slice().reverse().map((item, i) => {
-        const realIndex = inv.length - 1 - i;
-        const isFav     = item.id && favs.includes(item.id);
+        const realIndex  = inv.length - 1 - i;
+        const isFav      = item.id && favs.includes(item.id);
+        const rarityColor = (RARITY_ODDS[item.rarity] || {}).colour || '#c6d4df';
         return `
             <div class="inventory-item ${isFav ? 'is-favourite' : ''}">
                 <button class="fav-btn ${isFav ? 'faved' : ''}"
@@ -392,7 +393,7 @@ function renderInventory() {
                     ${isFav ? '⭐' : '☆'}
                 </button>
                 <div class="inventory-item-info">
-                    <div class="inventory-item-name">#${inv.length - i} ${item.fullItem}</div>
+                    <div class="inventory-item-name" style="color:${rarityColor}">#${inv.length - i} ${item.fullItem}</div>
                     <div class="inventory-item-detail">${item.tier} · ${item.type} · Float: ${item.float} · ~$${item.price}</div>
                 </div>
                 <button class="sell-btn" onclick="sellItem(${realIndex})">
