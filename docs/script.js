@@ -146,9 +146,6 @@ const iPrice       = document.getElementById('iPrice');
 const stRow        = document.getElementById('stRow');
 const iKills       = document.getElementById('iKills');
 const multiResults = document.getElementById('multiResults');
-const invBtn       = document.getElementById('invBtn');
-const statsBtn     = document.getElementById('statsBtn');
-const levelBtn     = document.getElementById('levelBtn');
 
 // -------------------------------------------------------
 // Rolling Animation
@@ -535,66 +532,121 @@ function renderStats() {
 }
 
 // -------------------------------------------------------
-// Page Navigation
+// Page Navigation (Sidebar)
 // -------------------------------------------------------
 
-const PAGES = ['page-cases', 'page-fishing', 'page-achievements', 'page-weekly', 'page-howtoplay'];
+const PAGES = [
+    'page-cases', 'page-inventory', 'page-fishing',
+    'page-achievements', 'page-weekly', 'page-howtoplay', 'page-leaderboard'
+];
 
 function switchPage(pageId) {
     PAGES.forEach(id => {
-        document.getElementById(id).classList.toggle('hidden', id !== pageId);
+        document.getElementById(id)?.classList.toggle('hidden', id !== pageId);
     });
-    document.querySelectorAll('.nav-tab').forEach(tab => {
-        tab.classList.toggle('active', tab.dataset.page === pageId.replace('page-', ''));
+    document.querySelectorAll('.sidebar-item[data-page]').forEach(item => {
+        item.classList.toggle('active', item.dataset.page === pageId.replace('page-', ''));
     });
-    ALL_PANELS.forEach(id => document.getElementById(id).classList.remove('visible'));
-    clearSecondaryActive();
     if (pageId === 'page-achievements') renderAchievements();
-    if (pageId === 'page-weekly') renderWeeklyPage();
+    if (pageId === 'page-weekly')       renderWeeklyPage();
+    if (pageId === 'page-inventory')    renderInventory();
+    if (pageId === 'page-leaderboard') {
+        if (typeof updateLbUsernameDisplay === 'function') updateLbUsernameDisplay();
+        if (typeof renderLeaderboard      === 'function') renderLeaderboard();
+    }
+    closeSidebar();
 }
 
-document.querySelectorAll('.nav-tab').forEach(tab => {
-    tab.addEventListener('click', () => switchPage(`page-${tab.dataset.page}`));
+document.querySelectorAll('.sidebar-item[data-page]').forEach(item => {
+    item.addEventListener('click', () => switchPage(`page-${item.dataset.page}`));
 });
 
 // -------------------------------------------------------
-// Panel Toggles
+// Sidebar (mobile open/close)
 // -------------------------------------------------------
 
-const ALL_PANELS    = ['invPanel', 'statsPanel', 'lbPanel', 'levelPanel'];
-const PANEL_BTN_MAP = {
-    invPanel:   'invBtn',
-    statsPanel: 'statsBtn',
-    lbPanel:    'lbBtn',
-    levelPanel: 'levelBtn'
-};
-
-function clearSecondaryActive() {
-    Object.values(PANEL_BTN_MAP).forEach(id => {
-        document.getElementById(id)?.classList.remove('active');
-    });
+function openSidebar() {
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('sidebarOverlay').classList.add('visible');
 }
 
-function openPanel(panelId, onOpen) {
-    const isOpen = document.getElementById(panelId).classList.contains('visible');
-    ALL_PANELS.forEach(id => document.getElementById(id).classList.remove('visible'));
-    clearSecondaryActive();
-    if (!isOpen) {
-        document.getElementById(panelId).classList.add('visible');
-        const btnId = PANEL_BTN_MAP[panelId];
-        if (btnId) document.getElementById(btnId).classList.add('active');
-        if (onOpen) onOpen();
+function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('visible');
+}
+
+document.getElementById('hamburgerBtn').addEventListener('click', openSidebar);
+document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+
+// -------------------------------------------------------
+// Account Panel
+// -------------------------------------------------------
+
+function openAccountPanel(defaultTab = 'stats') {
+    document.getElementById('accountPanel').classList.add('open');
+    document.getElementById('accountPanelOverlay').classList.add('visible');
+    switchAccountTab(defaultTab);
+    updateAcctPanelName();
+}
+
+function closeAccountPanel() {
+    document.getElementById('accountPanel').classList.remove('open');
+    document.getElementById('accountPanelOverlay').classList.remove('visible');
+}
+
+function switchAccountTab(tabId) {
+    document.querySelectorAll('.acct-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.atab === tabId);
+    });
+    document.querySelectorAll('.acct-tab-content').forEach(c => {
+        c.classList.toggle('active', c.id === `accountTab-${tabId}`);
+    });
+    if (tabId === 'stats')  renderStats();
+    if (tabId === 'levels') renderLevelDetails();
+}
+
+function updateAcctPanelName() {
+    const el = document.getElementById('acctPanelName');
+    if (!el) return;
+    if (typeof isGuest === 'function' && isGuest()) {
+        el.textContent = 'Guest';
+    } else {
+        el.textContent = getUsername() || 'Account';
     }
 }
 
-invBtn.addEventListener('click',   () => openPanel('invPanel',   renderInventory));
-statsBtn.addEventListener('click', () => openPanel('statsPanel', renderStats));
-levelBtn.addEventListener('click', () => openPanel('levelPanel', renderLevelDetails));
+function updateAccountBtn() {
+    const el = document.getElementById('accountBtnName');
+    if (!el) return;
+    if (typeof isGuest === 'function' && isGuest()) {
+        el.textContent = 'Guest';
+    } else {
+        el.textContent = getUsername() || 'Account';
+    }
+}
+
+function initAccountPanel() {
+    document.getElementById('accountBtn').addEventListener('click', () => openAccountPanel());
+    document.getElementById('accountPanelClose').addEventListener('click', closeAccountPanel);
+    document.getElementById('accountPanelOverlay').addEventListener('click', closeAccountPanel);
+
+    document.querySelectorAll('.acct-tab').forEach(tab => {
+        tab.addEventListener('click', () => switchAccountTab(tab.dataset.atab));
+    });
+
+    // Gold alert toggle
+    const goldToggle = document.getElementById('settingGoldAlerts');
+    if (goldToggle) {
+        goldToggle.checked = localStorage.getItem('csgo_block_gold_alerts') !== 'true';
+        goldToggle.addEventListener('change', () => {
+            localStorage.setItem('csgo_block_gold_alerts', goldToggle.checked ? 'false' : 'true');
+        });
+    }
+
+    updateAccountBtn();
+}
 
 document.getElementById('sellAllBtn').addEventListener('click', sellAll);
-document.getElementById('supportBtn').addEventListener('click', () => {
-    window.open('https://ko-fi.com/nthn_mp4', '_blank');
-});
 
 // -------------------------------------------------------
 // Init
@@ -605,3 +657,4 @@ updateLevelDisplay();
 renderCaseGrid();
 initWeekly();
 initAuth();
+initAccountPanel();

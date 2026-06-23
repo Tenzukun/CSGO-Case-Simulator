@@ -4,8 +4,8 @@
 // and shows a notification on every connected screen.
 // -------------------------------------------------------
 
-const ALERT_MAX_AGE_MS  = 24 * 60 * 60 * 1000;
-let   lastAlertTime     = Date.now();
+const ALERT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+let   lastAlertTime    = Date.now();
 
 let alertQueue   = [];
 let alertShowing = false;
@@ -33,7 +33,6 @@ async function pushGoldAlert(itemName, caseName) {
     }
 }
 
-// Delete alerts older than 24 hours to keep the DB tidy
 async function pruneOldAlerts() {
     try {
         const res  = await fetch(`${FIREBASE_URL}/gold_alerts.json`);
@@ -78,6 +77,8 @@ function initGoldAlerts() {
 // -------------------------------------------------------
 
 function queueAlert(alert) {
+    // Respect the user's gold alert setting
+    if (localStorage.getItem('csgo_block_gold_alerts') === 'true') return;
     alertQueue.push(alert);
     if (!alertShowing) showNextAlert();
 }

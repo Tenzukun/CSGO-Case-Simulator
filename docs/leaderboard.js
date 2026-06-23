@@ -10,14 +10,62 @@ function setUsername(name) {
     localStorage.setItem('csgo_username', name.trim());
 }
 
+function initUsernameModal() {
+    const modal  = document.getElementById('usernameModal');
+    const input  = document.getElementById('usernameInput');
+    const submit = document.getElementById('usernameSubmit');
+
+    if (getUsername()) {
+        modal.classList.add('hidden');
+        return;
+    }
+
+    modal.classList.remove('hidden');
+
+    const doConfirm = async () => {
+        const val = input.value.trim();
+        if (!val) { input.focus(); return; }
+
+        submit.disabled    = true;
+        submit.textContent = 'Checking...';
+
+        // Check Firebase for existing save data
+        const existing = await loadPlayerFromCloud(val);
+
+        if (existing && existing.level && existing.level > 1) {
+            // Show the load-data prompt
+            document.getElementById('modalStateEnter').classList.add('hidden');
+            document.getElementById('modalStateLoad').classList.remove('hidden');
+            document.getElementById('modalLoadDesc').textContent =
+                `Found saved data for "${val}" (Level ${existing.level}, ${(existing.cases || 0).toLocaleString()} cases opened). Load it?`;
+
+            document.getElementById('loadDataBtn').onclick = () => {
+                applyCloudData(val, existing);
+                modal.classList.add('hidden');
+                location.reload();
+            };
+
+            document.getElementById('startFreshBtn').onclick = () => {
+                setUsername(val);
+                modal.classList.add('hidden');
+                updateLbUsernameDisplay();
+                schedulePush();
+            };
+        } else {
+            setUsername(val);
+            modal.classList.add('hidden');
+            updateLbUsernameDisplay();
+            schedulePush();
+        }
+    };
+
+    submit.addEventListener('click', doConfirm);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') doConfirm(); });
+}
+
 function updateLbUsernameDisplay() {
     const el = document.getElementById('lbUsernameDisplay');
-    if (!el) return;
-    if (typeof isGuest === 'function' && isGuest()) {
-        el.innerHTML = `Playing as <b>Guest</b>`;
-    } else {
-        el.innerHTML = `Playing as <b>${getUsername() || '?'}</b>`;
-    }
+    if (el) el.innerHTML = `Playing as <b>${getUsername() || '?'}</b>`;
 }
 
 // -------------------------------------------------------
@@ -72,7 +120,6 @@ function schedulePush() {
 async function pushLeaderboard() {
     const username = getUsername();
     if (!username || !FIREBASE_URL) return;
-    if (typeof isGuest === 'function' && isGuest()) return;
 
     const stats = getLbStats();
 
@@ -192,11 +239,6 @@ async function renderLeaderboard() {
         if (lbActiveTab === 'coins') return (b.coins || 0) - (a.coins || 0);
         if (lbActiveTab === 'cases') return (b.cases || 0) - (a.cases || 0);
         if (lbActiveTab === 'level') return (b.level || 1) - (a.level || 1);
-        if (lbActiveTab === 'item') {
-            const rankDiff = (b.bestRank || 0) - (a.bestRank || 0);
-            if (rankDiff !== 0) return rankDiff;
-            return (b.bestValue || 0) - (a.bestValue || 0);
-        }
         return 0;
     });
 
@@ -216,10 +258,6 @@ async function renderLeaderboard() {
             valueHtml = `<span class="lb-value">${(entry.coins || 0).toLocaleString()} coins</span>`;
         } else if (lbActiveTab === 'cases') {
             valueHtml = `<span class="lb-value">${(entry.cases || 0).toLocaleString()} cases</span>`;
-        } else if (lbActiveTab === 'item') {
-            const col = { GOLD: '#e4ae39', 'Rare (Red)': '#eb4b4b', Pink: '#d32ce6', Purple: '#8847ff' }[entry.bestRarity] || '#8f98a0';
-            const val = entry.bestValue ? `${entry.bestValue.toLocaleString()} coins` : '';
-            valueHtml = `<span class="lb-value" style="color:${col}" title="${val}">${entry.bestItem || 'None'}</span>`;
         } else if (lbActiveTab === 'level') {
             valueHtml = `<span class="lb-value">Level ${entry.level || 1}</span>`;
         }
@@ -237,11 +275,6 @@ async function renderLeaderboard() {
 // -------------------------------------------------------
 // Leaderboard Event Listeners
 // -------------------------------------------------------
-
-document.getElementById('lbBtn').addEventListener('click', () => openPanel('lbPanel', () => {
-    updateLbUsernameDisplay();
-    renderLeaderboard();
-}));
 
 document.getElementById('lbRefreshBtn').addEventListener('click', renderLeaderboard);
 
