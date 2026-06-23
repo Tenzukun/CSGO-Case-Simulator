@@ -239,6 +239,11 @@ async function renderLeaderboard() {
         if (lbActiveTab === 'coins') return (b.coins || 0) - (a.coins || 0);
         if (lbActiveTab === 'cases') return (b.cases || 0) - (a.cases || 0);
         if (lbActiveTab === 'level') return (b.level || 1) - (a.level || 1);
+        if (lbActiveTab === 'item') {
+            const rankDiff = (b.bestRank || 0) - (a.bestRank || 0);
+            if (rankDiff !== 0) return rankDiff;
+            return (b.bestValue || 0) - (a.bestValue || 0);
+        }
         return 0;
     });
 
@@ -258,6 +263,10 @@ async function renderLeaderboard() {
             valueHtml = `<span class="lb-value">${(entry.coins || 0).toLocaleString()} coins</span>`;
         } else if (lbActiveTab === 'cases') {
             valueHtml = `<span class="lb-value">${(entry.cases || 0).toLocaleString()} cases</span>`;
+        } else if (lbActiveTab === 'item') {
+            const col = { GOLD: '#e4ae39', 'Rare (Red)': '#eb4b4b', Pink: '#d32ce6', Purple: '#8847ff' }[entry.bestRarity] || '#8f98a0';
+            const val = entry.bestValue ? `${entry.bestValue.toLocaleString()} coins` : '';
+            valueHtml = `<span class="lb-value" style="color:${col}" title="${val}">${entry.bestItem || 'None'}</span>`;
         } else if (lbActiveTab === 'level') {
             valueHtml = `<span class="lb-value">Level ${entry.level || 1}</span>`;
         }
