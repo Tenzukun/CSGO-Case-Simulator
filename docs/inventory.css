@@ -188,26 +188,18 @@
     display: flex;
     gap: 10px;
     margin-bottom: 12px;
+    flex-shrink: 0;
 }
 
 #invList {
-    max-height: 420px;
     overflow-y: auto;
+    max-height: 420px;
     padding-right: 4px;
 }
 
-#invList::-webkit-scrollbar {
-    width: 5px;
-}
-
-#invList::-webkit-scrollbar-track {
-    background: #1b2838;
-}
-
-#invList::-webkit-scrollbar-thumb {
-    background: #2a3f5f;
-    border-radius: 4px;
-}
+#invList::-webkit-scrollbar       { width: 5px; }
+#invList::-webkit-scrollbar-track { background: #1b2838; }
+#invList::-webkit-scrollbar-thumb { background: #2a3f5f; border-radius: 4px; }
 
 .sell-all-btn {
     flex: 1;
