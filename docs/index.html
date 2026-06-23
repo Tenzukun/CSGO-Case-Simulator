@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="alerts.css">
     <link rel="stylesheet" href="auth.css">
     <link rel="stylesheet" href="fishing-skills.css">
+    <link rel="stylesheet" href="feedback.css">
     <link rel="stylesheet" href="mobile.css">
 </head>
 <body>
@@ -123,6 +124,7 @@
             <div class="sidebar-divider"></div>
             <button class="sidebar-item" data-page="upgrades">⚙️ Upgrades</button>
             <button class="sidebar-item" data-page="leaderboard">🏆 Leaderboard</button>
+            <button class="sidebar-item" data-page="feedback">💬 Feedback</button>
             <a href="https://ko-fi.com/nthn_mp4" target="_blank" class="sidebar-item">☕ Ko-fi</a>
         </nav>
     </aside>
@@ -323,6 +325,55 @@
             </div>
         </div>
 
+        <!-- Page: Feedback -->
+        <div class="page hidden" id="page-feedback">
+            <h2 class="page-heading">💬 Feedback</h2>
+            <div class="fb-section">
+                <p class="fb-subtitle">Got a bug to report, a feature idea, or just want to say something? Drop it here — all feedback goes directly to the developer.</p>
+
+                <!-- Form -->
+                <div id="fbForm">
+                    <div class="fb-group">
+                        <label class="fb-label">How would you rate your experience?</label>
+                        <div class="fb-stars">
+                            <span class="fb-star" title="Poor">★</span>
+                            <span class="fb-star" title="Fair">★</span>
+                            <span class="fb-star" title="Good">★</span>
+                            <span class="fb-star" title="Great">★</span>
+                            <span class="fb-star" title="Excellent">★</span>
+                        </div>
+                        <div class="fb-rating-text" id="fbRatingText"></div>
+                    </div>
+
+                    <div class="fb-group">
+                        <label class="fb-label" for="fbCategory">Category</label>
+                        <select class="fb-select" id="fbCategory">
+                            <option value="General">💬 General Feedback</option>
+                            <option value="Bug">🐛 Bug Report</option>
+                            <option value="Suggestion">💡 Feature / Suggestion</option>
+                            <option value="Balance">⚖️ Balance / Economy</option>
+                            <option value="Other">📝 Other</option>
+                        </select>
+                    </div>
+
+                    <div class="fb-group">
+                        <label class="fb-label" for="fbMessage">Your Message</label>
+                        <textarea class="fb-textarea" id="fbMessage" placeholder="Tell us what's on your mind..."></textarea>
+                    </div>
+
+                    <button class="fb-submit-btn" id="fbSubmitBtn">Submit Feedback</button>
+                </div>
+
+                <!-- Success state -->
+                <div id="fbSuccess" class="fb-success hidden">
+                    <div class="fb-success-icon">✅</div>
+                    <div class="fb-success-title">Thanks for your feedback!</div>
+                    <div class="fb-success-desc">Your response has been recorded and will be reviewed by the developer. It helps make the game better for everyone.</div>
+                    <button class="fb-again-btn" id="fbAgainBtn">Submit another</button>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <!-- ================================================
@@ -402,6 +453,7 @@
     <script src="fishing-skills.js"></script>
     <script src="case-skills.js"></script>
     <script src="upgrades.js"></script>
+    <script src="feedback.js"></script>
     <script src="achievements.js"></script>
     <script src="weekly.js"></script>
     <script src="alerts.js"></script>

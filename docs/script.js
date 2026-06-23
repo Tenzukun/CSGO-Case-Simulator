@@ -577,7 +577,7 @@ function renderStats() {
 const PAGES = [
     'page-cases', 'page-inventory', 'page-fishing',
     'page-achievements', 'page-weekly', 'page-howtoplay',
-    'page-leaderboard', 'page-upgrades'
+    'page-leaderboard', 'page-upgrades', 'page-feedback'
 ];
 
 function switchPage(pageId) {
@@ -591,6 +591,7 @@ function switchPage(pageId) {
     if (pageId === 'page-weekly')       renderWeeklyPage();
     if (pageId === 'page-inventory')    renderInventory();
     if (pageId === 'page-upgrades')     renderUpgradesPage();
+    if (pageId === 'page-feedback')     renderFeedbackPage();
     if (pageId === 'page-leaderboard') {
         if (typeof updateLbUsernameDisplay === 'function') updateLbUsernameDisplay();
         if (typeof renderLeaderboard      === 'function') renderLeaderboard();
@@ -701,3 +702,4 @@ initAuth();
 initAccountPanel();
 initFishingSkillTree();
 initUpgradesPage();
+initFeedbackPage();
