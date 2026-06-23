@@ -244,7 +244,7 @@ const COINS_PER_DOLLAR = 100;
 // Firebase config — paste your Realtime Database URL here
 // e.g. 'https://your-project-default-rtdb.firebaseio.com'
 // -------------------------------------------------------
-const FIREBASE_URL = 'https://leaderboard-f47dd-default-rtdb.firebaseio.com/';
+const FIREBASE_URL = '';
 
 // -------------------------------------------------------
 // Currency
@@ -947,19 +947,19 @@ function renderStats() {
 // Panel toggles
 // -------------------------------------------------------
 
-invBtn.addEventListener('click', () => {
-    const isOpen = invPanel.classList.contains('visible');
-    invPanel.classList.toggle('visible', !isOpen);
-    statsPanel.classList.remove('visible');
-    if (!isOpen) renderInventory();
-});
+const ALL_PANELS = ['invPanel', 'statsPanel', 'fishPanel', 'lbPanel'];
 
-statsBtn.addEventListener('click', () => {
-    const isOpen = statsPanel.classList.contains('visible');
-    statsPanel.classList.toggle('visible', !isOpen);
-    invPanel.classList.remove('visible');
-    if (!isOpen) renderStats();
-});
+function openPanel(panelId, onOpen) {
+    const isOpen = document.getElementById(panelId).classList.contains('visible');
+    ALL_PANELS.forEach(id => document.getElementById(id).classList.remove('visible'));
+    if (!isOpen) {
+        document.getElementById(panelId).classList.add('visible');
+        if (onOpen) onOpen();
+    }
+}
+
+invBtn.addEventListener('click',   () => openPanel('invPanel',   renderInventory));
+statsBtn.addEventListener('click', () => openPanel('statsPanel', renderStats));
 
 resetBtn.addEventListener('click', () => {
     if (confirm('Are you sure you want to clear your entire inventory?')) {
@@ -1051,14 +1051,7 @@ function renderFishLog() {
     `).join('');
 }
 
-document.getElementById('fishBtn').addEventListener('click', () => {
-    const isOpen = fishPanel.classList.contains('visible');
-    fishPanel.classList.toggle('visible', !isOpen);
-    invPanel.classList.remove('visible');
-    statsPanel.classList.remove('visible');
-    lbPanel.classList.remove('visible');
-    if (!isOpen) renderFishLog();
-});
+document.getElementById('fishBtn').addEventListener('click', () => openPanel('fishPanel', renderFishLog));
 
 document.getElementById('fishClearBtn').addEventListener('click', () => {
     fishLog.length = 0;
@@ -1102,17 +1095,10 @@ castBtn.addEventListener('click', () => {
     }, waitMs);
 });
 
-document.getElementById('lbBtn').addEventListener('click', () => {
-    const isOpen = lbPanel.classList.contains('visible');
-    lbPanel.classList.toggle('visible', !isOpen);
-    invPanel.classList.remove('visible');
-    statsPanel.classList.remove('visible');
-    fishPanel.classList.remove('visible');
-    if (!isOpen) {
-        updateLbUsernameDisplay();
-        renderLeaderboard();
-    }
-});
+document.getElementById('lbBtn').addEventListener('click', () => openPanel('lbPanel', () => {
+    updateLbUsernameDisplay();
+    renderLeaderboard();
+}));
 
 document.getElementById('lbRefreshBtn').addEventListener('click', () => {
     renderLeaderboard();
