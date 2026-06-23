@@ -10,103 +10,19 @@ body {
     color: #c6d4df;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-}
-
-/* --- Banner --- */
-.banner {
-    text-align: center;
-    margin-bottom: 30px;
-    width: 100%;
-    max-width: 700px;
-}
-
-.banner h1 {
-    font-size: 2rem;
-    color: #c6d4df;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    border-bottom: 2px solid #4b69ff;
-    padding-bottom: 10px;
-    margin-bottom: 8px;
-}
-
-.banner p {
-    font-size: 0.95rem;
-    color: #8f98a0;
-    margin-bottom: 14px;
-}
-
-/* --- Balance Bar --- */
-.balance-bar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background-color: #16202d;
-    border: 1px solid #2a3f5f;
-    border-radius: 8px;
-    padding: 10px 20px;
-}
-
-.balance-icon {
-    font-size: 1.2rem;
-}
-
-.balance-amount {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #e4ae39;
-}
-
-/* --- Main Navigation --- */
-.main-nav {
-    display: flex;
-    gap: 6px;
-    width: 100%;
-    max-width: 700px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-}
-
-.nav-tab {
-    flex: 1;
-    min-width: 80px;
-    padding: 10px 6px;
-    background: #16202d;
-    border: 1px solid #2a3f5f;
-    color: #8f98a0;
-    font-size: 0.82rem;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.3px;
-    white-space: nowrap;
-}
-
-.nav-tab:hover {
-    border-color: #4b69ff;
-    color: #c6d4df;
-}
-
-.nav-tab.active {
-    background: #4b69ff;
-    border-color: #4b69ff;
-    color: #fff;
 }
 
 /* --- Pages --- */
 .page {
     width: 100%;
-    max-width: 700px;
 }
 
+.page.hidden { display: none; }
+
 .fishing-page,
-.howtoplay-page {
+.howtoplay-page,
+.achievements-page,
+.weekly-page {
     width: 100%;
     background: #16202d;
     border: 1px solid #2a3f5f;
@@ -166,9 +82,7 @@ body {
     transition: border-color 0.2s;
 }
 
-.modal input:focus {
-    border-color: #4b69ff;
-}
+.modal input:focus { border-color: #4b69ff; }
 
 .modal-btn {
     width: 100%;
@@ -184,14 +98,8 @@ body {
     margin-bottom: 8px;
 }
 
-.modal-btn:hover {
-    background: #3a56d4;
-}
-
-.modal-btn:disabled {
-    background: #2a3f5f;
-    cursor: not-allowed;
-}
+.modal-btn:hover    { background: #3a56d4; }
+.modal-btn:disabled { background: #2a3f5f; cursor: not-allowed; }
 
 .modal-btn-secondary {
     background: transparent;
@@ -205,6 +113,17 @@ body {
 }
 
 #modalStateLoad.hidden,
-#modalStateEnter.hidden {
-    display: none;
+#modalStateEnter.hidden { display: none; }
+
+/* --- Level Up Overlay --- */
+.levelup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5000;
 }
+
+.levelup-overlay.hidden { display: none; }
