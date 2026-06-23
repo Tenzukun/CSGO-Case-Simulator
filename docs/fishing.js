@@ -17,21 +17,20 @@ function rollFishCatch() {
     const multiplier = getFishMultiplier();
 
     if (roll < 50) {
-        const coins = Math.round((Math.floor(Math.random() * 151) + 50) * multiplier);
+        const coins = Math.round((Math.floor(Math.random() * 201) + 100) * multiplier);
         return { type: 'coins', name: '💰 Found some coins', value: coins, cssClass: 'catch-coins', xpType: 'coins' };
     } else if (roll < 75) {
-        const coins = Math.round((Math.floor(Math.random() * 301) + 200) * multiplier);
+        const coins = Math.round((Math.floor(Math.random() * 351) + 350) * multiplier);
         return { type: 'coins', name: '💰 Nice haul!', value: coins, cssClass: 'catch-coins', xpType: 'coins-big' };
     } else if (roll < 90) {
         const item  = JUNK_ITEMS[Math.floor(Math.random() * JUNK_ITEMS.length)];
-        const coins = Math.round((Math.floor(Math.random() * 101) + 50) * multiplier);
+        const coins = Math.round((Math.floor(Math.random() * 151) + 100) * multiplier);
         return { type: 'junk', name: `🪣 ${item}`, value: coins, cssClass: 'catch-junk', xpType: 'junk' };
     } else if (roll < 98) {
         const item  = RARE_JUNK_ITEMS[Math.floor(Math.random() * RARE_JUNK_ITEMS.length)];
-        const coins = Math.round((Math.floor(Math.random() * 301) + 200) * multiplier);
+        const coins = Math.round((Math.floor(Math.random() * 401) + 400) * multiplier);
         return { type: 'rare', name: `✨ ${item}`, value: coins, cssClass: 'catch-rare', xpType: 'rare' };
     } else {
-        // Roll a real skin from a random case
         const casePool  = CASES[Math.floor(Math.random() * CASES.length)];
         const rarity    = rollRarity();
         const pool      = casePool.skins[rarity] || casePool.skins['Blue'];
@@ -81,7 +80,6 @@ document.getElementById('fishClearBtn').addEventListener('click', () => {
     renderFishLog();
 });
 
-const fishPanel  = document.getElementById('page-fishing');
 const castBtn    = document.getElementById('castBtn');
 const fishStatus = document.getElementById('fishStatus');
 
@@ -100,13 +98,15 @@ castBtn.addEventListener('click', () => {
 
             addCoins(result.value);
             addLbCoins(result.value);
-            addXP(XP_PER_FISH[result.xpType] || 5);
+            addXP(getFishXP(result.xpType)); // level-scaled XP
             checkFishAchievements(result);
 
-            // Skin goes straight to inventory
             if (result.type === 'skin' && result.skinItem) {
                 const inv = getInventory();
-                inv.push(result.skinItem);
+                inv.push({
+                    id:       Date.now() + '-' + Math.floor(Math.random() * 10000),
+                    ...result.skinItem
+                });
                 localStorage.setItem('csgo_inventory', JSON.stringify(inv));
                 if (document.getElementById('invPanel').classList.contains('visible')) {
                     renderInventory();

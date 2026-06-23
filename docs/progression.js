@@ -10,15 +10,16 @@ const XP_PER_RARITY = {
     'Blue':       10
 };
 
+// Base XP values for fishing — scale with level in fishing.js
 const XP_PER_FISH = {
-    'coins': 5,
-    'coins-big': 10,
-    'junk': 15,
-    'rare': 30,
-    'skin': 100
+    'coins':      10,
+    'coins-big':  20,
+    'junk':       5,
+    'rare':       25,
+    'skin':       100
 };
 
-const XP_DAILY = 100;
+const XP_WEEKLY = 150; // XP per weekly reward claim
 
 // XP needed to go from level N to N+1
 function xpForLevel(level) {
@@ -47,7 +48,6 @@ function addXP(amount) {
     localStorage.setItem('csgo_xp', xp);
     showXPGain(amount);
 
-    // Check for level ups
     let xpIntoLevel = xp - totalXPForLevel(level);
     while (xpIntoLevel >= xpForLevel(level)) {
         xpIntoLevel -= xpForLevel(level);
@@ -60,22 +60,28 @@ function addXP(amount) {
     updateLevelDisplay();
 }
 
-// Daily reward scales with level: +50 coins per level
-function getDailyRewardAmount() {
-    return DAILY_REWARD + (getLevel() - 1) * 50;
-}
-
-// Fishing payout multiplier scales with level: +5% per level
-function getFishMultiplier() {
+// Weekly reward multiplier (scales coin payouts by level)
+function getWeeklyMultiplier() {
     return 1 + (getLevel() - 1) * 0.05;
 }
 
+// Fishing payout multiplier
+function getFishMultiplier() {
+    return getWeeklyMultiplier();
+}
+
+// Fishing XP scales with level: base * (1 + (level-1) * 0.1)
+function getFishXP(xpType) {
+    const base = XP_PER_FISH[xpType] || 5;
+    return Math.round(base * (1 + (getLevel() - 1) * 0.1));
+}
+
 function updateLevelDisplay() {
-    const level      = getLevel();
-    const xp         = getXP();
-    const needed     = xpForLevel(level);
-    const xpInto     = xp - totalXPForLevel(level);
-    const pct        = Math.min((xpInto / needed) * 100, 100).toFixed(1);
+    const level  = getLevel();
+    const xp     = getXP();
+    const needed = xpForLevel(level);
+    const xpInto = xp - totalXPForLevel(level);
+    const pct    = Math.min((xpInto / needed) * 100, 100).toFixed(1);
 
     const labelEl = document.getElementById('levelLabel');
     const fillEl  = document.getElementById('xpBarFill');
@@ -87,13 +93,12 @@ function updateLevelDisplay() {
 }
 
 function getLevelPerkText(level) {
-    const dailyNow = DAILY_REWARD + (level - 1) * 50;
-    const fishPct  = Math.round((getFishMultiplier() - 1) * 100);
+    const mult    = (1 + (level - 1) * 0.05).toFixed(2);
+    const fishPct = Math.round((getWeeklyMultiplier() - 1) * 100);
 
-    if (level % 10 === 0) return `Daily reward now ${dailyNow.toLocaleString()} coins!`;
+    if (level % 10 === 0) return `Weekly rewards now ${mult}x stronger!`;
     if (level % 5  === 0) return `Fishing payouts are now ${fishPct}% better!`;
 
-    // Case unlocks
     const unlocked = CASES.find(c => c.unlockLevel === level);
     if (unlocked)  return `${unlocked.icon} ${unlocked.name} unlocked!`;
 
@@ -111,7 +116,6 @@ function showLevelUp(level) {
 
     overlay.classList.remove('hidden');
 
-    // Re-render case grid in case a new case just unlocked
     if (typeof renderCaseGrid === 'function') renderCaseGrid();
 }
 
@@ -120,12 +124,11 @@ document.getElementById('levelUpClose').addEventListener('click', () => {
 });
 
 function showXPGain(amount) {
-    const el       = document.createElement('div');
-    el.className   = 'xp-gain-popup';
+    const el     = document.createElement('div');
+    el.className = 'xp-gain-popup';
     el.textContent = `+${amount} XP`;
     document.body.appendChild(el);
 
-    // Position near the XP bar
     const bar = document.getElementById('xpBarFill');
     if (bar) {
         const rect  = bar.getBoundingClientRect();
@@ -134,4 +137,59 @@ function showXPGain(amount) {
     }
 
     setTimeout(() => el.remove(), 1200);
+}
+
+// -------------------------------------------------------
+// Level Details Panel
+// -------------------------------------------------------
+
+function renderLevelDetails() {
+    const el = document.getElementById('levelDetailsContent');
+    if (!el) return;
+
+    const currentLevel = getLevel();
+    const xp       = getXP();
+    const xpInto   = xp - totalXPForLevel(currentLevel);
+    const needed   = xpForLevel(currentLevel);
+    const remaining = needed - xpInto;
+
+    // Build display list: milestones + always include currentLevel
+    const milestones = [1, 5, 10, 15, 20, 25, 30, 35, 40, 50];
+    const displayLevels = milestones.includes(currentLevel)
+        ? milestones
+        : [...milestones, currentLevel].sort((a, b) => a - b);
+
+    let rows = displayLevels.map(lvl => {
+        const mult      = 1 + (lvl - 1) * 0.05;
+        const fishPct   = Math.round((mult - 1) * 100);
+        const multLabel = mult.toFixed(2);
+        const caseUnlock = CASES.find(c => c.unlockLevel === lvl);
+
+        let perks = [];
+        if (caseUnlock) perks.push(`${caseUnlock.icon} ${caseUnlock.name} unlocked`);
+        perks.push(`Weekly ${multLabel}x`);
+        perks.push(`Fishing +${fishPct}%`);
+
+        const stateClass = lvl < currentLevel ? 'is-past'
+                         : lvl === currentLevel ? 'is-current'
+                         : 'is-future';
+
+        return `
+            <div class="level-details-row ${stateClass}">
+                <span class="level-details-lv">Lv.${lvl}</span>
+                <span class="level-details-perks">${perks.join(' · ')}</span>
+            </div>
+        `;
+    }).join('');
+
+    el.innerHTML = `
+        <div class="level-details-current">
+            You are <strong>Level ${currentLevel}</strong> — ${remaining.toLocaleString()} XP to Level ${currentLevel + 1}
+        </div>
+        <div class="level-details-table">${rows}</div>
+        <div class="level-details-xp-note">
+            XP per case: Blue 10 · Purple 25 · Pink 75 · Red 200 · Gold 500<br>
+            XP per fish scales with level (base: Coins 10 · Junk 5 · Rare 25 · Skin 100)
+        </div>
+    `;
 }

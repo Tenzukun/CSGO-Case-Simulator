@@ -16,12 +16,12 @@ const CASES = [
             'Blue':       ['Nova | Wood Fired', 'P2000 | Handgun', 'Tec-9 | Isaac']
         },
         prices: {
-            '★ Flip Knife | Fade': 150, '★ Gut Knife | Doppler': 120,
-            'AK-47 | Neon Rider': 25,   'M4A1-S | Cyrex': 20,
-            'USP-S | Caiman': 10,        'Glock-18 | Moonrise': 8,
-            'P250 | Undertow': 3,        'MP7 | Skulls': 2,
-            'Nova | Wood Fired': 0.50,   'P2000 | Handgun': 0.40,
-            'Tec-9 | Isaac': 0.50
+            '★ Flip Knife | Fade': 150,  '★ Gut Knife | Doppler': 120,
+            'AK-47 | Neon Rider': 25,    'M4A1-S | Cyrex': 20,
+            'USP-S | Caiman': 10,         'Glock-18 | Moonrise': 8,
+            'P250 | Undertow': 5,         'MP7 | Skulls': 4,
+            'Nova | Wood Fired': 1.50,    'P2000 | Handgun': 1.20,
+            'Tec-9 | Isaac': 1.50
         }
     },
     {
@@ -36,12 +36,12 @@ const CASES = [
             'Blue':       ['MP9 | Hot Rod', 'P250 | Sand Dune', 'Nova | Predator']
         },
         prices: {
-            '★ Karambit | Doppler': 500, '★ M9 Bayonet | Marble Fade': 400,
-            'AWP | Dragon Lore': 1500,   'M4A4 | Howl': 2000,
-            'AK-47 | Vulcan': 80,        'AWP | Hyper Beast': 60,
-            'AK-47 | Redline': 10,       'AWP | Asiimov': 15,
-            'MP9 | Hot Rod': 3,          'P250 | Sand Dune': 0.50,
-            'Nova | Predator': 1
+            '★ Karambit | Doppler': 500,  '★ M9 Bayonet | Marble Fade': 400,
+            'AWP | Dragon Lore': 1500,    'M4A4 | Howl': 2000,
+            'AK-47 | Vulcan': 80,         'AWP | Hyper Beast': 60,
+            'AK-47 | Redline': 12,        'AWP | Asiimov': 15,
+            'MP9 | Hot Rod': 4,           'P250 | Sand Dune': 3.50,
+            'Nova | Predator': 3.50
         }
     },
     {
@@ -56,12 +56,12 @@ const CASES = [
             'Blue':       ['MAG-7 | Sonar', 'MP9 | Hot Rod', 'P250 | Sand Dune']
         },
         prices: {
-            '★ Butterfly Knife | Fade': 700, "★ Sport Gloves | Pandora's Box": 600,
-            'AK-47 | Wild Lotus': 800,       'Desert Eagle | Blaze': 200,
-            'USP-S | Kill Confirmed': 40,     'M4A1-S | Hyper Beast': 30,
-            'Glock-18 | Water Elemental': 5,  'P90 | Asiimov': 8,
-            'MAG-7 | Sonar': 1.50,           'MP9 | Hot Rod': 3,
-            'P250 | Sand Dune': 0.50
+            '★ Butterfly Knife | Fade': 700,      "★ Sport Gloves | Pandora's Box": 600,
+            'AK-47 | Wild Lotus': 800,             'Desert Eagle | Blaze': 200,
+            'USP-S | Kill Confirmed': 40,          'M4A1-S | Hyper Beast': 30,
+            'Glock-18 | Water Elemental': 15,      'P90 | Asiimov': 20,
+            'MAG-7 | Sonar': 7,                    'MP9 | Hot Rod': 7,
+            'P250 | Sand Dune': 7
         }
     },
     {
@@ -82,10 +82,10 @@ const CASES = [
             'M4A4 | Howl': 2000,                   'Desert Eagle | Blaze': 200,
             'AK-47 | Vulcan': 80,                  'USP-S | Kill Confirmed': 40,
             'AWP | Hyper Beast': 60,               'M4A1-S | Hyper Beast': 30,
-            'AK-47 | Redline': 10,                 'AWP | Asiimov': 15,
-            'Glock-18 | Water Elemental': 5,       'P90 | Asiimov': 8,
-            'MP9 | Hot Rod': 3,                    'P250 | Sand Dune': 0.50,
-            'Nova | Predator': 1,                  'MAG-7 | Sonar': 1.50
+            'AK-47 | Redline': 15,                 'AWP | Asiimov': 20,
+            'Glock-18 | Water Elemental': 18,      'P90 | Asiimov': 18,
+            'MP9 | Hot Rod': 18,                   'P250 | Sand Dune': 15,
+            'Nova | Predator': 15,                 'MAG-7 | Sonar': 18
         }
     },
     {
@@ -103,10 +103,10 @@ const CASES = [
             '★ Karambit | Case Hardened': 600,  '★ Flip Knife | Crimson Web': 350,
             'AK-47 | Bloodsport': 120,           'M4A4 | Neo-Noir': 90,
             'USP-S | Cortex': 50,               'P250 | See Ya Later': 25,
-            'MAC-10 | Neon Rider': 12,           'MP5-SD | Phosphor': 8,
-            'FAMAS | Styx': 6,                   'P2000 | Oceanic': 1,
-            'Dual Berettas | Shred': 0.80,       'MP7 | Abyssal Apparition': 1.20,
-            'CZ75-Auto | Vendetta': 0.90
+            'MAC-10 | Neon Rider': 20,           'MP5-SD | Phosphor': 18,
+            'FAMAS | Styx': 16,                  'P2000 | Oceanic': 32,
+            'Dual Berettas | Shred': 30,         'MP7 | Abyssal Apparition': 30,
+            'CZ75-Auto | Vendetta': 30
         }
     },
     {
@@ -124,10 +124,10 @@ const CASES = [
             '★ Bayonet | Tiger Tooth': 450,         '★ Shadow Daggers | Doppler': 200,
             'AK-47 | Asiimov': 180,                 'M4A1-S | Welcome to the Jungle': 150,
             'Glock-18 | Twilight Galaxy': 70,       'Desert Eagle | Printstream': 90,
-            'AWP | Fever Dream': 20,                'UMP-45 | Wild Child': 10,
-            'R8 Revolver | Grip': 5,                'Five-SeveN | Angry Mob': 2,
-            'XM1014 | XOXO': 1.50,                  'PP-Bizon | High Roller': 1.20,
-            'SG 553 | Aloha': 1
+            'AWP | Fever Dream': 25,                'UMP-45 | Wild Child': 20,
+            'R8 Revolver | Grip': 18,               'Five-SeveN | Angry Mob': 90,
+            'XM1014 | XOXO': 85,                    'PP-Bizon | High Roller': 85,
+            'SG 553 | Aloha': 80
         }
     },
     {
@@ -146,10 +146,10 @@ const CASES = [
             '★ Specialist Gloves | Crimson Kimono': 650,
             'AK-47 | Fire Serpent': 900,           'AWP | Medusa': 500,
             'M4A4 | Buzz Kill': 60,                'USP-S | Orion': 80,
-            'P90 | Death Grip': 15,                'Galil AR | Cerberus': 10,
-            'AUG | Stymphalian': 8,                'Tec-9 | Snek-9': 2,
-            'MAG-7 | Heat': 1.50,                  'MP9 | Hydra': 1.20,
-            'Sawed-Off | Limelight': 1
+            'P90 | Death Grip': 30,                'Galil AR | Cerberus': 25,
+            'AUG | Stymphalian': 22,               'Tec-9 | Snek-9': 220,
+            'MAG-7 | Heat': 210,                   'MP9 | Hydra': 210,
+            'Sawed-Off | Limelight': 200
         }
     },
     {
@@ -169,10 +169,10 @@ const CASES = [
             'AK-47 | Gold Arabesque': 400,         'AWP | The Prince': 350,
             'M4A4 | Poseidon': 300,               'Glock-18 | Bullet Queen': 100,
             'Desert Eagle | Ocean Drive': 80,      'AK-47 | The Empress': 120,
-            'MP9 | Starlight Protector': 30,       'MAC-10 | Gold Brick': 20,
-            'UMP-45 | Moonrise': 15,              'Five-SeveN | Scrawl': 3,
-            'P250 | Contaminant': 2,              'MAG-7 | Foresight': 1.50,
-            'Nova | Antique': 1
+            'MP9 | Starlight Protector': 50,       'MAC-10 | Gold Brick': 40,
+            'UMP-45 | Moonrise': 35,              'Five-SeveN | Scrawl': 480,
+            'P250 | Contaminant': 460,             'MAG-7 | Foresight': 460,
+            'Nova | Antique': 440
         }
     }
 ];
@@ -227,11 +227,9 @@ const RARITY_ODDS = {
 };
 
 const STARTING_COINS   = 1000;
-const DAILY_REWARD     = 500;
 const COINS_PER_DOLLAR = 100;
 
 // -------------------------------------------------------
-// Firebase — paste your Realtime Database URL here
-// e.g. 'https://your-project-default-rtdb.firebaseio.com'
+// Firebase
 // -------------------------------------------------------
 const FIREBASE_URL = 'https://leaderboard-f47dd-default-rtdb.firebaseio.com/';
