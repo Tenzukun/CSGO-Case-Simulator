@@ -21,7 +21,7 @@ body {
     text-align: center;
     margin-bottom: 30px;
     width: 100%;
-    max-width: 600px;
+    max-width: 700px;
 }
 
 .banner h1 {
@@ -37,6 +37,163 @@ body {
 .banner p {
     font-size: 0.95rem;
     color: #8f98a0;
+    margin-bottom: 14px;
+}
+
+/* --- Balance Bar --- */
+.balance-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: #16202d;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 10px 20px;
+}
+
+.balance-icon {
+    font-size: 1.2rem;
+}
+
+.balance-amount {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #e4ae39;
+}
+
+.daily-btn {
+    padding: 6px 14px;
+    background-color: #4b69ff;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-left: 10px;
+}
+
+.daily-btn:hover {
+    background-color: #3a56d4;
+}
+
+.daily-btn:disabled {
+    background-color: #2a3f5f;
+    cursor: not-allowed;
+}
+
+/* --- Screen Title --- */
+.screen-title {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #8f98a0;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* --- Case Selection Grid --- */
+#caseSelectScreen {
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 20px;
+}
+
+.case-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+}
+
+.case-card {
+    background-color: #16202d;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 20px 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.case-card:hover {
+    border-color: #4b69ff;
+    transform: translateY(-2px);
+}
+
+.case-card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.case-card-name {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #c6d4df;
+    margin-bottom: 6px;
+}
+
+.case-card-cost {
+    font-size: 0.85rem;
+    color: #e4ae39;
+    font-weight: bold;
+}
+
+.case-card-desc {
+    font-size: 0.78rem;
+    color: #8f98a0;
+    margin-top: 6px;
+}
+
+.case-card.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.case-card.locked:hover {
+    border-color: #2a3f5f;
+    transform: none;
+}
+
+/* --- Hidden --- */
+.hidden {
+    display: none !important;
+}
+
+/* --- Back Button --- */
+.back-btn {
+    background: none;
+    border: none;
+    color: #8f98a0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-bottom: 16px;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.back-btn:hover {
+    color: #c6d4df;
+}
+
+/* --- Case Opening Screen --- */
+#caseOpenScreen {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
+}
+
+.case-info {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #8f98a0;
+}
+
+.case-info span {
+    color: #e4ae39;
+    font-weight: bold;
 }
 
 /* --- Main Card --- */
@@ -46,7 +203,6 @@ body {
     border-radius: 8px;
     padding: 30px;
     width: 100%;
-    max-width: 600px;
     margin-bottom: 20px;
 }
 
@@ -294,7 +450,7 @@ body {
     gap: 10px;
     margin-bottom: 20px;
     width: 100%;
-    max-width: 600px;
+    max-width: 700px;
 }
 
 .secondary-btn {
@@ -321,7 +477,7 @@ body {
     border-radius: 8px;
     padding: 20px;
     width: 100%;
-    max-width: 600px;
+    max-width: 700px;
     margin-bottom: 20px;
 }
 
@@ -344,10 +500,18 @@ body {
     padding: 10px 0;
     border-bottom: 1px solid #2a3f5f;
     font-size: 0.88rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
 }
 
 .inventory-item:last-child {
     border-bottom: none;
+}
+
+.inventory-item-info {
+    flex: 1;
 }
 
 .inventory-item-name {
@@ -358,6 +522,23 @@ body {
 
 .inventory-item-detail {
     color: #8f98a0;
+}
+
+.sell-btn {
+    padding: 5px 12px;
+    background-color: #2a3f5f;
+    color: #e4ae39;
+    border: 1px solid #e4ae39;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s;
+}
+
+.sell-btn:hover {
+    background-color: #e4ae39;
+    color: #1b2838;
 }
 
 .empty-msg {
@@ -410,6 +591,296 @@ body {
     color: #c6d4df;
 }
 
+/* --- Support --- */
+.support {
+    margin-top: 10px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.support a {
+    color: #8f98a0;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.support a:hover {
+    color: #c6d4df;
+}
+
+/* --- Fishing --- */
+.fish-desc {
+    font-size: 0.88rem;
+    color: #8f98a0;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.cast-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: #1a6b3c;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 16px;
+}
+
+.cast-btn:hover {
+    background-color: #145730;
+}
+
+.cast-btn:disabled {
+    background-color: #2a3f5f;
+    cursor: not-allowed;
+}
+
+.fish-status {
+    text-align: center;
+    font-size: 1rem;
+    color: #8f98a0;
+    min-height: 28px;
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+}
+
+.fish-log {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fish-catch {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background-color: #1b2838;
+    border-left: 4px solid #2a3f5f;
+    font-size: 0.88rem;
+    animation: cardReveal 0.3s ease forwards;
+}
+
+.fish-catch.catch-coins    { border-left-color: #e4ae39; }
+.fish-catch.catch-junk     { border-left-color: #8f98a0; }
+.fish-catch.catch-rare     { border-left-color: #8847ff; }
+.fish-catch.catch-skin     { border-left-color: #eb4b4b; }
+
+.fish-catch-name {
+    color: #c6d4df;
+    font-weight: bold;
+}
+
+.fish-catch-value {
+    color: #e4ae39;
+    font-weight: bold;
+    white-space: nowrap;
+    margin-left: 10px;
+}
+
+/* --- Username Modal --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-overlay.hidden {
+    display: none !important;
+}
+
+.modal {
+    background: #16202d;
+    border: 1px solid #2a3f5f;
+    border-radius: 12px;
+    padding: 30px;
+    width: 90%;
+    max-width: 380px;
+    text-align: center;
+}
+
+.modal h2 {
+    font-size: 1.3rem;
+    color: #c6d4df;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.modal p {
+    font-size: 0.88rem;
+    color: #8f98a0;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.modal input {
+    width: 100%;
+    padding: 10px 14px;
+    background: #1b2838;
+    border: 1px solid #2a3f5f;
+    border-radius: 6px;
+    color: #c6d4df;
+    font-size: 1rem;
+    margin-bottom: 14px;
+    outline: none;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.modal input:focus {
+    border-color: #4b69ff;
+}
+
+.modal-btn {
+    width: 100%;
+    padding: 12px;
+    background: #4b69ff;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.modal-btn:hover {
+    background: #3a56d4;
+}
+
+/* --- Leaderboard --- */
+.lb-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.lb-username-display {
+    font-size: 0.85rem;
+    color: #8f98a0;
+}
+
+.lb-username-display b {
+    color: #e4ae39;
+}
+
+.lb-refresh-btn {
+    background: none;
+    border: 1px solid #2a3f5f;
+    color: #8f98a0;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.lb-refresh-btn:hover {
+    border-color: #4b69ff;
+    color: #c6d4df;
+}
+
+.lb-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.lb-tab {
+    flex: 1;
+    padding: 8px;
+    background: #1b2838;
+    border: 1px solid #2a3f5f;
+    color: #8f98a0;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    transition: all 0.2s;
+}
+
+.lb-tab:hover {
+    border-color: #4b69ff;
+    color: #c6d4df;
+}
+
+.lb-tab.active {
+    background: #4b69ff;
+    border-color: #4b69ff;
+    color: #fff;
+    font-weight: bold;
+}
+
+.lb-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lb-entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: #1b2838;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    border: 1px solid transparent;
+}
+
+.lb-entry.is-me {
+    border-color: #4b69ff;
+}
+
+.lb-rank {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #8f98a0;
+    width: 26px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.lb-rank.gold   { color: #e4ae39; font-size: 1.2rem; }
+.lb-rank.silver { color: #b0c3d9; font-size: 1.1rem; }
+.lb-rank.bronze { color: #cd7f32; font-size: 1.05rem; }
+
+.lb-name {
+    flex: 1;
+    color: #c6d4df;
+    font-weight: bold;
+}
+
+.lb-value {
+    color: #e4ae39;
+    font-weight: bold;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.lb-sub {
+    display: block;
+    font-size: 0.75rem;
+    color: #8f98a0;
+    font-weight: normal;
+    margin-top: 2px;
+}
+
 /* --- Mobile --- */
 @media (max-width: 480px) {
     .banner h1 {
@@ -428,22 +899,13 @@ body {
     .multi-results {
         grid-template-columns: 1fr 1fr;
     }
-}
 
-/* --- Support --- */
-.support {
-    margin-top: 10px;
-    margin-bottom: 30px;
-    text-align: center;
-}
+    .case-grid {
+        grid-template-columns: 1fr 1fr;
+    }
 
-.support a {
-    color: #8f98a0;
-    font-size: 0.85rem;
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.support a:hover {
-    color: #c6d4df;
+    .balance-bar {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
 }

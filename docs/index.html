@@ -8,68 +8,123 @@
 </head>
 <body>
 
+    <!-- Username Modal -->
+    <div class="modal-overlay" id="usernameModal">
+        <div class="modal">
+            <h2>👋 Welcome!</h2>
+            <p>Set a username to appear on the leaderboard. Your friends will see this name.</p>
+            <input type="text" id="usernameInput" placeholder="Enter username..." maxlength="20" autocomplete="off">
+            <button class="modal-btn" id="usernameSubmit">Join the Leaderboard</button>
+        </div>
+    </div>
+
+    <!-- Header -->
     <div class="banner">
         <h1>CS:GO Case Opening</h1>
         <p>Think you can hit the gold? Give it a shot.</p>
-    </div>
-
-    <div class="card">
-        <div class="open-btns">
-            <button class="open-btn" id="openBtn">Open 1x</button>
-            <button class="open-btn" id="open5Btn">Open 5x</button>
-            <button class="open-btn" id="open10Btn">Open 10x</button>
-        </div>
-        <div class="quick-toggle">
-            <label class="toggle-label">
-                <span>⚡ Quick Open</span>
-                <input type="checkbox" id="quickToggle">
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
-
-        <div class="rolling-text" id="rollingText"></div>
-
-        <div class="item-card" id="itemCard">
-            <div class="item-header" id="itemHeader">
-                <div class="item-name" id="itemName"></div>
-                <div class="item-subtitle" id="itemSubtitle"></div>
-            </div>
-            <div class="item-body">
-                <div class="float-bar-container">
-                    <div class="float-labels">
-                        <span>FN</span>
-                        <span>MW</span>
-                        <span>FT</span>
-                        <span>WW</span>
-                        <span>BS</span>
-                    </div>
-                    <div class="float-bar">
-                        <div class="float-marker" id="floatMarker"></div>
-                    </div>
-                </div>
-                <div class="item-row"><span>Type</span>    <span id="iType"></span></div>
-                <div class="item-row"><span>Rarity</span>  <span id="iRarity"></span></div>
-                <div class="item-row"><span>Exterior</span><span id="iExterior"></span></div>
-                <div class="item-row"><span>Float</span>   <span id="iFloat"></span></div>
-                <div class="item-row"><span>Seed</span>    <span id="iSeed"></span></div>
-                <div class="item-row"><span>Price</span>   <span id="iPrice"></span></div>
-                <div class="item-row" id="stRow" style="display:none">
-                    <span>StatTrak™</span><span id="iKills"></span>
-                </div>
-            </div>
-            <div class="multi-results" id="multiResults"></div>
+        <div class="balance-bar">
+            <span class="balance-icon">💰</span>
+            <span class="balance-amount" id="balanceDisplay">0 coins</span>
+            <button class="daily-btn" id="dailyBtn">🎁 Daily Reward</button>
         </div>
     </div>
 
+    <!-- Case Selection Screen -->
+    <div id="caseSelectScreen">
+        <h2 class="screen-title">Select a Case</h2>
+        <div class="case-grid" id="caseGrid"></div>
+    </div>
+
+    <!-- Case Opening Screen -->
+    <div id="caseOpenScreen" class="hidden">
+        <button class="back-btn" id="backBtn">← Back to Cases</button>
+        <div class="card">
+            <div class="case-info" id="caseInfo"></div>
+            <div class="open-btns">
+                <button class="open-btn" id="openBtn">Open 1x</button>
+                <button class="open-btn" id="open5Btn">Open 5x</button>
+                <button class="open-btn" id="open10Btn">Open 10x</button>
+            </div>
+            <div class="quick-toggle">
+                <label class="toggle-label">
+                    <span>⚡ Quick Open</span>
+                    <input type="checkbox" id="quickToggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div class="rolling-text" id="rollingText"></div>
+
+            <div class="item-card" id="itemCard">
+                <div class="item-header" id="itemHeader">
+                    <div class="item-name" id="itemName"></div>
+                    <div class="item-subtitle" id="itemSubtitle"></div>
+                </div>
+                <div class="item-body">
+                    <div class="float-bar-container">
+                        <div class="float-labels">
+                            <span>FN</span>
+                            <span>MW</span>
+                            <span>FT</span>
+                            <span>WW</span>
+                            <span>BS</span>
+                        </div>
+                        <div class="float-bar">
+                            <div class="float-marker" id="floatMarker"></div>
+                        </div>
+                    </div>
+                    <div class="item-row"><span>Type</span>    <span id="iType"></span></div>
+                    <div class="item-row"><span>Rarity</span>  <span id="iRarity"></span></div>
+                    <div class="item-row"><span>Exterior</span><span id="iExterior"></span></div>
+                    <div class="item-row"><span>Float</span>   <span id="iFloat"></span></div>
+                    <div class="item-row"><span>Seed</span>    <span id="iSeed"></span></div>
+                    <div class="item-row"><span>Price</span>   <span id="iPrice"></span></div>
+                    <div class="item-row" id="stRow" style="display:none">
+                        <span>StatTrak™</span><span id="iKills"></span>
+                    </div>
+                </div>
+                <div class="multi-results" id="multiResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory, Stats, Support -->
     <div class="secondary-btns">
         <button class="secondary-btn" id="invBtn">🎒 Inventory</button>
         <button class="secondary-btn" id="statsBtn">📊 Stats</button>
+        <button class="secondary-btn" id="fishBtn">🎣 Fishing</button>
+        <button class="secondary-btn" id="lbBtn">🏆 Leaderboard</button>
+        <button class="secondary-btn" id="supportBtn">☕ Ko-fi</button>
     </div>
 
     <div class="panel" id="invPanel">
         <h2>Your Inventory</h2>
         <div id="invList"></div>
         <button class="reset-btn" id="resetBtn">🗑️ Reset Inventory</button>
+    </div>
+
+    <div class="panel" id="fishPanel">
+        <h2>🎣 Fishing</h2>
+        <p class="fish-desc">Cast your line and see what bites. Catch coins, junk, or maybe something rare...</p>
+        <button class="cast-btn" id="castBtn">🎣 Cast Line</button>
+        <div class="fish-status" id="fishStatus"></div>
+        <div class="fish-log" id="fishLog"></div>
+    </div>
+
+    <div class="panel" id="lbPanel">
+        <h2>🏆 Leaderboard</h2>
+        <div class="lb-header">
+            <span class="lb-username-display" id="lbUsernameDisplay"></span>
+            <button class="lb-refresh-btn" id="lbRefreshBtn">↻ Refresh</button>
+        </div>
+        <div class="lb-tabs">
+            <button class="lb-tab active" data-tab="coins">💰 Coins</button>
+            <button class="lb-tab" data-tab="cases">📦 Cases</button>
+            <button class="lb-tab" data-tab="item">🎯 Best Item</button>
+        </div>
+        <div class="lb-list" id="lbList">
+            <p class="empty-msg">Loading...</p>
+        </div>
     </div>
 
     <div class="panel" id="statsPanel">
