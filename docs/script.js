@@ -382,9 +382,8 @@ function renderInventory() {
     }
 
     invList.innerHTML = inv.slice().reverse().map((item, i) => {
-        const realIndex  = inv.length - 1 - i;
-        const isFav      = item.id && favs.includes(item.id);
-        const rarityColor = (RARITY_ODDS[item.rarity] || {}).colour || '#c6d4df';
+        const realIndex = inv.length - 1 - i;
+        const isFav     = item.id && favs.includes(item.id);
         return `
             <div class="inventory-item ${isFav ? 'is-favourite' : ''}">
                 <button class="fav-btn ${isFav ? 'faved' : ''}"
@@ -393,7 +392,7 @@ function renderInventory() {
                     ${isFav ? '⭐' : '☆'}
                 </button>
                 <div class="inventory-item-info">
-                    <div class="inventory-item-name" style="color:${rarityColor}">#${inv.length - i} ${item.fullItem}</div>
+                    <div class="inventory-item-name">${item.fullItem}</div>
                     <div class="inventory-item-detail">${item.tier} · ${item.type} · Float: ${item.float} · ~$${item.price}</div>
                 </div>
                 <button class="sell-btn" onclick="sellItem(${realIndex})">
@@ -442,7 +441,7 @@ function renderStats() {
         <div class="stat-box"><div class="stat-label">🔵 Blue</div><div class="stat-value">${s.blue}</div></div>
         <div class="stat-box"><div class="stat-label">Balance</div><div class="stat-value">${getCoins().toLocaleString()}</div></div>
     `;
-    document.getElementById('bestRoll').textContent = s.bestItem;
+
 }
 
 // -------------------------------------------------------
