@@ -90,6 +90,7 @@ document.getElementById('dailyBtn').addEventListener('click', () => {
     addCoins(reward);
     addLbCoins(reward);
     addXP(XP_DAILY);
+    checkDailyAchievements();
     checkDailyReward();
     alert(`You claimed your daily reward of ${reward.toLocaleString()} coins!`);
 });
@@ -321,6 +322,7 @@ async function doOpen(count = 1) {
         updateStats(result);
         addLbCase(result);
         addXP(XP_PER_RARITY[result.rarity] || 10);
+        checkCaseAchievements(result);
         rollingText.textContent = getRarityMessage(result.rarity);
     } else {
         const results = Array.from({ length: count }, () => openCrate(selectedCase));
@@ -338,6 +340,7 @@ async function doOpen(count = 1) {
             updateStats(r);
             addLbCase(r);
             addXP(XP_PER_RARITY[r.rarity] || 10);
+            checkCaseAchievements(r);
         });
 
         multiResults.classList.add('visible');
@@ -461,7 +464,7 @@ function renderStats() {
 // Page Navigation
 // -------------------------------------------------------
 
-const PAGES = ['page-cases', 'page-fishing', 'page-howtoplay'];
+const PAGES = ['page-cases', 'page-fishing', 'page-achievements', 'page-howtoplay'];
 
 function switchPage(pageId) {
     PAGES.forEach(id => {
@@ -470,8 +473,8 @@ function switchPage(pageId) {
     document.querySelectorAll('.nav-tab').forEach(tab => {
         tab.classList.toggle('active', tab.dataset.page === pageId.replace('page-', ''));
     });
-    // Close any open panels when switching pages
     ALL_PANELS.forEach(id => document.getElementById(id).classList.remove('visible'));
+    if (pageId === 'page-achievements') renderAchievements();
 }
 
 document.querySelectorAll('.nav-tab').forEach(tab => {

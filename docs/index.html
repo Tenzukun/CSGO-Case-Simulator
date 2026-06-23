@@ -10,9 +10,21 @@
     <link rel="stylesheet" href="fishing.css">
     <link rel="stylesheet" href="leaderboard.css">
     <link rel="stylesheet" href="progression.css">
+    <link rel="stylesheet" href="achievements.css">
     <link rel="stylesheet" href="mobile.css">
 </head>
 <body>
+
+    <!-- Achievement Popup -->
+    <div class="achievement-popup hidden" id="achievementPopup">
+        <div class="ach-popup-icon" id="achPopupIcon">🏅</div>
+        <div class="ach-popup-text">
+            <div class="ach-popup-label">Achievement Unlocked</div>
+            <div class="ach-popup-name" id="achPopupName"></div>
+            <div class="ach-popup-desc" id="achPopupDesc"></div>
+        </div>
+        <button class="ach-popup-close" id="achPopupClose">✕</button>
+    </div>
 
     <!-- Username Modal -->
     <div class="modal-overlay hidden" id="usernameModal">
@@ -56,6 +68,7 @@
     <nav class="main-nav">
         <button class="nav-tab active" data-page="cases">🎰 Cases</button>
         <button class="nav-tab" data-page="fishing">🎣 Fishing</button>
+        <button class="nav-tab" data-page="achievements">🏅 Achievements</button>
         <button class="nav-tab" data-page="howtoplay">❓ How to Play</button>
     </nav>
 
@@ -190,6 +203,15 @@
         </div>
     </div>
 
+    <!-- Page: Achievements -->
+    <div class="page hidden" id="page-achievements">
+        <div class="achievements-page">
+            <h2 class="screen-title">🏅 Achievements</h2>
+            <div class="ach-count" id="achCount">0 / 35 unlocked</div>
+            <div id="achievementsGrid"></div>
+        </div>
+    </div>
+
     <!-- Page: How to Play -->
     <div class="page hidden" id="page-howtoplay">
         <div class="howtoplay-page">
@@ -246,6 +268,7 @@
     <script src="progression.js"></script>
     <script src="leaderboard.js"></script>
     <script src="fishing.js"></script>
+    <script src="achievements.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

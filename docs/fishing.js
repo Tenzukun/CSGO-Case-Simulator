@@ -101,6 +101,7 @@ castBtn.addEventListener('click', () => {
             addCoins(result.value);
             addLbCoins(result.value);
             addXP(XP_PER_FISH[result.xpType] || 5);
+            checkFishAchievements(result);
 
             // Skin goes straight to inventory
             if (result.type === 'skin' && result.skinItem) {

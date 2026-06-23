@@ -54,6 +54,7 @@ function addXP(amount) {
         level++;
         localStorage.setItem('csgo_level', level);
         showLevelUp(level);
+        if (typeof checkLevelAchievements === 'function') checkLevelAchievements(level);
     }
 
     updateLevelDisplay();

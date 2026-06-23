@@ -1,0 +1,162 @@
+/* --- Achievement Popup --- */
+.achievement-popup {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: linear-gradient(135deg, #16202d, #1b2838);
+    border: 2px solid #e4ae39;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 0 24px rgba(228, 174, 57, 0.3);
+    z-index: 3000;
+    max-width: 320px;
+    animation: slideInRight 0.4s ease forwards;
+}
+
+.achievement-popup.hidden {
+    display: none !important;
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.ach-popup-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.ach-popup-text {
+    flex: 1;
+}
+
+.ach-popup-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #e4ae39;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+.ach-popup-name {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 2px;
+}
+
+.ach-popup-desc {
+    font-size: 0.78rem;
+    color: #8f98a0;
+}
+
+.ach-popup-close {
+    background: none;
+    border: none;
+    color: #8f98a0;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.ach-popup-close:hover {
+    color: #c6d4df;
+}
+
+/* --- Achievements Page --- */
+.achievements-page {
+    width: 100%;
+}
+
+.ach-count {
+    font-size: 0.85rem;
+    color: #8f98a0;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.ach-category {
+    margin-bottom: 24px;
+}
+
+.ach-category-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #8f98a0;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #2a3f5f;
+}
+
+.ach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+}
+
+.ach-badge {
+    background: #16202d;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 14px 10px;
+    text-align: center;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.ach-badge.unlocked {
+    border-color: #e4ae39;
+    background: linear-gradient(135deg, #16202d, #1e2c1e);
+}
+
+.ach-badge.unlocked:hover {
+    transform: translateY(-2px);
+    border-color: #f0c040;
+}
+
+.ach-badge.locked {
+    opacity: 0.45;
+}
+
+.ach-icon {
+    font-size: 1.8rem;
+    margin-bottom: 6px;
+}
+
+.ach-name {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #c6d4df;
+    margin-bottom: 4px;
+}
+
+.ach-desc {
+    font-size: 0.72rem;
+    color: #8f98a0;
+    line-height: 1.4;
+}
+
+.ach-badge.unlocked .ach-name {
+    color: #e4ae39;
+}
+
+/* --- Mobile --- */
+@media (max-width: 480px) {
+    .ach-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .achievement-popup {
+        bottom: 12px;
+        right: 12px;
+        left: 12px;
+        max-width: none;
+    }
+}
