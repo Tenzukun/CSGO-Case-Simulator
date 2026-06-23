@@ -1,0 +1,186 @@
+/* -------------------------------------------------------
+   Auth Modal
+------------------------------------------------------- */
+
+.auth-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 6000;
+}
+
+.auth-overlay.hidden {
+    display: none !important;
+}
+
+.auth-modal {
+    background: #16202d;
+    border: 1px solid #2a3f5f;
+    border-radius: 14px;
+    padding: 32px 28px 28px;
+    max-width: 380px;
+    width: 92%;
+    text-align: center;
+}
+
+.auth-header {
+    margin-bottom: 24px;
+}
+
+.auth-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #c6d4df;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.auth-subtitle {
+    font-size: 0.82rem;
+    color: #8f98a0;
+}
+
+/* Tabs */
+.auth-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+    border: 1px solid #2a3f5f;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 9px;
+    background: transparent;
+    border: none;
+    color: #8f98a0;
+    font-size: 0.88rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.auth-tab.active {
+    background: #4b69ff;
+    color: #fff;
+}
+
+.auth-tab:not(.active):hover {
+    background: #1b2838;
+    color: #c6d4df;
+}
+
+/* Inputs */
+.auth-modal input[type="text"],
+.auth-modal input[type="password"] {
+    width: 100%;
+    padding: 10px 14px;
+    background: #1b2838;
+    border: 1px solid #2a3f5f;
+    border-radius: 6px;
+    color: #c6d4df;
+    font-size: 0.92rem;
+    margin-bottom: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.auth-modal input:focus {
+    border-color: #4b69ff;
+}
+
+/* Errors */
+.auth-error {
+    font-size: 0.8rem;
+    color: #eb4b4b;
+    min-height: 18px;
+    margin-bottom: 6px;
+    text-align: left;
+}
+
+/* Primary button */
+.auth-btn {
+    width: 100%;
+    padding: 11px;
+    background: #4b69ff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 2px;
+}
+
+.auth-btn:hover    { background: #3a56d4; }
+.auth-btn:disabled { background: #2a3f5f; cursor: not-allowed; }
+
+/* Divider */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 18px 0 14px;
+    color: #2a3f5f;
+    font-size: 0.8rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #2a3f5f;
+}
+
+.auth-divider span { color: #8f98a0; }
+
+/* Guest button */
+.auth-guest-btn {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid #2a3f5f;
+    border-radius: 6px;
+    color: #8f98a0;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 10px;
+}
+
+.auth-guest-btn:hover {
+    border-color: #c6d4df;
+    color: #c6d4df;
+}
+
+.auth-guest-note {
+    font-size: 0.75rem;
+    color: #8f98a0;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Sign out button in leaderboard header */
+.lb-signout-btn {
+    padding: 4px 10px;
+    background: transparent;
+    border: 1px solid #2a3f5f;
+    border-radius: 4px;
+    color: #8f98a0;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.lb-signout-btn:hover {
+    border-color: #eb4b4b;
+    color: #eb4b4b;
+}
