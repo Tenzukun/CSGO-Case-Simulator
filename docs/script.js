@@ -374,18 +374,104 @@ function sellAll() {
     renderInventory();
 }
 
+// -------------------------------------------------------
+// Inventory Sort / Filter State
+// -------------------------------------------------------
+
+let invSortBy      = 'newest';
+let invFilterRarity = 'all';
+
+function ensureInvControls() {
+    if (document.getElementById('invControls')) return;
+
+    const controls = document.createElement('div');
+    controls.id        = 'invControls';
+    controls.className = 'inv-controls';
+    controls.innerHTML = `
+        <select id="invSort" class="inv-control-select" title="Sort">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="value-desc">Value: High → Low</option>
+            <option value="value-asc">Value: Low → High</option>
+            <option value="rarity-desc">Rarity: Best First</option>
+            <option value="rarity-asc">Rarity: Worst First</option>
+        </select>
+        <select id="invFilter" class="inv-control-select" title="Filter by rarity">
+            <option value="all">All Rarities</option>
+            <option value="GOLD">🟡 Gold</option>
+            <option value="Rare (Red)">🔴 Red</option>
+            <option value="Pink">🩷 Pink</option>
+            <option value="Purple">🟣 Purple</option>
+            <option value="Blue">🔵 Blue</option>
+        </select>
+    `;
+
+    const invList = document.getElementById('invList');
+    invList.parentNode.insertBefore(controls, invList);
+
+    document.getElementById('invSort').addEventListener('change', e => {
+        invSortBy = e.target.value;
+        renderInventory();
+    });
+    document.getElementById('invFilter').addEventListener('change', e => {
+        invFilterRarity = e.target.value;
+        renderInventory();
+    });
+}
+
 function renderInventory() {
+    ensureInvControls();
+
     const inv     = getInventory();
     const favs    = getFavourites();
     const invList = document.getElementById('invList');
+
+    // Restore control values after re-render
+    const sortEl   = document.getElementById('invSort');
+    const filterEl = document.getElementById('invFilter');
+    if (sortEl)   sortEl.value   = invSortBy;
+    if (filterEl) filterEl.value = invFilterRarity;
 
     if (inv.length === 0) {
         invList.innerHTML = '<p class="empty-msg">No items yet. Open a case first!</p>';
         return;
     }
 
-    invList.innerHTML = inv.slice().reverse().map((item, i) => {
-        const realIndex   = inv.length - 1 - i;
+    // Tag each item with its original index for sellItem()
+    let items = inv.map((item, i) => ({ ...item, _origIndex: i }));
+
+    // Filter
+    if (invFilterRarity !== 'all') {
+        items = items.filter(item => item.rarity === invFilterRarity);
+    }
+
+    // Sort
+    switch (invSortBy) {
+        case 'newest':
+            items.reverse();
+            break;
+        case 'oldest':
+            break;
+        case 'value-desc':
+            items.sort((a, b) => (b.coins || 0) - (a.coins || 0));
+            break;
+        case 'value-asc':
+            items.sort((a, b) => (a.coins || 0) - (b.coins || 0));
+            break;
+        case 'rarity-desc':
+            items.sort((a, b) => (RARITY_RANKS[b.rarity] || 0) - (RARITY_RANKS[a.rarity] || 0));
+            break;
+        case 'rarity-asc':
+            items.sort((a, b) => (RARITY_RANKS[a.rarity] || 0) - (RARITY_RANKS[b.rarity] || 0));
+            break;
+    }
+
+    if (items.length === 0) {
+        invList.innerHTML = '<p class="empty-msg">No items match this filter.</p>';
+        return;
+    }
+
+    invList.innerHTML = items.map(item => {
         const isFav       = item.id && favs.includes(item.id);
         const rarityColor = (RARITY_ODDS[item.rarity] || {}).colour || '#c6d4df';
         return `
@@ -399,7 +485,7 @@ function renderInventory() {
                     <div class="inventory-item-name" style="color:${rarityColor}">${item.fullItem}</div>
                     <div class="inventory-item-detail">${item.tier} · ${item.type} · Float: ${item.float} · ~$${item.price}</div>
                 </div>
-                <button class="sell-btn" onclick="sellItem(${realIndex})">
+                <button class="sell-btn" onclick="sellItem(${item._origIndex})">
                     Sell<br>${item.coins.toLocaleString()} coins
                 </button>
             </div>
