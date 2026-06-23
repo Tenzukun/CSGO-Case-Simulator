@@ -201,3 +201,77 @@
     animation: xpFloat 1.2s ease forwards;
     white-space: nowrap;
 }
+
+/* --- Level Details Panel --- */
+.level-details-current {
+    font-size: 0.92rem;
+    color: #c6d4df;
+    margin-bottom: 16px;
+    padding: 10px 12px;
+    background: #1b2838;
+    border-radius: 6px;
+    border-left: 3px solid #e4ae39;
+}
+
+.level-details-current strong {
+    color: #e4ae39;
+}
+
+.level-details-table {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
+.level-details-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 10px;
+    border-radius: 5px;
+    font-size: 0.83rem;
+    border: 1px solid transparent;
+}
+
+.level-details-row.is-past {
+    background: #1b2838;
+    color: #8f98a0;
+    opacity: 0.6;
+}
+
+.level-details-row.is-current {
+    background: rgba(228, 174, 57, 0.1);
+    border-color: #e4ae39;
+    color: #c6d4df;
+}
+
+.level-details-row.is-future {
+    background: #1b2838;
+    color: #8f98a0;
+}
+
+.level-details-lv {
+    font-weight: bold;
+    color: #e4ae39;
+    min-width: 38px;
+    font-size: 0.85rem;
+}
+
+.level-details-row.is-past .level-details-lv {
+    color: #8f98a0;
+}
+
+.level-details-perks {
+    flex: 1;
+    line-height: 1.4;
+}
+
+.level-details-xp-note {
+    font-size: 0.78rem;
+    color: #8f98a0;
+    line-height: 1.7;
+    padding: 10px 12px;
+    background: #1b2838;
+    border-radius: 6px;
+}
