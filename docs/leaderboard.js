@@ -22,13 +22,41 @@ function initUsernameModal() {
 
     modal.classList.remove('hidden');
 
-    const doConfirm = () => {
+    const doConfirm = async () => {
         const val = input.value.trim();
         if (!val) { input.focus(); return; }
-        setUsername(val);
-        modal.classList.add('hidden');
-        updateLbUsernameDisplay();
-        pushLeaderboard();
+
+        submit.disabled    = true;
+        submit.textContent = 'Checking...';
+
+        // Check Firebase for existing save data
+        const existing = await loadPlayerFromCloud(val);
+
+        if (existing && existing.level && existing.level > 1) {
+            // Show the load-data prompt
+            document.getElementById('modalStateEnter').classList.add('hidden');
+            document.getElementById('modalStateLoad').classList.remove('hidden');
+            document.getElementById('modalLoadDesc').textContent =
+                `Found saved data for "${val}" (Level ${existing.level}, ${(existing.cases || 0).toLocaleString()} cases opened). Load it?`;
+
+            document.getElementById('loadDataBtn').onclick = () => {
+                applyCloudData(val, existing);
+                modal.classList.add('hidden');
+                location.reload();
+            };
+
+            document.getElementById('startFreshBtn').onclick = () => {
+                setUsername(val);
+                modal.classList.add('hidden');
+                updateLbUsernameDisplay();
+                schedulePush();
+            };
+        } else {
+            setUsername(val);
+            modal.classList.add('hidden');
+            updateLbUsernameDisplay();
+            schedulePush();
+        }
     };
 
     submit.addEventListener('click', doConfirm);
@@ -41,11 +69,12 @@ function updateLbUsernameDisplay() {
 }
 
 // -------------------------------------------------------
-// Leaderboard Stats (persistent localStorage)
+// Leaderboard Stats
 // -------------------------------------------------------
 
 function getLbStats() {
-    return JSON.parse(localStorage.getItem('csgo_lb_stats') || '{"coins":0,"cases":0,"bestItem":"None","bestRarity":"","bestRank":0}');
+    return JSON.parse(localStorage.getItem('csgo_lb_stats') ||
+        '{"coins":0,"cases":0,"bestItem":"None","bestRarity":"","bestRank":0,"bestValue":0}');
 }
 
 function saveLbStats(stats) {
@@ -56,51 +85,120 @@ function addLbCoins(amount) {
     const stats  = getLbStats();
     stats.coins += amount;
     saveLbStats(stats);
-    pushLeaderboard();
+    schedulePush();
 }
 
 function addLbCase(result) {
-    const stats  = getLbStats();
+    const stats = getLbStats();
     stats.cases++;
     stats.coins += result.coins;
     const rank = RARITY_RANKS[result.rarity] || 0;
-    if (rank > stats.bestRank) {
+
+    // Fix: rank first, then coin value as tiebreaker
+    if (rank > stats.bestRank || (rank === stats.bestRank && result.coins > (stats.bestValue || 0))) {
         stats.bestRank   = rank;
         stats.bestRarity = result.rarity;
         stats.bestItem   = result.fullItem;
+        stats.bestValue  = result.coins;
     }
+
     saveLbStats(stats);
-    pushLeaderboard();
+    schedulePush();
 }
 
 // -------------------------------------------------------
-// Firebase
+// Cloud Save / Load
 // -------------------------------------------------------
+
+let pushTimer = null;
+
+function schedulePush() {
+    if (pushTimer) clearTimeout(pushTimer);
+    pushTimer = setTimeout(pushLeaderboard, 3000);
+}
 
 async function pushLeaderboard() {
     const username = getUsername();
     if (!username || !FIREBASE_URL) return;
 
     const stats = getLbStats();
-    const data  = {
+
+    const lbData = {
         username,
         coins:      stats.coins,
         cases:      stats.cases,
         bestItem:   stats.bestItem,
         bestRarity: stats.bestRarity,
+        bestValue:  stats.bestValue || 0,
         level:      getLevel(),
         updated:    Date.now()
     };
 
+    const playerData = {
+        ...lbData,
+        xp:           getXP(),
+        balance:      getCoins(),
+        inventory:    JSON.stringify(getInventory()),
+        achievements: JSON.stringify(getUnlockedAchievements()),
+        achStats:     JSON.stringify(getAchStats()),
+        alltimeStats: JSON.stringify(getAllTimeStats()),
+        weeklyState:  JSON.stringify(getWeeklyState ? getWeeklyState() : {}),
+        favourites:   JSON.stringify(getFavourites ? getFavourites() : [])
+    };
+
     try {
-        await fetch(`${FIREBASE_URL}/leaderboard/${encodeURIComponent(username)}.json`, {
-            method: 'PUT',
-            body:   JSON.stringify(data)
-        });
+        await Promise.all([
+            fetch(`${FIREBASE_URL}/leaderboard/${encodeURIComponent(username)}.json`, {
+                method: 'PUT', body: JSON.stringify(lbData)
+            }),
+            fetch(`${FIREBASE_URL}/players/${encodeURIComponent(username)}.json`, {
+                method: 'PUT', body: JSON.stringify(playerData)
+            })
+        ]);
     } catch (e) {
-        console.warn('Leaderboard push failed:', e);
+        console.warn('Cloud save failed:', e);
     }
 }
+
+async function loadPlayerFromCloud(username) {
+    if (!FIREBASE_URL) return null;
+    try {
+        const res  = await fetch(`${FIREBASE_URL}/players/${encodeURIComponent(username)}.json`);
+        const data = await res.json();
+        return data || null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function applyCloudData(username, data) {
+    if (!data) return;
+    localStorage.setItem('csgo_username',     username);
+    if (data.balance      !== undefined) localStorage.setItem('csgo_coins',         data.balance);
+    if (data.xp           !== undefined) localStorage.setItem('csgo_xp',            data.xp);
+    if (data.level        !== undefined) localStorage.setItem('csgo_level',         data.level);
+    if (data.inventory    !== undefined) localStorage.setItem('csgo_inventory',     data.inventory);
+    if (data.achievements !== undefined) localStorage.setItem('csgo_achievements',  data.achievements);
+    if (data.achStats     !== undefined) localStorage.setItem('csgo_ach_stats',     data.achStats);
+    if (data.alltimeStats !== undefined) localStorage.setItem('csgo_alltime_stats', data.alltimeStats);
+    if (data.weeklyState  !== undefined) localStorage.setItem('csgo_weekly',        data.weeklyState);
+    if (data.favourites   !== undefined) localStorage.setItem('csgo_favourites',    data.favourites);
+
+    // Rebuild lb_stats
+    const lb = {
+        coins:      data.coins      || 0,
+        cases:      data.cases      || 0,
+        bestItem:   data.bestItem   || 'None',
+        bestRarity: data.bestRarity || '',
+        bestRank:   data.bestRank   || 0,
+        bestValue:  data.bestValue  || 0
+    };
+    localStorage.setItem('csgo_lb_stats', JSON.stringify(lb));
+}
+
+// -------------------------------------------------------
+// Firebase: Fetch Leaderboard
+// -------------------------------------------------------
 
 async function fetchLeaderboard() {
     if (!FIREBASE_URL) return [];
@@ -126,7 +224,7 @@ async function renderLeaderboard() {
     listEl.innerHTML = '<p class="empty-msg">Loading...</p>';
 
     if (!FIREBASE_URL) {
-        listEl.innerHTML = '<p class="empty-msg">Firebase not configured yet. Add your database URL to script.js.</p>';
+        listEl.innerHTML = '<p class="empty-msg">Firebase not configured yet.</p>';
         return;
     }
 
@@ -138,16 +236,20 @@ async function renderLeaderboard() {
     }
 
     const sorted = [...entries].sort((a, b) => {
-        if (lbActiveTab === 'coins') return (b.coins  || 0) - (a.coins  || 0);
-        if (lbActiveTab === 'cases') return (b.cases  || 0) - (a.cases  || 0);
-        if (lbActiveTab === 'item')  return (b.bestRank || 0) - (a.bestRank || 0);
-        if (lbActiveTab === 'level') return (b.level  || 1) - (a.level  || 1);
+        if (lbActiveTab === 'coins') return (b.coins    || 0) - (a.coins    || 0);
+        if (lbActiveTab === 'cases') return (b.cases    || 0) - (a.cases    || 0);
+        if (lbActiveTab === 'level') return (b.level    || 1) - (a.level    || 1);
+        if (lbActiveTab === 'item') {
+            const rankDiff = (b.bestRank || 0) - (a.bestRank || 0);
+            if (rankDiff !== 0) return rankDiff;
+            return (b.bestValue || 0) - (a.bestValue || 0); // tiebreak by coin value
+        }
         return 0;
     });
 
-    const medals      = ['🥇', '🥈', '🥉'];
-    const medalClass  = ['gold', 'silver', 'bronze'];
-    const me          = getUsername();
+    const medals     = ['🥇', '🥈', '🥉'];
+    const medalClass = ['gold', 'silver', 'bronze'];
+    const me         = getUsername();
 
     listEl.innerHTML = sorted.map((entry, i) => {
         const rankHtml = i < 3

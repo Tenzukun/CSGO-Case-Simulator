@@ -29,73 +29,6 @@ function updateBalanceDisplay() {
 }
 
 // -------------------------------------------------------
-// Daily Reward
-// -------------------------------------------------------
-
-let dailyCountdownInterval = null;
-
-function checkDailyReward() {
-    const lastClaim = localStorage.getItem('csgo_daily');
-    const now       = new Date();
-    const today     = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
-    const dailyBtn  = document.getElementById('dailyBtn');
-
-    if (lastClaim === today) {
-        dailyBtn.disabled    = true;
-        dailyBtn.textContent = '🎁 Come back tomorrow!';
-        startDailyCountdown();
-    } else {
-        dailyBtn.disabled    = false;
-        dailyBtn.textContent = `🎁 Daily (${getDailyRewardAmount().toLocaleString()} coins)`;
-        clearDailyCountdown();
-    }
-}
-
-function clearDailyCountdown() {
-    if (dailyCountdownInterval) clearInterval(dailyCountdownInterval);
-    const el = document.getElementById('dailyCountdown');
-    if (el) el.textContent = '';
-}
-
-function startDailyCountdown() {
-    let el = document.getElementById('dailyCountdown');
-    if (!el) {
-        el = document.createElement('div');
-        el.id        = 'dailyCountdown';
-        el.className = 'daily-countdown';
-        document.getElementById('dailyBtn').after(el);
-    }
-
-    const tick = () => {
-        const now      = new Date();
-        const midnight = new Date(now);
-        midnight.setHours(24, 0, 0, 0);
-        const diff = midnight - now;
-        const h    = String(Math.floor(diff / 3600000)).padStart(2, '0');
-        const m    = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
-        const s    = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
-        el.textContent = `Next reward in: ${h}:${m}:${s}`;
-    };
-
-    tick();
-    if (dailyCountdownInterval) clearInterval(dailyCountdownInterval);
-    dailyCountdownInterval = setInterval(tick, 1000);
-}
-
-document.getElementById('dailyBtn').addEventListener('click', () => {
-    const now   = new Date();
-    const today = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
-    const reward = getDailyRewardAmount();
-    localStorage.setItem('csgo_daily', today);
-    addCoins(reward);
-    addLbCoins(reward);
-    addXP(XP_DAILY);
-    checkDailyAchievements();
-    checkDailyReward();
-    alert(`You claimed your daily reward of ${reward.toLocaleString()} coins!`);
-});
-
-// -------------------------------------------------------
 // Case Selection
 // -------------------------------------------------------
 
@@ -159,7 +92,7 @@ function selectCase(id) {
 }
 
 function renderCaseContents(c) {
-    const contentsEl  = document.getElementById('caseContents');
+    const contentsEl = document.getElementById('caseContents');
     contentsEl.innerHTML = Object.entries(c.skins).map(([rarity, skins]) => {
         const info = RARITY_ODDS[rarity];
         return `
@@ -212,11 +145,9 @@ const iPrice       = document.getElementById('iPrice');
 const stRow        = document.getElementById('stRow');
 const iKills       = document.getElementById('iKills');
 const multiResults = document.getElementById('multiResults');
-const invPanel     = document.getElementById('invPanel');
-const statsPanel   = document.getElementById('statsPanel');
 const invBtn       = document.getElementById('invBtn');
 const statsBtn     = document.getElementById('statsBtn');
-const resetBtn     = document.getElementById('resetBtn');
+const levelBtn     = document.getElementById('levelBtn');
 
 // -------------------------------------------------------
 // Rolling Animation
@@ -269,7 +200,6 @@ function displayItem(result) {
         stRow.style.display = 'none';
     }
 
-    // Rarity animation
     const animClass = {
         'GOLD':       'rarity-gold-anim',
         'Rare (Red)': 'rarity-red-anim',
@@ -334,7 +264,8 @@ async function doOpen(count = 1) {
         }
 
         displayItem(best);
-        rollingText.textContent = `Best of ${count}: ${getRarityMessage(best.rarity)}`;
+        rollingText.textContent = getRarityMessage(best.rarity); // removed "Best of X:" prefix
+
         results.forEach(r => {
             saveItem(r);
             updateStats(r);
@@ -371,12 +302,28 @@ function getInventory() {
     return JSON.parse(localStorage.getItem('csgo_inventory') || '[]');
 }
 
+function getFavourites() {
+    return JSON.parse(localStorage.getItem('csgo_favourites') || '[]');
+}
+
+function toggleFavourite(itemId) {
+    if (!itemId) return;
+    const favs = getFavourites();
+    const idx  = favs.indexOf(itemId);
+    if (idx === -1) favs.push(itemId);
+    else favs.splice(idx, 1);
+    localStorage.setItem('csgo_favourites', JSON.stringify(favs));
+    renderInventory();
+    schedulePush();
+}
+
 function saveItem(result) {
     const inv = getInventory();
     inv.push({
+        id:       Date.now() + '-' + Math.floor(Math.random() * 10000),
         fullItem: result.fullItem, rarity: result.rarity, tier: result.tier,
-        type: result.type, float: result.floatVal, seed: result.seed,
-        price: result.price, coins: result.coins
+        type:     result.type,     float:  result.floatVal, seed: result.seed,
+        price:    result.price,    coins:  result.coins
     });
     localStorage.setItem('csgo_inventory', JSON.stringify(inv));
     if (document.getElementById('invPanel').classList.contains('visible')) renderInventory();
@@ -384,8 +331,13 @@ function saveItem(result) {
 
 function sellItem(index) {
     const inv  = getInventory();
+    const favs = getFavourites();
     const item = inv[index];
     if (!item) return;
+    if (item.id && favs.includes(item.id)) {
+        alert('This item is favourited. Unfavourite it first to sell it.');
+        return;
+    }
     if (!confirm(`Sell ${item.fullItem} for ${item.coins.toLocaleString()} coins?`)) return;
     inv.splice(index, 1);
     localStorage.setItem('csgo_inventory', JSON.stringify(inv));
@@ -394,17 +346,34 @@ function sellItem(index) {
 }
 
 function sellAll() {
-    const inv = getInventory();
+    const inv  = getInventory();
+    const favs = getFavourites();
     if (inv.length === 0) return;
-    const total = inv.reduce((sum, item) => sum + (item.coins || 0), 0);
-    if (!confirm(`Sell all ${inv.length} items for ${total.toLocaleString()} coins?`)) return;
-    localStorage.removeItem('csgo_inventory');
+
+    const toSell   = inv.filter(item => !item.id || !favs.includes(item.id));
+    const favCount = inv.length - toSell.length;
+
+    if (toSell.length === 0) {
+        alert('All items are favourited. Unfavourite some items to sell them.');
+        return;
+    }
+
+    const total = toSell.reduce((sum, item) => sum + (item.coins || 0), 0);
+    const msg   = favCount > 0
+        ? `Sell ${toSell.length} items for ${total.toLocaleString()} coins? (${favCount} favourited item${favCount > 1 ? 's' : ''} will be kept)`
+        : `Sell all ${inv.length} items for ${total.toLocaleString()} coins?`;
+
+    if (!confirm(msg)) return;
+
+    const kept = inv.filter(item => item.id && favs.includes(item.id));
+    localStorage.setItem('csgo_inventory', JSON.stringify(kept));
     addCoins(total);
     renderInventory();
 }
 
 function renderInventory() {
     const inv     = getInventory();
+    const favs    = getFavourites();
     const invList = document.getElementById('invList');
 
     if (inv.length === 0) {
@@ -414,8 +383,14 @@ function renderInventory() {
 
     invList.innerHTML = inv.slice().reverse().map((item, i) => {
         const realIndex = inv.length - 1 - i;
+        const isFav     = item.id && favs.includes(item.id);
         return `
-            <div class="inventory-item">
+            <div class="inventory-item ${isFav ? 'is-favourite' : ''}">
+                <button class="fav-btn ${isFav ? 'faved' : ''}"
+                        onclick="toggleFavourite('${item.id || ''}')"
+                        title="${isFav ? 'Unfavourite' : 'Favourite'}">
+                    ${isFav ? '⭐' : '☆'}
+                </button>
                 <div class="inventory-item-info">
                     <div class="inventory-item-name">#${inv.length - i} ${item.fullItem}</div>
                     <div class="inventory-item-detail">${item.tier} · ${item.type} · Float: ${item.float} · ~$${item.price}</div>
@@ -429,42 +404,51 @@ function renderInventory() {
 }
 
 // -------------------------------------------------------
-// Session Stats
+// All-time Stats (persistent)
 // -------------------------------------------------------
 
-const sessionStats = {
-    total: 0, gold: 0, red: 0, pink: 0, purple: 0, blue: 0,
-    bestItem: 'None yet', bestRank: 0, coinsSpent: 0
-};
+function getAllTimeStats() {
+    return JSON.parse(localStorage.getItem('csgo_alltime_stats') || JSON.stringify({
+        total: 0, gold: 0, red: 0, pink: 0, purple: 0, blue: 0,
+        bestItem: 'None yet', bestRank: 0, coinsSpent: 0
+    }));
+}
+
+function saveAllTimeStats(s) {
+    localStorage.setItem('csgo_alltime_stats', JSON.stringify(s));
+}
 
 function updateStats(result) {
-    sessionStats.total++;
-    sessionStats.coinsSpent += selectedCase ? selectedCase.cost : 0;
+    const s   = getAllTimeStats();
+    s.total++;
+    s.coinsSpent += selectedCase ? selectedCase.cost : 0;
     const key = { 'GOLD': 'gold', 'Rare (Red)': 'red', 'Pink': 'pink', 'Purple': 'purple', 'Blue': 'blue' }[result.rarity];
-    sessionStats[key]++;
+    if (key) s[key]++;
     const rank = RARITY_RANKS[result.rarity];
-    if (rank > sessionStats.bestRank) { sessionStats.bestRank = rank; sessionStats.bestItem = result.fullItem; }
+    if (rank > s.bestRank) { s.bestRank = rank; s.bestItem = result.fullItem; }
+    saveAllTimeStats(s);
 }
 
 function renderStats() {
+    const s = getAllTimeStats();
     document.getElementById('statsGrid').innerHTML = `
-        <div class="stat-box"><div class="stat-label">Total Opened</div><div class="stat-value">${sessionStats.total}</div></div>
-        <div class="stat-box"><div class="stat-label">Coins Spent</div><div class="stat-value">${sessionStats.coinsSpent.toLocaleString()}</div></div>
-        <div class="stat-box"><div class="stat-label">🟡 Gold</div><div class="stat-value">${sessionStats.gold}</div></div>
-        <div class="stat-box"><div class="stat-label">🔴 Red</div><div class="stat-value">${sessionStats.red}</div></div>
-        <div class="stat-box"><div class="stat-label">🩷 Pink</div><div class="stat-value">${sessionStats.pink}</div></div>
-        <div class="stat-box"><div class="stat-label">🟣 Purple</div><div class="stat-value">${sessionStats.purple}</div></div>
-        <div class="stat-box"><div class="stat-label">🔵 Blue</div><div class="stat-value">${sessionStats.blue}</div></div>
+        <div class="stat-box"><div class="stat-label">Total Opened</div><div class="stat-value">${s.total.toLocaleString()}</div></div>
+        <div class="stat-box"><div class="stat-label">Coins Spent</div><div class="stat-value">${s.coinsSpent.toLocaleString()}</div></div>
+        <div class="stat-box"><div class="stat-label">🟡 Gold</div><div class="stat-value">${s.gold}</div></div>
+        <div class="stat-box"><div class="stat-label">🔴 Red</div><div class="stat-value">${s.red}</div></div>
+        <div class="stat-box"><div class="stat-label">🩷 Pink</div><div class="stat-value">${s.pink}</div></div>
+        <div class="stat-box"><div class="stat-label">🟣 Purple</div><div class="stat-value">${s.purple}</div></div>
+        <div class="stat-box"><div class="stat-label">🔵 Blue</div><div class="stat-value">${s.blue}</div></div>
         <div class="stat-box"><div class="stat-label">Balance</div><div class="stat-value">${getCoins().toLocaleString()}</div></div>
     `;
-    document.getElementById('bestRoll').textContent = sessionStats.bestItem;
+    document.getElementById('bestRoll').textContent = s.bestItem;
 }
 
 // -------------------------------------------------------
 // Page Navigation
 // -------------------------------------------------------
 
-const PAGES = ['page-cases', 'page-fishing', 'page-achievements', 'page-howtoplay'];
+const PAGES = ['page-cases', 'page-fishing', 'page-achievements', 'page-weekly', 'page-howtoplay'];
 
 function switchPage(pageId) {
     PAGES.forEach(id => {
@@ -475,6 +459,7 @@ function switchPage(pageId) {
     });
     ALL_PANELS.forEach(id => document.getElementById(id).classList.remove('visible'));
     if (pageId === 'page-achievements') renderAchievements();
+    if (pageId === 'page-weekly') renderWeeklyPage();
 }
 
 document.querySelectorAll('.nav-tab').forEach(tab => {
@@ -485,7 +470,7 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
 // Panel Toggles
 // -------------------------------------------------------
 
-const ALL_PANELS = ['invPanel', 'statsPanel', 'lbPanel'];
+const ALL_PANELS = ['invPanel', 'statsPanel', 'lbPanel', 'levelPanel'];
 
 function openPanel(panelId, onOpen) {
     const isOpen = document.getElementById(panelId).classList.contains('visible');
@@ -498,13 +483,7 @@ function openPanel(panelId, onOpen) {
 
 invBtn.addEventListener('click',   () => openPanel('invPanel',   renderInventory));
 statsBtn.addEventListener('click', () => openPanel('statsPanel', renderStats));
-
-resetBtn.addEventListener('click', () => {
-    if (confirm('Are you sure you want to clear your entire inventory?')) {
-        localStorage.removeItem('csgo_inventory');
-        renderInventory();
-    }
-});
+levelBtn.addEventListener('click', () => openPanel('levelPanel', renderLevelDetails));
 
 document.getElementById('sellAllBtn').addEventListener('click', sellAll);
 document.getElementById('supportBtn').addEventListener('click', () => {
@@ -517,6 +496,6 @@ document.getElementById('supportBtn').addEventListener('click', () => {
 
 updateBalanceDisplay();
 updateLevelDisplay();
-checkDailyReward();
 renderCaseGrid();
+initWeekly();
 initUsernameModal();
