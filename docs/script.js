@@ -229,8 +229,8 @@ function animateRolling() {
             dots = (dots % 6) + 1;
             ticks++;
             rollingText.textContent = 'Rolling' + '.'.repeat(dots);
-            if (ticks >= 12) { clearInterval(interval); rollingText.textContent = ''; resolve(); }
-        }, 200);
+            if (ticks >= 6) { clearInterval(interval); rollingText.textContent = ''; resolve(); }
+        }, 120);
     });
 }
 
