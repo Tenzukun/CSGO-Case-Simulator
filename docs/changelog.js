@@ -137,4 +137,4 @@ function initChangelog() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', initChangelog);
+initChangelog();
