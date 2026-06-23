@@ -1,11 +1,11 @@
 // -------------------------------------------------------
 // Gold Drop Alert System
-// Uses Firebase SSE to push live notifications to all
-// connected users whenever anyone rolls a Gold item.
+// Polls Firebase every 5 seconds for new gold alerts
+// and shows a notification on every connected screen.
 // -------------------------------------------------------
 
-const ALERT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
-const pageLoadTime     = Date.now();
+const ALERT_MAX_AGE_MS  = 24 * 60 * 60 * 1000;
+let   lastAlertTime     = Date.now();
 
 let alertQueue   = [];
 let alertShowing = false;
@@ -49,37 +49,28 @@ async function pruneOldAlerts() {
 }
 
 // -------------------------------------------------------
-// Firebase SSE listener — receive alerts from all users
+// Poll Firebase for new alerts
 // -------------------------------------------------------
+
+async function pollGoldAlerts() {
+    if (!FIREBASE_URL) return;
+    try {
+        const res  = await fetch(`${FIREBASE_URL}/gold_alerts.json`);
+        const data = await res.json();
+        if (!data) return;
+
+        for (const val of Object.values(data)) {
+            if (val && val.timestamp > lastAlertTime) {
+                lastAlertTime = val.timestamp;
+                queueAlert(val);
+            }
+        }
+    } catch (e) { /* silent */ }
+}
 
 function initGoldAlerts() {
     if (!FIREBASE_URL) return;
-
-    try {
-        const source = new EventSource(`${FIREBASE_URL}/gold_alerts.json`);
-
-        // Initial snapshot — ignore (old alerts already in DB)
-        source.addEventListener('put', () => {});
-
-        // A new alert was written by someone
-        source.addEventListener('patch', e => {
-            try {
-                const payload = JSON.parse(e.data);
-                const entries = payload.data;
-                if (!entries) return;
-                for (const val of Object.values(entries)) {
-                    if (val && val.timestamp > pageLoadTime) {
-                        queueAlert(val);
-                    }
-                }
-            } catch (err) {
-                console.warn('Gold alert parse error:', err);
-            }
-        });
-
-    } catch (e) {
-        console.warn('Gold alert SSE init failed:', e);
-    }
+    setInterval(pollGoldAlerts, 5000);
 }
 
 // -------------------------------------------------------
