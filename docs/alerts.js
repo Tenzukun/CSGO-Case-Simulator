@@ -4,7 +4,7 @@
 // connected users whenever anyone rolls a Gold item.
 // -------------------------------------------------------
 
-const ALERT_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
+const ALERT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 const pageLoadTime     = Date.now();
 
 let alertQueue   = [];
@@ -61,7 +61,7 @@ function initGoldAlerts() {
         // Initial snapshot — ignore (old alerts already in DB)
         source.addEventListener('put', () => {});
 
-        // Incremental update — a new alert was written by someone
+        // A new alert was written by someone
         source.addEventListener('patch', e => {
             try {
                 const payload = JSON.parse(e.data);
@@ -78,7 +78,7 @@ function initGoldAlerts() {
         });
 
     } catch (e) {
-        console.warn('Gold alert SSE failed:', e);
+        console.warn('Gold alert SSE init failed:', e);
     }
 }
 
@@ -107,7 +107,6 @@ function showNextAlert() {
     el.classList.remove('hidden', 'slide-out');
     el.classList.add('slide-in');
 
-    // Hold for 5 s then slide out
     setTimeout(() => {
         el.classList.remove('slide-in');
         el.classList.add('slide-out');

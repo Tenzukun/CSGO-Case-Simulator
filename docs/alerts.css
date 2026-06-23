@@ -1,5 +1,5 @@
 /* -------------------------------------------------------
-   Gold Drop Alert — side notification
+   Gold Drop Alert — live side notification
 ------------------------------------------------------- */
 
 .gold-alert {
@@ -86,14 +86,13 @@
     color: #8f98a0;
 }
 
-/* Mobile: anchor to bottom-centre instead of bottom-right */
 @media (max-width: 480px) {
     .gold-alert {
         bottom: 16px;
-        right: 50%;
-        transform: translateX(50%);
-        max-width: 340px;
-        width: calc(100vw - 32px);
+        right: 16px;
+        left: 16px;
+        width: auto;
+        max-width: none;
     }
 
     .gold-alert.slide-in {
@@ -105,12 +104,12 @@
     }
 
     @keyframes gaSlideInMobile {
-        from { transform: translateX(50%) translateY(120%); opacity: 0; }
-        to   { transform: translateX(50%) translateY(0);    opacity: 1; }
+        from { transform: translateY(120%); opacity: 0; }
+        to   { transform: translateY(0);    opacity: 1; }
     }
 
     @keyframes gaSlideOutMobile {
-        from { transform: translateX(50%) translateY(0);    opacity: 1; }
-        to   { transform: translateX(50%) translateY(120%); opacity: 0; }
+        from { transform: translateY(0);    opacity: 1; }
+        to   { transform: translateY(120%); opacity: 0; }
     }
 }
