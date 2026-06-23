@@ -9,12 +9,22 @@
 <body>
 
     <!-- Username Modal -->
-    <div class="modal-overlay" id="usernameModal">
+    <div class="modal-overlay hidden" id="usernameModal">
         <div class="modal">
             <h2>👋 Welcome!</h2>
             <p>Set a username to appear on the leaderboard. Your friends will see this name.</p>
             <input type="text" id="usernameInput" placeholder="Enter username..." maxlength="20" autocomplete="off">
             <button class="modal-btn" id="usernameSubmit">Join the Leaderboard</button>
+        </div>
+    </div>
+
+    <!-- Level Up Overlay -->
+    <div class="levelup-overlay hidden" id="levelUpOverlay">
+        <div class="levelup-card">
+            <div class="levelup-badge">⭐ LEVEL UP! ⭐</div>
+            <div class="levelup-number" id="levelUpNumber">Level 2</div>
+            <div class="levelup-perk" id="levelUpPerk"></div>
+            <button class="levelup-close" id="levelUpClose">Continue</button>
         </div>
     </div>
 
@@ -26,6 +36,13 @@
             <span class="balance-icon">💰</span>
             <span class="balance-amount" id="balanceDisplay">0 coins</span>
             <button class="daily-btn" id="dailyBtn">🎁 Daily Reward</button>
+        </div>
+        <div class="level-bar">
+            <span class="level-label" id="levelLabel">Lv.1</span>
+            <div class="xp-bar-wrap">
+                <div class="xp-bar-fill" id="xpBarFill" style="width:0%"></div>
+            </div>
+            <span class="xp-text" id="xpText">0 / 200 XP</span>
         </div>
     </div>
 
@@ -66,11 +83,7 @@
                 <div class="item-body">
                     <div class="float-bar-container">
                         <div class="float-labels">
-                            <span>FN</span>
-                            <span>MW</span>
-                            <span>FT</span>
-                            <span>WW</span>
-                            <span>BS</span>
+                            <span>FN</span><span>MW</span><span>FT</span><span>WW</span><span>BS</span>
                         </div>
                         <div class="float-bar">
                             <div class="float-marker" id="floatMarker"></div>
@@ -91,12 +104,13 @@
         </div>
     </div>
 
-    <!-- Inventory, Stats, Support -->
+    <!-- Inventory, Stats, Fishing, Leaderboard, Support -->
     <div class="secondary-btns">
         <button class="secondary-btn" id="invBtn">🎒 Inventory</button>
         <button class="secondary-btn" id="statsBtn">📊 Stats</button>
         <button class="secondary-btn" id="fishBtn">🎣 Fishing</button>
         <button class="secondary-btn" id="lbBtn">🏆 Leaderboard</button>
+        <button class="secondary-btn" id="tutBtn">❓ How to Play</button>
         <button class="secondary-btn" id="supportBtn">☕ Ko-fi</button>
     </div>
 
@@ -138,12 +152,56 @@
             <button class="lb-refresh-btn" id="lbRefreshBtn">↻ Refresh</button>
         </div>
         <div class="lb-tabs">
-            <button class="lb-tab active" data-tab="coins">💰 Coins</button>
+            <button class="lb-tab active" data-tab="coins">💰 Total Earned</button>
             <button class="lb-tab" data-tab="cases">📦 Cases</button>
             <button class="lb-tab" data-tab="item">🎯 Best Item</button>
+            <button class="lb-tab" data-tab="level">⭐ Level</button>
         </div>
         <div class="lb-list" id="lbList">
             <p class="empty-msg">Loading...</p>
+        </div>
+    </div>
+
+    <div class="panel" id="tutPanel">
+        <h2>❓ How to Play</h2>
+
+        <div class="tut-section">
+            <div class="tut-heading">🎰 Opening Cases</div>
+            <p>Select a case from the main screen. Each case costs coins to open. You'll roll for a skin of a random rarity — Blue is most common, Gold is the rarest. Higher rarity drops give more XP and are worth more coins.</p>
+        </div>
+
+        <div class="tut-section">
+            <div class="tut-heading">💰 Earning Coins</div>
+            <p>Coins come from three sources: selling items from your inventory, claiming your daily reward (resets at midnight), and fishing. The more you level up, the bigger your daily reward and fishing payouts get.</p>
+        </div>
+
+        <div class="tut-section">
+            <div class="tut-heading">🎣 Fishing</div>
+            <p>Open the Fishing tab and hit Cast Line. Something bites within a couple of seconds. You can catch coins, junk items worth coins, rare junk, or — at a 2% chance — a real skin that goes straight into your inventory.</p>
+        </div>
+
+        <div class="tut-section">
+            <div class="tut-heading">⭐ Levelling Up</div>
+            <p>You earn XP every time you open a case or go fishing. The XP bar in the header fills up, and when it's full you level up. Higher rarity drops give more XP. Levelling up unlocks new cases, increases your daily reward, and boosts fishing payouts.</p>
+            <div class="tut-xp-table">
+                <div class="tut-xp-row"><span>🔵 Blue drop</span><span>10 XP</span></div>
+                <div class="tut-xp-row"><span>🟣 Purple drop</span><span>25 XP</span></div>
+                <div class="tut-xp-row"><span>🩷 Pink drop</span><span>75 XP</span></div>
+                <div class="tut-xp-row"><span>🔴 Red drop</span><span>200 XP</span></div>
+                <div class="tut-xp-row"><span>🟡 Gold drop</span><span>500 XP</span></div>
+                <div class="tut-xp-row"><span>🎣 Fishing catch</span><span>5–100 XP</span></div>
+                <div class="tut-xp-row"><span>🎁 Daily reward</span><span>100 XP</span></div>
+            </div>
+        </div>
+
+        <div class="tut-section">
+            <div class="tut-heading">🔒 Case Unlocks</div>
+            <p>The first four cases are available from the start. Four more unlock as you level up — Spectrum at Level 5, Prisma at Level 15, Glove at Level 25, and the Classified Case at Level 40.</p>
+        </div>
+
+        <div class="tut-section">
+            <div class="tut-heading">🏆 Leaderboard</div>
+            <p>Set your username on your first visit. Your stats are tracked automatically and pushed to a shared leaderboard your friends can see. Compete across four categories: Total Earned, Cases Opened, Best Item, and Level.</p>
         </div>
     </div>
 
@@ -160,6 +218,12 @@
         <a href="https://ko-fi.com/nthn_mp4" target="_blank">☕ Support on Ko-fi</a>
     </div>
 
+    <!-- Scripts — load order matters -->
+    <script src="data.js"></script>
+    <script src="rolls.js"></script>
+    <script src="progression.js"></script>
+    <script src="leaderboard.js"></script>
+    <script src="fishing.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

@@ -1064,6 +1064,210 @@ body {
     margin-top: 6px;
 }
 
+/* --- Level Bar --- */
+.level-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 6px 14px;
+    background: #16202d;
+    border: 1px solid #2a3f5f;
+    border-radius: 6px;
+}
+
+.level-label {
+    font-size: 0.88rem;
+    font-weight: bold;
+    color: #e4ae39;
+    white-space: nowrap;
+}
+
+.xp-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: #2a3f5f;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.xp-bar-fill {
+    height: 100%;
+    background: linear-gradient(to right, #4b69ff, #8847ff);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+.xp-text {
+    font-size: 0.75rem;
+    color: #8f98a0;
+    white-space: nowrap;
+}
+
+/* --- Level Up Popup --- */
+.levelup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s ease;
+}
+
+.levelup-overlay.hidden {
+    display: none !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes popIn {
+    0%   { transform: scale(0.7); opacity: 0; }
+    70%  { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.levelup-card {
+    background: linear-gradient(135deg, #16202d, #1b2838);
+    border: 2px solid #e4ae39;
+    border-radius: 16px;
+    padding: 40px 50px;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(228, 174, 57, 0.4);
+    animation: popIn 0.4s ease forwards;
+    max-width: 340px;
+    width: 90%;
+}
+
+.levelup-badge {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #e4ae39;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.levelup-number {
+    font-size: 2.8rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 14px;
+    text-shadow: 0 0 20px rgba(228, 174, 57, 0.6);
+}
+
+.levelup-perk {
+    font-size: 0.95rem;
+    color: #c6d4df;
+    margin-bottom: 24px;
+    line-height: 1.5;
+    min-height: 40px;
+}
+
+.levelup-close {
+    padding: 10px 30px;
+    background: #e4ae39;
+    color: #1b2838;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.levelup-close:hover {
+    background: #c99c30;
+}
+
+/* --- Case Card Lock --- */
+.case-card-lock {
+    font-size: 0.8rem;
+    color: #8f98a0;
+    margin-top: 4px;
+}
+
+/* --- Leaderboard Level Badge --- */
+.lb-level-badge {
+    font-size: 0.75rem;
+    background: #2a3f5f;
+    color: #e4ae39;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+/* --- Tutorial --- */
+.tut-section {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #2a3f5f;
+}
+
+.tut-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.tut-heading {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #c6d4df;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.tut-section p {
+    font-size: 0.88rem;
+    color: #8f98a0;
+    line-height: 1.6;
+}
+
+.tut-xp-table {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tut-xp-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.83rem;
+    padding: 4px 8px;
+    background: #1b2838;
+    border-radius: 4px;
+    color: #8f98a0;
+}
+
+.tut-xp-row span:last-child {
+    color: #8847ff;
+    font-weight: bold;
+}
+
+/* --- XP Gain Popup --- */
+@keyframes xpFloat {
+    0%   { opacity: 1; transform: translateY(0) translateX(-50%); }
+    100% { opacity: 0; transform: translateY(-40px) translateX(-50%); }
+}
+
+.xp-gain-popup {
+    position: absolute;
+    font-size: 0.88rem;
+    font-weight: bold;
+    color: #8847ff;
+    pointer-events: none;
+    z-index: 9999;
+    animation: xpFloat 1.2s ease forwards;
+    white-space: nowrap;
+}
+
 /* --- Mobile --- */
 @media (max-width: 480px) {
     .banner h1 {
