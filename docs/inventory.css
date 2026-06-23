@@ -187,7 +187,26 @@
 .inv-actions {
     display: flex;
     gap: 10px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
+}
+
+#invList {
+    max-height: 420px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+#invList::-webkit-scrollbar {
+    width: 5px;
+}
+
+#invList::-webkit-scrollbar-track {
+    background: #1b2838;
+}
+
+#invList::-webkit-scrollbar-thumb {
+    background: #2a3f5f;
+    border-radius: 4px;
 }
 
 .sell-all-btn {

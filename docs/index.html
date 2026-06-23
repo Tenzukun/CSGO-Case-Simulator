@@ -156,17 +156,20 @@
         <!-- Inventory Panel -->
         <div class="panel" id="invPanel">
             <h2>Your Inventory</h2>
-            <div id="invList"></div>
             <div class="inv-actions">
                 <button class="sell-all-btn" id="sellAllBtn">💰 Sell All</button>
             </div>
+            <div id="invList"></div>
         </div>
 
         <!-- Stats Panel -->
         <div class="panel" id="statsPanel">
             <h2>Stats</h2>
             <div class="stats-grid" id="statsGrid"></div>
-
+            <div class="stat-best-roll">
+                <span class="stat-label">Best Roll</span>
+                <span class="stat-best-value" id="bestRoll">None yet</span>
+            </div>
         </div>
 
         <!-- Leaderboard Panel -->
@@ -179,6 +182,7 @@
             <div class="lb-tabs">
                 <button class="lb-tab active" data-tab="coins">💰 Total Earned</button>
                 <button class="lb-tab" data-tab="cases">📦 Cases</button>
+                <button class="lb-tab" data-tab="item">🎯 Best Item</button>
                 <button class="lb-tab" data-tab="level">⭐ Level</button>
             </div>
             <div class="lb-list" id="lbList">
@@ -290,7 +294,7 @@
 
             <div class="tut-section">
                 <div class="tut-heading">🏆 Leaderboard</div>
-                <p>Set your username on your first visit. Your stats sync automatically to a shared leaderboard. Enter the same username on another device to load your saved progress. Compete across three categories: Total Earned, Cases Opened, and Level.</p>
+                <p>Set your username on your first visit. Your stats sync automatically to a shared leaderboard. Enter the same username on another device to load your saved progress. Compete across four categories: Total Earned, Cases Opened, Best Item, and Level.</p>
             </div>
         </div>
     </div>
