@@ -193,6 +193,9 @@ function signOut() {
 // -------------------------------------------------------
 
 function initAuth() {
+    // Sign out must be wired regardless of login state
+    document.getElementById('signOutBtn')?.addEventListener('click', signOut);
+
     if (isLoggedIn() || isGuest()) return;
 
     document.getElementById('authOverlay').classList.remove('hidden');
@@ -229,7 +232,4 @@ function initAuth() {
             if (e.key === 'Enter') authSignUp();
         });
     });
-
-    // Sign out button (in leaderboard panel)
-    document.getElementById('signOutBtn')?.addEventListener('click', signOut);
 }

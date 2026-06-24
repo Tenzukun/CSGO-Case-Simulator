@@ -4,6 +4,17 @@
 
 const CHANGELOG = [
     {
+        version: 'v0.18',
+        title: 'Sign Out Fix & Cross-Device Sync',
+        date: 'June 2026',
+        changes: [
+            { type: 'fix',      text: 'Sign Out button now works. It was wired inside a block that returned early for logged-in users, so it was never being attached.' },
+            { type: 'new',      text: 'Cross-device sync added — the game polls Firebase every 30 seconds. If another device (e.g. your phone) made changes since your last save, the latest state is pulled and applied silently.' },
+            { type: 'improved', text: 'Coins, level, XP, inventory, achievements, and leaderboard stats all stay in sync across devices automatically.' },
+            { type: 'improved', text: 'A subtle "↻ Synced" indicator briefly appears in the top nav when remote changes are pulled in.' },
+        ]
+    },
+    {
         version: 'v0.17',
         title: 'Best Item Leaderboard Fix',
         date: 'June 2026',

@@ -717,3 +717,4 @@ initFishingSkillTree();
 initUpgradesPage();
 initFeedbackPage();
 initPrestige();
+startCrossDeviceSync();

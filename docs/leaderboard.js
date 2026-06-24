@@ -157,6 +157,8 @@ async function pushLeaderboard() {
                 method: 'PUT', body: JSON.stringify(playerData)
             })
         ]);
+        // Record when we last pushed so sync can detect remote changes
+        localStorage.setItem('csgo_last_push_time', lbData.updated.toString());
     } catch (e) {
         console.warn('Cloud save failed:', e);
     }
@@ -306,3 +308,80 @@ document.querySelectorAll('.lb-tab').forEach(tab => {
         renderLeaderboard();
     });
 });
+// -------------------------------------------------------
+// Cross-Device Sync
+// Poll Firebase every 30s; if another device pushed more
+// recently than we did, pull and apply their state.
+// -------------------------------------------------------
+
+let _syncInterval = null;
+
+function applySyncData(data) {
+    if (!data) return;
+
+    // Core stats
+    if (data.balance      != null) localStorage.setItem('csgo_coins',         String(data.balance));
+    if (data.xp           != null) localStorage.setItem('csgo_xp',            String(data.xp));
+    if (data.level        != null) localStorage.setItem('csgo_level',         String(data.level));
+    if (data.inventory    != null) localStorage.setItem('csgo_inventory',     data.inventory);
+    if (data.achievements != null) localStorage.setItem('csgo_achievements',  data.achievements);
+    if (data.achStats     != null) localStorage.setItem('csgo_ach_stats',     data.achStats);
+    if (data.alltimeStats != null) localStorage.setItem('csgo_alltime_stats', data.alltimeStats);
+    if (data.weeklyState  != null) localStorage.setItem('csgo_weekly',        data.weeklyState);
+    if (data.favourites   != null) localStorage.setItem('csgo_favourites',    data.favourites);
+
+    // Rebuild lb_stats from synced data
+    const lb = getLbStats();
+    if (data.coins      != null) lb.coins      = data.coins;
+    if (data.cases      != null) lb.cases      = data.cases;
+    if (data.bestItem   != null) lb.bestItem   = data.bestItem;
+    if (data.bestRarity != null) lb.bestRarity = data.bestRarity;
+    if (data.bestRank   != null) lb.bestRank   = data.bestRank;
+    if (data.bestValue  != null) lb.bestValue  = data.bestValue;
+    saveLbStats(lb);
+
+    // Refresh displays
+    if (typeof updateBalanceDisplay === 'function') updateBalanceDisplay();
+    if (typeof updateLevelDisplay   === 'function') updateLevelDisplay();
+    if (typeof updatePrestigeButton === 'function') updatePrestigeButton();
+    if (typeof renderBestEver       === 'function') renderBestEver();
+
+    showSyncIndicator();
+}
+
+function showSyncIndicator() {
+    const el = document.getElementById('syncIndicator');
+    if (!el) return;
+    el.classList.remove('hidden', 'sync-fade');
+    // Force reflow then fade out
+    void el.offsetWidth;
+    el.classList.add('sync-fade');
+}
+
+async function pollForSync() {
+    const username = getUsername();
+    if (!username || (typeof isGuest === 'function' && isGuest())) return;
+
+    try {
+        const res  = await fetch(`${FIREBASE_URL}/players/${encodeURIComponent(username)}.json`);
+        const data = await res.json();
+        if (!data || !data.updated) return;
+
+        const lastPush = parseInt(localStorage.getItem('csgo_last_push_time') || '0');
+
+        // Only apply if another device pushed more recently than we did
+        if (data.updated > lastPush) {
+            localStorage.setItem('csgo_last_push_time', String(data.updated));
+            applySyncData(data);
+        }
+    } catch (_) {
+        // Silent — don't interrupt gameplay on network error
+    }
+}
+
+function startCrossDeviceSync() {
+    if (_syncInterval) clearInterval(_syncInterval);
+    // Initial pull after a short delay, then every 30s
+    setTimeout(pollForSync, 5000);
+    _syncInterval = setInterval(pollForSync, 30000);
+}
