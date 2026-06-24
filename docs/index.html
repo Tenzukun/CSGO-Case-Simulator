@@ -577,6 +577,14 @@
                 navigator.serviceWorker.register('/CSGO-Case-Simulator/sw.js')
                     .catch(err => console.warn('Service worker registration failed:', err));
             });
+
+            // When a new service worker takes over, reload once to get fresh files
+            let swReloading = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (swReloading) return;
+                swReloading = true;
+                window.location.reload();
+            });
         }
     </script>
 </body>
