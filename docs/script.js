@@ -699,19 +699,16 @@ function switchAccountTab(tabId) {
     });
     if (tabId === 'stats')  renderStats();
     if (tabId === 'levels') renderLevelDetails();
+    if (tabId === 'badges') renderBadgesTab();
 }
 
 function updateAcctPanelName() {
     const el = document.getElementById('acctPanelName');
     if (!el) return;
     if (typeof isGuest === 'function' && isGuest()) {
-        el.innerHTML = 'Guest';
+        el.textContent = 'Guest';
     } else {
-        const title = (typeof getActiveTitle === 'function') ? getActiveTitle() : null;
-        const isBeta = localStorage.getItem('csgo_beta_tester') === 'true';
-        const betaHtml  = isBeta  ? `<span class="lb-beta-badge">🧪 BETA</span> ` : '';
-        const titleHtml = title   ? `<span class="lb-player-title">${title}</span> ` : '';
-        el.innerHTML = `${betaHtml}${titleHtml}${getUsername() || 'Account'}`;
+        el.textContent = getUsername() || 'Account';
     }
 }
 
@@ -721,13 +718,89 @@ function updateAccountBtn() {
     if (typeof isGuest === 'function' && isGuest()) {
         el.textContent = 'Guest';
     } else {
-        const title  = (typeof getActiveTitle === 'function') ? getActiveTitle() : null;
-        const isBeta = localStorage.getItem('csgo_beta_tester') === 'true';
-        const prefix = isBeta ? '🧪 ' : '';
+        const title = (typeof getActiveTitle === 'function') ? getActiveTitle() : null;
         el.textContent = title
-            ? `${prefix}[${title}] ${getUsername() || 'Account'}`
-            : `${prefix}${getUsername() || 'Account'}`;
+            ? `[${title}] ${getUsername() || 'Account'}`
+            : (getUsername() || 'Account');
     }
+}
+
+function renderBadgesTab() {
+    const el = document.getElementById('accountTab-badges');
+    if (!el) return;
+
+    const isBeta         = localStorage.getItem('csgo_beta_tester') === 'true';
+    const isDev          = localStorage.getItem('csgo_developer')   === 'true';
+    const pLevel         = (typeof getPrestigeLevel    === 'function') ? getPrestigeLevel()    : 0;
+    const shopData       = (typeof getPrestigeShopData === 'function') ? getPrestigeShopData() : { unlocked: [], activeTitle: null };
+    const shop           = (typeof PRESTIGE_SHOP !== 'undefined') ? PRESTIGE_SHOP : [];
+    const unlockedTitles = shop.filter(i => i.category === 'title' && shopData.unlocked.includes(i.id));
+    const hasBadges      = isBeta || isDev || pLevel > 0 || unlockedTitles.length > 0;
+
+    if (!hasBadges) {
+        el.innerHTML = `<p class="badges-empty">No badges earned yet. Prestige, unlock a title from the shop, or become a beta tester to earn badges here.</p>`;
+        return;
+    }
+
+    let html = '';
+
+    // Special badges (DEV / BETA)
+    if (isDev || isBeta) {
+        html += `<div class="badges-section-label">Special</div><div class="badges-grid">`;
+        if (isDev) {
+            html += `
+                <div class="badge-card">
+                    <span class="lb-dev-badge" style="font-size:0.82rem;padding:3px 9px;">⚙️ DEV</span>
+                    <div class="badge-card-name">Developer</div>
+                    <div class="badge-card-desc">The person behind the simulator.</div>
+                </div>`;
+        }
+        if (isBeta) {
+            html += `
+                <div class="badge-card">
+                    <span class="lb-beta-badge" style="font-size:0.82rem;padding:3px 9px;">🧪 BETA</span>
+                    <div class="badge-card-name">Beta Tester</div>
+                    <div class="badge-card-desc">Helped shape the game during early access.</div>
+                </div>`;
+        }
+        html += `</div>`;
+    }
+
+    // Prestige badge
+    if (pLevel > 0) {
+        const tier = (typeof getBadgeTier === 'function') ? getBadgeTier(pLevel) : 'bronze';
+        const tierLabel = tier.charAt(0).toUpperCase() + tier.slice(1);
+        html += `
+            <div class="badges-section-label">Prestige</div>
+            <div class="badges-grid">
+                <div class="badge-card">
+                    <span class="prestige-badge prestige-badge-${tier}" style="font-size:0.82rem;padding:3px 9px;">✦ P${pLevel}</span>
+                    <div class="badge-card-name">Prestige ${pLevel}</div>
+                    <div class="badge-card-desc">${tierLabel} tier — prestiged ${pLevel === 1 ? 'once' : pLevel + ' times'}.</div>
+                </div>
+            </div>`;
+    }
+
+    // Unlocked titles
+    if (unlockedTitles.length > 0) {
+        html += `<div class="badges-section-label">Titles</div><div class="badges-grid">`;
+        unlockedTitles.forEach(item => {
+            const isActive = shopData.activeTitle === item.id;
+            html += `
+                <div class="badge-card">
+                    <span class="lb-player-title" style="font-size:0.78rem;padding:3px 8px;">${item.name}</span>
+                    <div class="badge-card-name">${item.name}</div>
+                    <div class="badge-card-desc">${item.desc}</div>
+                    <button class="badge-equip-btn ${isActive ? 'badge-equip-active' : ''}"
+                            onclick="setActiveTitle('${item.id}'); renderBadgesTab(); updateAccountBtn();">
+                        ${isActive ? '✓ Equipped' : 'Equip'}
+                    </button>
+                </div>`;
+        });
+        html += `</div>`;
+    }
+
+    el.innerHTML = html;
 }
 
 function initAccountPanel() {

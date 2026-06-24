@@ -5,6 +5,17 @@
 const CHANGELOG = [
     {
         version: 'v0.23',
+        title: 'Badges Tab and Special Badges',
+        date: 'June 2026',
+        changes: [
+            { type: 'new',      text: 'Badges tab added to the account panel. Shows all your earned badges in one place: special badges (Dev, Beta Tester), your prestige tier, and any titles unlocked from the prestige shop.' },
+            { type: 'new',      text: 'Titles can now be equipped directly from the Badges tab as well as the Prestige Shop.' },
+            { type: 'new',      text: 'Beta tester badge added. Players granted beta tester status show a 🧪 BETA badge on the leaderboard.' },
+            { type: 'new',      text: 'Developer badge added. The developer account displays a ⚙️ DEV badge on the leaderboard.' },
+        ]
+    },
+    {
+        version: 'v0.23',
         title: 'Beta Tester Badge',
         date: 'June 2026',
         changes: [

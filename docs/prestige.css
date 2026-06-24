@@ -476,3 +476,97 @@
     white-space: nowrap;
     letter-spacing: 0.3px;
 }
+
+/* --- Developer badge --- */
+.lb-dev-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.65rem;
+    font-weight: bold;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-right: 4px;
+    background: rgba(192, 132, 252, 0.12);
+    color: #c084fc;
+    border: 1px solid rgba(192, 132, 252, 0.35);
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+}
+
+/* -------------------------------------------------------
+   Badges Tab
+------------------------------------------------------- */
+
+.badges-section-label {
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #4b69ff;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.badges-section-label:first-child { margin-top: 0; }
+
+.badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.badge-card {
+    background: #1b2838;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+}
+
+.badge-card-name {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #c6d4df;
+}
+
+.badge-card-desc {
+    font-size: 0.7rem;
+    color: #8f98a0;
+    line-height: 1.4;
+}
+
+.badge-equip-btn {
+    width: 100%;
+    padding: 4px 6px;
+    background: transparent;
+    border: 1px solid #4b69ff;
+    border-radius: 4px;
+    color: #4b69ff;
+    font-size: 0.7rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    margin-top: 2px;
+}
+
+.badge-equip-btn:hover { background: rgba(75,105,255,0.1); }
+
+.badge-equip-active {
+    background: rgba(78,199,140,0.1) !important;
+    border-color: #4ec78c !important;
+    color: #4ec78c !important;
+}
+
+.badges-empty {
+    font-size: 0.82rem;
+    color: #8f98a0;
+    font-style: italic;
+    line-height: 1.5;
+    padding: 4px 0;
+}
