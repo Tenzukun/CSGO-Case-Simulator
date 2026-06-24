@@ -127,9 +127,10 @@ async function pushLeaderboard() {
         username,
         coins:      stats.coins,
         cases:      stats.cases,
-        bestItem:   stats.bestItem,
-        bestRarity: stats.bestRarity,
-        bestValue:  stats.bestValue || 0,
+        bestItem:   stats.bestItem   || 'None',
+        bestRarity: stats.bestRarity || '',
+        bestRank:   stats.bestRank   || 0,
+        bestValue:  stats.bestValue  || 0,
         level:      getLevel(),
         updated:    Date.now()
     };
@@ -239,6 +240,10 @@ async function renderLeaderboard() {
         if (lbActiveTab === 'coins') return (b.coins || 0) - (a.coins || 0);
         if (lbActiveTab === 'cases') return (b.cases || 0) - (a.cases || 0);
         if (lbActiveTab === 'level') return (b.level || 1) - (a.level || 1);
+        if (lbActiveTab === 'item') {
+            const rankDiff = (b.bestRank || 0) - (a.bestRank || 0);
+            return rankDiff !== 0 ? rankDiff : (b.bestValue || 0) - (a.bestValue || 0);
+        }
         return 0;
     });
 
@@ -260,6 +265,15 @@ async function renderLeaderboard() {
             valueHtml = `<span class="lb-value">${(entry.cases || 0).toLocaleString()} cases</span>`;
         } else if (lbActiveTab === 'level') {
             valueHtml = `<span class="lb-value">Level ${entry.level || 1}</span>`;
+        } else if (lbActiveTab === 'item') {
+            const item  = entry.bestItem || 'None';
+            const color = (RARITY_ODDS[entry.bestRarity] || {}).colour || '#8f98a0';
+            const val   = entry.bestValue ? `${entry.bestValue.toLocaleString()} coins` : '';
+            valueHtml = `
+                <span class="lb-value lb-best-item">
+                    <span style="color:${color}">${item}</span>
+                    ${val ? `<span class="lb-best-value">${val}</span>` : ''}
+                </span>`;
         }
 
         return `
