@@ -212,6 +212,13 @@
                 <h2 class="screen-title">🎣 Fishing</h2>
                 <p class="fish-desc">Cast your line and see what bites. Catch coins, junk, or maybe something rare...</p>
                 <button class="cast-btn" id="castBtn">🎣 Cast Line</button>
+                <div class="quick-toggle" style="margin-bottom:10px">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="instantFishToggle">
+                        <span class="toggle-slider"></span>
+                        <span style="margin-left:6px">⚡ Instant Fishing</span>
+                    </label>
+                </div>
                 <div class="fish-status" id="fishStatus"></div>
                 <div class="fish-log-header">
                     <span class="fish-log-title">Catch Log</span>
@@ -220,13 +227,7 @@
                 <div class="fish-log" id="fishLog"></div>
                 <div class="fish-odds">
                     <div class="fish-odds-title">Catch Chances</div>
-                    <div class="fish-odds-list">
-                        <div class="fish-odds-row"><span>💰 Small coins (15–60)</span><span>50%</span></div>
-                        <div class="fish-odds-row"><span>💰 Big coins (60–175)</span><span>25%</span></div>
-                        <div class="fish-odds-row"><span>🪣 Junk item (15–60 coins)</span><span>15%</span></div>
-                        <div class="fish-odds-row"><span>✨ Rare junk (90–250 coins)</span><span>8%</span></div>
-                        <div class="fish-odds-row highlight"><span>🔫 Random skin</span><span>2%</span></div>
-                    </div>
+                    <div class="fish-odds-list" id="fishOddsList"></div>
                 </div>
             </div>
         </div>

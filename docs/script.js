@@ -604,6 +604,7 @@ function switchPage(pageId) {
     if (pageId === 'page-upgrades')     renderUpgradesPage();
     if (pageId === 'page-feedback')     renderFeedbackPage();
     if (pageId === 'page-changelog')    renderChangelogPage();
+    if (pageId === 'page-fishing')      renderFishOdds();
     if (pageId === 'page-leaderboard') {
         if (typeof updateLbUsernameDisplay === 'function') updateLbUsernameDisplay();
         if (typeof renderLeaderboard      === 'function') renderLeaderboard();

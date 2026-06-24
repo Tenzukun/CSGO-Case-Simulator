@@ -12,6 +12,60 @@ const RARE_JUNK_ITEMS = [
     'Vintage Flask', 'Silver Coin', 'Encrypted Chip'
 ];
 
+let instantFish = localStorage.getItem('csgo_instant_fish') === 'true';
+
+// -------------------------------------------------------
+// Dynamic odds display (reflects active fishing skills)
+// -------------------------------------------------------
+
+function renderFishOdds() {
+    const el = document.getElementById('fishOddsList');
+    if (!el) return;
+
+    const bonus = (typeof getFishingBonus === 'function') ? getFishingBonus() : {};
+    const mult  = getFishMultiplier() * (bonus.coinMult || 1);
+    const rvm   = bonus.rareValueMult || 1;
+
+    const skinChance    = 2  + (bonus.skinChanceBonus  || 0);
+    const rareChance    = 8  + (bonus.rareChanceBonus  || 0);
+    const junkChance    = Math.max(5, 15 - (bonus.rareChanceBonus || 0));
+    const bigCoinChance = 25 + (bonus.bigCoinBonus     || 0);
+    const smallChance   = Math.max(0, 100 - skinChance - rareChance - junkChance - bigCoinChance);
+
+    const fmt = (min, max, m) =>
+        `${Math.round(min * m)}–${Math.round(max * m)}`;
+
+    const hasMystery = bonus.mysteryCatch;
+
+    el.innerHTML = `
+        <div class="fish-odds-row">
+            <span>💰 Small coins (${fmt(15, 60, mult)})</span>
+            <span>${smallChance.toFixed(0)}%</span>
+        </div>
+        <div class="fish-odds-row">
+            <span>💰 Big coins (${fmt(60, 175, mult)})</span>
+            <span>${bigCoinChance.toFixed(0)}%</span>
+        </div>
+        <div class="fish-odds-row">
+            <span>🪣 Junk (${fmt(15, 60, mult)} coins)</span>
+            <span>${junkChance.toFixed(0)}%</span>
+        </div>
+        ${hasMystery ? `
+        <div class="fish-odds-row">
+            <span>📦 Mystery Chest (${fmt(150, 600, mult)} coins)</span>
+            <span>5%</span>
+        </div>` : ''}
+        <div class="fish-odds-row">
+            <span>✨ Rare junk (${fmt(90 * rvm, 250 * rvm, mult)} coins)</span>
+            <span>${(hasMystery ? rareChance - 5 : rareChance).toFixed(0)}%</span>
+        </div>
+        <div class="fish-odds-row highlight">
+            <span>🔫 Random skin</span>
+            <span>${skinChance.toFixed(0)}%</span>
+        </div>
+    `;
+}
+
 // -------------------------------------------------------
 // Roll a single catch (skill bonuses applied)
 // -------------------------------------------------------
@@ -168,6 +222,16 @@ document.getElementById('fishClearBtn').addEventListener('click', () => {
     renderFishLog();
 });
 
+// Instant Fishing toggle
+const instantFishToggle = document.getElementById('instantFishToggle');
+if (instantFishToggle) {
+    instantFishToggle.checked = instantFish;
+    instantFishToggle.addEventListener('change', e => {
+        instantFish = e.target.checked;
+        localStorage.setItem('csgo_instant_fish', instantFish);
+    });
+}
+
 const castBtn    = document.getElementById('castBtn');
 const fishStatus = document.getElementById('fishStatus');
 
@@ -176,11 +240,11 @@ castBtn.addEventListener('click', () => {
     fishStatus.textContent = '🎣 Line cast...';
     SFX.cast();
 
-    const waitMs = Math.floor(Math.random() * 1001) + 500;
+    const waitMs = instantFish ? 0 : Math.floor(Math.random() * 1001) + 500;
 
     setTimeout(() => {
         fishStatus.textContent = '⚡ Something bit!';
-        SFX.bite();
+        if (!instantFish) SFX.bite();
 
         setTimeout(() => {
             const bonus  = (typeof getFishingBonus === 'function') ? getFishingBonus() : {};
@@ -202,6 +266,9 @@ castBtn.addEventListener('click', () => {
 
             // 1.5s cooldown before next cast
             setTimeout(() => { castBtn.disabled = false; }, 1500);
-        }, 600);
+        }, instantFish ? 0 : 600);
     }, waitMs);
 });
+
+// Render odds on init
+renderFishOdds();
