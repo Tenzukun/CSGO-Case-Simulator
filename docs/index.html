@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="auth.css">
     <link rel="stylesheet" href="fishing-skills.css">
     <link rel="stylesheet" href="feedback.css">
+    <link rel="stylesheet" href="changelog.css">
     <link rel="stylesheet" href="mobile.css">
 </head>
 <body>
@@ -125,6 +126,7 @@
             <button class="sidebar-item" data-page="upgrades">⚙️ Upgrades</button>
             <button class="sidebar-item" data-page="leaderboard">🏆 Leaderboard</button>
             <button class="sidebar-item" data-page="feedback">💬 Feedback</button>
+            <button class="sidebar-item" data-page="changelog">📋 Changelog</button>
             <a href="https://ko-fi.com/nthn_mp4" target="_blank" class="sidebar-item">☕ Ko-fi</a>
         </nav>
     </aside>
@@ -374,6 +376,13 @@
             </div>
         </div>
 
+        <!-- Page: Changelog -->
+        <div class="page hidden" id="page-changelog">
+            <h2 class="page-heading">📋 Changelog</h2>
+            <p class="cl-meta">A full history of every update made to the simulator.</p>
+            <div id="changelogList"></div>
+        </div>
+
     </main>
 
     <!-- ================================================
@@ -459,6 +468,7 @@
     <script src="case-skills.js"></script>
     <script src="upgrades.js"></script>
     <script src="feedback.js"></script>
+    <script src="changelog.js"></script>
     <script src="achievements.js"></script>
     <script src="weekly.js"></script>
     <script src="alerts.js"></script>

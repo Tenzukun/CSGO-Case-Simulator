@@ -1,0 +1,135 @@
+/* -------------------------------------------------------
+   Changelog Page
+------------------------------------------------------- */
+
+#page-changelog .page-heading {
+    margin-bottom: 4px;
+}
+
+.cl-meta {
+    color: #8f98a0;
+    font-size: 0.83rem;
+    margin-bottom: 28px;
+}
+
+/* --- Entry card --- */
+.cl-entry {
+    background: #16202d;
+    border: 1px solid #2a3f5f;
+    border-left: 3px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    transition: border-left-color 0.2s;
+}
+
+.cl-entry:hover {
+    border-left-color: #4b69ff;
+}
+
+.cl-latest {
+    border-left-color: #e4ae39;
+}
+
+.cl-latest:hover {
+    border-left-color: #e4ae39;
+}
+
+/* --- Entry header --- */
+.cl-entry-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.cl-entry-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cl-version {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #c6d4df;
+    font-family: 'Courier New', monospace;
+}
+
+.cl-latest-badge {
+    background: #e4ae39;
+    color: #16202d;
+    font-size: 0.62rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+}
+
+.cl-entry-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cl-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #c6d4df;
+}
+
+.cl-date {
+    font-size: 0.78rem;
+    color: #8f98a0;
+}
+
+/* --- Change list --- */
+.cl-changes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.cl-change {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 0.84rem;
+    color: #8f98a0;
+    line-height: 1.5;
+}
+
+.cl-change-text {
+    flex: 1;
+}
+
+/* --- Badges --- */
+.cl-badge {
+    flex-shrink: 0;
+    font-size: 0.62rem;
+    font-weight: bold;
+    letter-spacing: 0.4px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-block;
+    text-transform: uppercase;
+}
+
+.cl-badge-new      { background: rgba(78,199,140,0.15); color: #4ec78c; border: 1px solid rgba(78,199,140,0.3); }
+.cl-badge-improved { background: rgba(75,105,255,0.15); color: #7a9bff; border: 1px solid rgba(75,105,255,0.3); }
+.cl-badge-fix      { background: rgba(228,174,57,0.15); color: #e4ae39; border: 1px solid rgba(228,174,57,0.3); }
+.cl-badge-balance  { background: rgba(235,123,75,0.15); color: #eb9b5a; border: 1px solid rgba(235,123,75,0.3); }
+.cl-badge-removed  { background: rgba(235,75,75,0.15);  color: #eb4b4b; border: 1px solid rgba(235,75,75,0.3); }
+
+/* --- Mobile --- */
+@media (max-width: 600px) {
+    .cl-entry-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
