@@ -4,6 +4,17 @@
 
 const CHANGELOG = [
     {
+        version: 'v0.14',
+        title: 'Instant Fishing & Dynamic Catch Chances',
+        date: 'June 2026',
+        changes: [
+            { type: 'new',      text: 'Instant Fishing toggle added to the Fishing page — skips the cast animation and bite pause so catches resolve immediately. The 1.5s cooldown between casts still applies.' },
+            { type: 'improved', text: 'Catch Chances section is now fully dynamic — percentages and coin ranges update in real time to reflect your active fishing skill upgrades (e.g. Keen Eyes shows 12% rare instead of 8%, coin multipliers reflect boosted ranges).' },
+            { type: 'improved', text: 'Mystery Chest row only appears in Catch Chances once the mastery skill is unlocked.' },
+            { type: 'improved', text: 'Instant Fishing preference saves to localStorage and persists across sessions.' },
+        ]
+    },
+    {
         version: 'v0.13',
         title: 'Progression & Economy Rebalance',
         date: 'June 2026',
