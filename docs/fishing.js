@@ -41,7 +41,7 @@ function rollFishCatch() {
 
     // Mystery Chest (mastery_3) — replaces 5% of rare junk threshold
     if (bonus.mysteryCatch && roll >= t1 && roll < t1 + 5) {
-        const coins = Math.round((Math.floor(Math.random() * 2501) + 500) * coinMult);
+        const coins = Math.round((Math.floor(Math.random() * 801) + 200) * coinMult);
         return { type: 'rare', name: '📦 Mystery Chest', value: coins, cssClass: 'catch-rare', xpType: 'rare' };
     }
 
@@ -72,23 +72,23 @@ function rollFishCatch() {
     } else if (roll < t2) {
         // Rare junk
         const item  = RARE_JUNK_ITEMS[Math.floor(Math.random() * RARE_JUNK_ITEMS.length)];
-        const coins = Math.round((Math.floor(Math.random() * 401) + 400) * coinMult * rareValueMult);
+        const coins = Math.round((Math.floor(Math.random() * 251) + 150) * coinMult * rareValueMult);
         return { type: 'rare', name: `✨ ${item}`, value: coins, cssClass: 'catch-rare', xpType: 'rare' };
 
     } else if (roll < t3) {
         // Junk
         const item  = JUNK_ITEMS[Math.floor(Math.random() * JUNK_ITEMS.length)];
-        const coins = Math.round((Math.floor(Math.random() * 151) + 100) * coinMult);
+        const coins = Math.round((Math.floor(Math.random() * 71) + 30) * coinMult);
         return { type: 'junk', name: `🪣 ${item}`, value: coins, cssClass: 'catch-junk', xpType: 'junk' };
 
     } else if (roll < t4) {
         // Big coins
-        const coins = Math.round((Math.floor(Math.random() * 351) + 350) * coinMult);
+        const coins = Math.round((Math.floor(Math.random() * 201) + 100) * coinMult);
         return { type: 'coins', name: '💰 Nice haul!', value: coins, cssClass: 'catch-coins', xpType: 'coins-big' };
 
     } else {
         // Small coins
-        const coins = Math.round((Math.floor(Math.random() * 201) + 100) * coinMult);
+        const coins = Math.round((Math.floor(Math.random() * 71) + 30) * coinMult);
         return { type: 'coins', name: '💰 Found some coins', value: coins, cssClass: 'catch-coins', xpType: 'coins' };
     }
 }
@@ -98,14 +98,14 @@ function rollBonusCatch() {
     const mult  = getFishMultiplier() * ((typeof getFishingBonus === 'function' ? getFishingBonus().coinMult : null) || 1);
     const roll  = Math.random();
     if (roll < 0.55) {
-        const coins = Math.round((Math.random() * 201 + 100) * mult);
+        const coins = Math.round((Math.random() * 71 + 30) * mult);
         return { type: 'coins', name: '🎲 Bonus: coins', value: coins, cssClass: 'catch-coins', xpType: 'coins' };
     } else if (roll < 0.80) {
-        const coins = Math.round((Math.random() * 351 + 350) * mult);
+        const coins = Math.round((Math.random() * 201 + 100) * mult);
         return { type: 'coins', name: '🎲 Bonus: big haul', value: coins, cssClass: 'catch-coins', xpType: 'coins-big' };
     } else {
         const item  = JUNK_ITEMS[Math.floor(Math.random() * JUNK_ITEMS.length)];
-        const coins = Math.round((Math.random() * 151 + 100) * mult);
+        const coins = Math.round((Math.random() * 71 + 30) * mult);
         return { type: 'junk', name: `🎲 Bonus: ${item}`, value: coins, cssClass: 'catch-junk', xpType: 'junk' };
     }
 }

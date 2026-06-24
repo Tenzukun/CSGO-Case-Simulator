@@ -23,7 +23,7 @@ const XP_WEEKLY = 150; // XP per weekly reward claim
 
 // XP needed to go from level N to N+1
 function xpForLevel(level) {
-    return Math.floor(200 * Math.pow(1.3, level - 1));
+    return Math.floor(200 * Math.pow(1.18, level - 1));
 }
 
 // Total XP needed to reach a given level from scratch
@@ -70,10 +70,11 @@ function getFishMultiplier() {
     return getWeeklyMultiplier();
 }
 
-// Fishing XP scales with level: base * (1 + (level-1) * 0.1)
+// Fishing XP scales with level, capped at 2x to prevent runaway gains
 function getFishXP(xpType) {
     const base = XP_PER_FISH[xpType] || 5;
-    return Math.round(base * (1 + (getLevel() - 1) * 0.1));
+    const mult = Math.min(2, 1 + (getLevel() - 1) * 0.1);
+    return Math.round(base * mult);
 }
 
 function updateLevelDisplay() {
@@ -148,31 +149,29 @@ function renderLevelDetails() {
     if (!el) return;
 
     const currentLevel = getLevel();
-    const xp           = getXP();
-    const xpInto       = xp - totalXPForLevel(currentLevel);
-    const needed       = xpForLevel(currentLevel);
-    const remaining    = needed - xpInto;
+    const xp       = getXP();
+    const xpInto   = xp - totalXPForLevel(currentLevel);
+    const needed   = xpForLevel(currentLevel);
+    const remaining = needed - xpInto;
 
-    // Show all case-unlock levels + standard milestones + current level
-    const caseUnlockLevels = CASES.map(c => c.unlockLevel).filter(l => l > 1);
-    const baseMilestones   = [1, 10, 20, 30, 40, 50];
-    const milestones       = [...new Set([...baseMilestones, ...caseUnlockLevels])].sort((a, b) => a - b);
-
+    // Build display list: milestones + always include currentLevel
+    const milestones = [1, 5, 10, 15, 20, 25, 30, 35, 40, 50];
     const displayLevels = milestones.includes(currentLevel)
         ? milestones
         : [...milestones, currentLevel].sort((a, b) => a - b);
 
-    const rows = displayLevels.map(lvl => {
-        const mult       = (1 + (lvl - 1) * 0.05).toFixed(2);
-        const fishPct    = Math.round(((1 + (lvl - 1) * 0.05) - 1) * 100);
+    let rows = displayLevels.map(lvl => {
+        const mult      = 1 + (lvl - 1) * 0.05;
+        const fishPct   = Math.round((mult - 1) * 100);
+        const multLabel = mult.toFixed(2);
         const caseUnlock = CASES.find(c => c.unlockLevel === lvl);
 
-        const perks = [];
+        let perks = [];
         if (caseUnlock) perks.push(`${caseUnlock.icon} ${caseUnlock.name} unlocked`);
-        perks.push(`Weekly ${mult}x`);
+        perks.push(`Weekly ${multLabel}x`);
         perks.push(`Fishing +${fishPct}%`);
 
-        const stateClass = lvl < currentLevel  ? 'is-past'
+        const stateClass = lvl < currentLevel ? 'is-past'
                          : lvl === currentLevel ? 'is-current'
                          : 'is-future';
 
