@@ -331,7 +331,7 @@ async function renderLeaderboard() {
         return `
             <div class="lb-entry ${entry.username === me ? 'is-me' : ''}">
                 ${rankHtml}
-                <span class="lb-name">${lvBadge} ${prestigeHtml}${devHtml}${betaHtml}${equippedBadgeHtml}${titleHtml}${entry.username}</span>
+                <span class="lb-name">${lvBadge} ${prestigeHtml}${equippedBadgeHtml}${titleHtml}${entry.username}</span>
                 ${valueHtml}
             </div>
         `;
