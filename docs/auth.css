@@ -77,7 +77,8 @@
 
 /* Inputs */
 .auth-modal input[type="text"],
-.auth-modal input[type="password"] {
+.auth-modal input[type="password"],
+.auth-modal input[type="email"] {
     width: 100%;
     padding: 10px 14px;
     background: #1b2838;
@@ -91,7 +92,9 @@
     box-sizing: border-box;
 }
 
-.auth-modal input:focus {
+.auth-modal input[type="text"]:focus,
+.auth-modal input[type="password"]:focus,
+.auth-modal input[type="email"]:focus {
     border-color: #4b69ff;
 }
 
