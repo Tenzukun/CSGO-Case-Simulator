@@ -425,6 +425,7 @@ function setActiveBadge(id) {
     }
     if (typeof renderBadgesTab  === 'function') renderBadgesTab();
     if (typeof updateAccountBtn === 'function') updateAccountBtn();
+    if (typeof renderLeaderboard === 'function') renderLeaderboard();
     if (typeof schedulePush     === 'function') schedulePush();
 }
 
