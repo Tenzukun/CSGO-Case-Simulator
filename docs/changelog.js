@@ -4,6 +4,16 @@
 
 const CHANGELOG = [
     {
+        version: 'v0.11',
+        title: 'Leaderboard Fix',
+        date: 'June 2026',
+        changes: [
+            { type: 'fix', text: 'Best Item leaderboard tab now correctly shows and sorts entries — bestRank was never being pushed to Firebase so all comparisons were equal.' },
+            { type: 'fix', text: 'Best Item tab sort now ranks by rarity first, then coin value as a tiebreaker.' },
+            { type: 'fix', text: 'Item name on the Best Item tab is now coloured by rarity with the coin value shown underneath.' },
+        ]
+    },
+    {
         version: 'v0.10',
         title: 'Balance Pass',
         date: 'June 2026',
