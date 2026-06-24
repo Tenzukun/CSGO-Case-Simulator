@@ -264,8 +264,7 @@ castBtn.addEventListener('click', () => {
                 fishStatus.textContent = `${result.name}  +${result.value.toLocaleString()} coins!`;
             }
 
-            // 1.5s cooldown before next cast
-            setTimeout(() => { castBtn.disabled = false; }, 1500);
+            castBtn.disabled = false;
         }, instantFish ? 0 : 600);
     }, waitMs);
 });

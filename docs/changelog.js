@@ -4,6 +4,14 @@
 
 const CHANGELOG = [
     {
+        version: 'v0.16',
+        title: 'Fishing Cooldown Removed',
+        date: 'June 2026',
+        changes: [
+            { type: 'improved', text: 'Removed the 1.5-second cooldown between fishing casts. The cast button re-enables immediately after a catch.' },
+        ]
+    },
+    {
         version: 'v0.15',
         title: 'Cases Restored, Grid Expansion & Alert Fix',
         date: 'June 2026',
