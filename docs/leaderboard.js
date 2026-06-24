@@ -242,8 +242,7 @@ async function renderLeaderboard() {
         if (lbActiveTab === 'cases') return (b.cases || 0) - (a.cases || 0);
         if (lbActiveTab === 'level') return (b.level || 1) - (a.level || 1);
         if (lbActiveTab === 'item') {
-            const rankDiff = (b.bestRank || 0) - (a.bestRank || 0);
-            return rankDiff !== 0 ? rankDiff : (b.bestValue || 0) - (a.bestValue || 0);
+            return (b.bestValue || 0) - (a.bestValue || 0);
         }
         return 0;
     });

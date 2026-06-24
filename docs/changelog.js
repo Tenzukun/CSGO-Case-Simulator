@@ -4,6 +4,14 @@
 
 const CHANGELOG = [
     {
+        version: 'v0.17',
+        title: 'Best Item Leaderboard Fix',
+        date: 'June 2026',
+        changes: [
+            { type: 'fix', text: 'Best Item leaderboard now ranks purely by coin value — the highest-value item wins regardless of rarity. Previously rarity rank took priority, meaning a lower-value Gold item could rank above a higher-value Red.' },
+        ]
+    },
+    {
         version: 'v0.16',
         title: 'Fishing Cooldown Removed',
         date: 'June 2026',
