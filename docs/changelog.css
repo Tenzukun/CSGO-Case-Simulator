@@ -12,6 +12,17 @@
     margin-bottom: 28px;
 }
 
+.cl-deploy-note {
+    background: rgba(75, 105, 255, 0.08);
+    border: 1px solid rgba(75, 105, 255, 0.25);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    color: #8f98a0;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
 /* --- Entry card --- */
 .cl-entry {
     background: #16202d;
