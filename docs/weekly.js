@@ -3,12 +3,12 @@
 // -------------------------------------------------------
 
 const WEEKLY_REWARDS = [
-    { day: 0, label: 'Day 1', dayName: 'Monday',    type: 'coins', base: 1000, icon: '💰', desc: '1,000 coins' },
-    { day: 1, label: 'Day 2', dayName: 'Tuesday',   type: 'coins', base: 1500, icon: '💰', desc: '1,500 coins' },
-    { day: 2, label: 'Day 3', dayName: 'Wednesday', type: 'coins', base: 2000, icon: '💰', desc: '2,000 coins' },
+    { day: 0, label: 'Day 1', dayName: 'Monday',    type: 'coins', base: 650,  icon: '💰', desc: '650 coins' },
+    { day: 1, label: 'Day 2', dayName: 'Tuesday',   type: 'coins', base: 1000, icon: '💰', desc: '1,000 coins' },
+    { day: 2, label: 'Day 3', dayName: 'Wednesday', type: 'coins', base: 1300, icon: '💰', desc: '1,300 coins' },
     { day: 3, label: 'Day 4', dayName: 'Thursday',  type: 'case',  caseId: 'chroma', icon: '🟣', desc: 'Free Chroma Case Open' },
-    { day: 4, label: 'Day 5', dayName: 'Friday',    type: 'coins', base: 2500, icon: '💰', desc: '2,500 coins' },
-    { day: 5, label: 'Day 6', dayName: 'Saturday',  type: 'coins', base: 3500, icon: '💰', desc: '3,500 coins' },
+    { day: 4, label: 'Day 5', dayName: 'Friday',    type: 'coins', base: 1600, icon: '💰', desc: '1,600 coins' },
+    { day: 5, label: 'Day 6', dayName: 'Saturday',  type: 'coins', base: 2250, icon: '💰', desc: '2,250 coins' },
     { day: 6, label: 'Day 7', dayName: 'Sunday',    type: 'case',  caseId: 'dragon', icon: '🐉', desc: 'Free Dragon Case Open' },
 ];
 

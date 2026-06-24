@@ -23,7 +23,7 @@ const XP_WEEKLY = 150; // XP per weekly reward claim
 
 // XP needed to go from level N to N+1
 function xpForLevel(level) {
-    return Math.floor(200 * Math.pow(1.18, level - 1));
+    return Math.floor(300 * Math.pow(1.18, level - 1));
 }
 
 // Total XP needed to reach a given level from scratch
@@ -74,14 +74,14 @@ function addXP(amount) {
     if (typeof updatePrestigeButton === 'function') updatePrestigeButton();
 }
 
-// Weekly reward multiplier (scales coin payouts by level)
+// Weekly reward multiplier — 3% per level (was 5%)
 function getWeeklyMultiplier() {
-    return 1 + (getLevel() - 1) * 0.05;
+    return 1 + (getLevel() - 1) * 0.03;
 }
 
-// Fishing payout multiplier
+// Fishing payout multiplier — capped at 1.25× regardless of level
 function getFishMultiplier() {
-    return getWeeklyMultiplier();
+    return Math.min(1.25, 1 + (getLevel() - 1) * 0.05);
 }
 
 // Fishing XP scales with level, capped at 2x to prevent runaway gains

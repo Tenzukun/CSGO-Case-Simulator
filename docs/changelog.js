@@ -4,6 +4,20 @@
 
 const CHANGELOG = [
     {
+        version: 'v0.13',
+        title: 'Progression & Economy Rebalance',
+        date: 'June 2026',
+        changes: [
+            { type: 'balance', text: 'XP required per level increased 50% (base 200 → 300). Reaching level 35 now requires ~461k XP instead of 308k.' },
+            { type: 'balance', text: 'Fishing coin multiplier capped at 1.25× regardless of level. Previously it scaled unbounded — at level 35 it was 2.7×, making fishing give 409k coins/hour. Now capped at ~58k/hour.' },
+            { type: 'balance', text: 'Fishing coin ranges cut a further ~40%: small coins 30–100 → 15–60, big coins 100–300 → 60–175, junk 30–100 → 15–60, rare junk 150–400 → 90–250.' },
+            { type: 'balance', text: 'Fishing cooldown of 1.5 seconds added between casts, limiting maximum cast rate to ~10/min.' },
+            { type: 'balance', text: 'Weekly multiplier rate reduced from 5% to 3% per level. At level 35: 2.7× → 2.02×.' },
+            { type: 'balance', text: 'Weekly base coin rewards reduced ~35%: Monday 1,000 → 650, Tuesday 1,500 → 1,000, Wednesday 2,000 → 1,300, Friday 2,500 → 1,600, Saturday 3,500 → 2,250. Total: 10,500 → 6,800 per week at level 1.' },
+            { type: 'balance', text: 'Mystery Chest (fishing mastery skill) payout reduced from 200–1,000 → 150–600 coins.' },
+        ]
+    },
+    {
         version: 'v0.12',
         title: 'Prestige System',
         date: 'June 2026',
