@@ -110,6 +110,27 @@ const CASES = [
         }
     },
     {
+        id: 'recoil', name: 'Recoil Case', icon: '🎯', cost: 8500,
+        unlockLevel: 10,
+        desc: 'Precision skins for the sharpshooter. Unlocks at Level 10.',
+        skins: {
+            'GOLD':       ['★ Butterfly Knife | Lore', '★ M9 Bayonet | Tiger Tooth'],
+            'Rare (Red)': ['AK-47 | Orion', 'M4A1-S | Phosphor'],
+            'Pink':       ['USP-S | Printstream', 'P250 | Cyber Shell'],
+            'Purple':     ['Glock-18 | Winterized', 'MP5-SD | Desert Strike', 'Five-SeveN | Midnight Storm'],
+            'Blue':       ['M4A4 | Poly Mag', 'MAC-10 | Whitefish', 'CZ75-Auto | Circaetus', 'Dual Berettas | Flora Carnivora']
+        },
+        prices: {
+            '★ Butterfly Knife | Lore': 600,   '★ M9 Bayonet | Tiger Tooth': 500,
+            'AK-47 | Orion': 150,               'M4A1-S | Phosphor': 120,
+            'USP-S | Printstream': 70,          'P250 | Cyber Shell': 45,
+            'Glock-18 | Winterized': 22,        'MP5-SD | Desert Strike': 18,
+            'Five-SeveN | Midnight Storm': 20,  'M4A4 | Poly Mag': 50,
+            'MAC-10 | Whitefish': 45,           'CZ75-Auto | Circaetus': 45,
+            'Dual Berettas | Flora Carnivora': 45
+        }
+    },
+    {
         id: 'prisma', name: 'Prisma Case', icon: '💎', cost: 15000,
         unlockLevel: 15,
         desc: 'Dark crystalline finishes. Unlocks at Level 15.',
@@ -128,6 +149,27 @@ const CASES = [
             'R8 Revolver | Grip': 18,               'Five-SeveN | Angry Mob': 90,
             'XM1014 | XOXO': 85,                    'PP-Bizon | High Roller': 85,
             'SG 553 | Aloha': 80
+        }
+    },
+    {
+        id: 'phantom', name: 'Phantom Case', icon: '👻', cost: 22000,
+        unlockLevel: 20,
+        desc: 'Dark and mysterious skins. Unlocks at Level 20.',
+        skins: {
+            'GOLD':       ['★ Karambit | Lore', '★ M9 Bayonet | Doppler'],
+            'Rare (Red)': ['AK-47 | X-Ray', 'M4A4 | Mainframe 001'],
+            'Pink':       ['USP-S | The Traitor', 'Desert Eagle | Emerald Jörmungandr'],
+            'Purple':     ['AUG | Momentum', 'P90 | Vent Rush', 'SCAR-20 | Phantom'],
+            'Blue':       ['Galil AR | Connexion', 'P250 | Apep\'s Reign', 'Tec-9 | Rebel', 'AWP | Silk Tiger']
+        },
+        prices: {
+            '★ Karambit | Lore': 900,              '★ M9 Bayonet | Doppler': 600,
+            'AK-47 | X-Ray': 220,                  'M4A4 | Mainframe 001': 180,
+            'USP-S | The Traitor': 80,             'Desert Eagle | Emerald Jörmungandr': 90,
+            'AUG | Momentum': 30,                  'P90 | Vent Rush': 25,
+            'SCAR-20 | Phantom': 28,               'Galil AR | Connexion': 110,
+            'P250 | Apep\'s Reign': 100,           'Tec-9 | Rebel': 100,
+            'AWP | Silk Tiger': 95
         }
     },
     {
@@ -150,6 +192,27 @@ const CASES = [
             'AUG | Stymphalian': 22,               'Tec-9 | Snek-9': 220,
             'MAG-7 | Heat': 210,                   'MP9 | Hydra': 210,
             'Sawed-Off | Limelight': 200
+        }
+    },
+    {
+        id: 'revolution', name: 'Revolution Case', icon: '⚡', cost: 50000,
+        unlockLevel: 32,
+        desc: 'High-end revolution-era skins. Unlocks at Level 32.',
+        skins: {
+            'GOLD':       ['★ Butterfly Knife | Doppler', '★ Talon Knife | Tiger Tooth'],
+            'Rare (Red)': ['AK-47 | Head Shot', 'M4A4 | Temukau'],
+            'Pink':       ['AWP | Duality', 'Glock-18 | Umbral Rabbit'],
+            'Purple':     ['M4A1-S | Black Lotus', 'UMP-45 | Momentum', 'R8 Revolver | Banana Cannon'],
+            'Blue':       ['MP9 | Featherweight', 'MAG-7 | Copper Coated', 'P250 | Vino Primo', 'SG 553 | Diner']
+        },
+        prices: {
+            '★ Butterfly Knife | Doppler': 800,   '★ Talon Knife | Tiger Tooth': 650,
+            'AK-47 | Head Shot': 300,              'M4A4 | Temukau': 280,
+            'AWP | Duality': 130,                  'Glock-18 | Umbral Rabbit': 95,
+            'M4A1-S | Black Lotus': 45,            'UMP-45 | Momentum': 35,
+            'R8 Revolver | Banana Cannon': 30,     'MP9 | Featherweight': 120,
+            'MAG-7 | Copper Coated': 110,          'P250 | Vino Primo': 110,
+            'SG 553 | Diner': 105
         }
     },
     {

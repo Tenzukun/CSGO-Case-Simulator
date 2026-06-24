@@ -232,7 +232,7 @@
 /* Centre case screens within the wide content area */
 #caseSelectScreen,
 #caseOpenScreen {
-    max-width: 860px;
+    max-width: 960px;
     margin: 0 auto;
 }
 

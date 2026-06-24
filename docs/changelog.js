@@ -4,6 +4,18 @@
 
 const CHANGELOG = [
     {
+        version: 'v0.15',
+        title: 'Cases Restored, Grid Expansion & Alert Fix',
+        date: 'June 2026',
+        changes: [
+            { type: 'new',      text: 'Recoil Case (8,500 coins, Level 10) re-added — includes Butterfly Knife | Lore, AK-47 | Orion, USP-S | Printstream and more.' },
+            { type: 'new',      text: 'Phantom Case (22,000 coins, Level 20) re-added — includes Karambit | Lore, AK-47 | X-Ray, USP-S | The Traitor and more.' },
+            { type: 'new',      text: 'Revolution Case (50,000 coins, Level 32) re-added — includes Butterfly Knife | Doppler, AK-47 | Head Shot, AWP | Duality and more.' },
+            { type: 'improved', text: 'Case selection grid now shows 6 cases per row (was 4), fitting all 11 cases cleanly across two rows.' },
+            { type: 'improved', text: 'Gold drop alert moved from top-centre to bottom-right — slides up from the corner instead of dropping in from the top.' },
+        ]
+    },
+    {
         version: 'v0.14',
         title: 'Instant Fishing & Dynamic Catch Chances',
         date: 'June 2026',
