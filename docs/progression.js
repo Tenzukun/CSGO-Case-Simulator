@@ -42,6 +42,11 @@ function getLevel() {
 }
 
 function addXP(amount) {
+    // Apply XP Overdrive perk if unlocked (+15% XP from all sources)
+    if (typeof isShopItemUnlocked === 'function' && isShopItemUnlocked('perk_xp_overdrive')) {
+        amount = Math.round(amount * 1.15);
+    }
+
     const maxLv = (typeof getMaxLevel === 'function') ? getMaxLevel() : 50;
 
     // Already at cap — no more XP

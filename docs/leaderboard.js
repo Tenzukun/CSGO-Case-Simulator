@@ -133,6 +133,7 @@ async function pushLeaderboard() {
         bestValue:  stats.bestValue  || 0,
         level:      getLevel(),
         prestige:   (typeof getPrestigeLevel === 'function') ? getPrestigeLevel() : 0,
+        title:      (typeof getActiveTitle   === 'function') ? getActiveTitle()   : null,
         updated:    Date.now()
     };
 
@@ -145,7 +146,8 @@ async function pushLeaderboard() {
         achStats:     JSON.stringify(getAchStats()),
         alltimeStats: JSON.stringify(getAllTimeStats()),
         weeklyState:  JSON.stringify(getWeeklyState ? getWeeklyState() : {}),
-        favourites:   JSON.stringify(getFavourites ? getFavourites() : [])
+        favourites:   JSON.stringify(getFavourites ? getFavourites() : []),
+        shopData:     localStorage.getItem('csgo_prestige_shop') || '{"unlocked":[],"activeTitle":null}'
     };
 
     // Set timestamp BEFORE push so the SSE echo from Firebase is ignored
@@ -188,6 +190,7 @@ function applyCloudData(username, data) {
     if (data.alltimeStats !== undefined) localStorage.setItem('csgo_alltime_stats', data.alltimeStats);
     if (data.weeklyState  !== undefined) localStorage.setItem('csgo_weekly',        data.weeklyState);
     if (data.favourites   !== undefined) localStorage.setItem('csgo_favourites',    data.favourites);
+    if (data.shopData     !== undefined) localStorage.setItem('csgo_prestige_shop', data.shopData);
 
     // Rebuild lb_stats
     const lb = {
@@ -285,10 +288,14 @@ async function renderLeaderboard() {
             ? `<span class="lb-prestige-badge prestige-badge prestige-badge-${tier}" title="Prestige ${p}">✦ P${p}</span>`
             : '';
 
+        const titleHtml = entry.title
+            ? `<span class="lb-player-title">${entry.title}</span>`
+            : '';
+
         return `
             <div class="lb-entry ${entry.username === me ? 'is-me' : ''}">
                 ${rankHtml}
-                <span class="lb-name">${lvBadge} ${prestigeHtml}${entry.username}</span>
+                <span class="lb-name">${lvBadge} ${prestigeHtml}${titleHtml}${entry.username}</span>
                 ${valueHtml}
             </div>
         `;
@@ -329,6 +336,7 @@ function applySyncData(data) {
     if (data.alltimeStats != null) localStorage.setItem('csgo_alltime_stats', data.alltimeStats);
     if (data.weeklyState  != null) localStorage.setItem('csgo_weekly',        data.weeklyState);
     if (data.favourites   != null) localStorage.setItem('csgo_favourites',    data.favourites);
+    if (data.shopData     != null) localStorage.setItem('csgo_prestige_shop', data.shopData);
 
     const lb = getLbStats();
     if (data.coins      != null) lb.coins      = data.coins;

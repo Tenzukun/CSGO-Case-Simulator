@@ -40,10 +40,13 @@ function renderCaseGrid() {
     const level   = getLevel();
 
     grid.innerHTML = CASES.map(c => {
-        const locked     = balance < c.cost;
-        const levelLock  = level < c.unlockLevel;
-        const cardClass  = (locked || levelLock) ? 'locked' : '';
-        const costHtml   = levelLock
+        const locked        = balance < c.cost;
+        const levelLock     = level < c.unlockLevel;
+        const prestigeLock  = c.prestigeOnly && !(typeof isShopItemUnlocked === 'function' && isShopItemUnlocked(c.shopItemId));
+        const cardClass     = (locked || levelLock || prestigeLock) ? 'locked' : '';
+        const costHtml      = prestigeLock
+            ? `<div class="case-card-lock">🔒 Prestige Shop unlock required</div>`
+            : levelLock
             ? `<div class="case-card-lock">🔒 Unlocks at Level ${c.unlockLevel}</div>`
             : `<div class="case-card-cost">💰 ${c.cost.toLocaleString()} coins</div>`;
 
@@ -66,6 +69,10 @@ function selectCase(id) {
 
     if (level < c.unlockLevel) {
         alert(`This case unlocks at Level ${c.unlockLevel}. You are Level ${level}.`);
+        return;
+    }
+    if (c.prestigeOnly && !(typeof isShopItemUnlocked === 'function' && isShopItemUnlocked(c.shopItemId))) {
+        alert('This case requires a Prestige Shop unlock. Visit the Upgrades page.');
         return;
     }
     if (getCoins() < c.cost) {
@@ -249,7 +256,14 @@ async function doOpen(count = 1) {
 
         if (count === 1) {
             // Single open — show full item card
-            const result = openCrate(selectedCase);
+            let result = openCrate(selectedCase);
+            // Lucky Break: Blue drops have 15% chance to re-roll for a higher rarity
+            if (typeof isShopItemUnlocked === 'function' && isShopItemUnlocked('perk_lucky_break') && result.rarity === 'Blue') {
+                if (Math.random() < 0.15) {
+                    const reroll = openCrate(selectedCase);
+                    if ((RARITY_RANKS[reroll.rarity] || 0) > (RARITY_RANKS[result.rarity] || 0)) result = reroll;
+                }
+            }
             displayItem(result);
             SFX.reveal(result.rarity);
             saveItem(result);
@@ -265,7 +279,16 @@ async function doOpen(count = 1) {
 
         } else {
             // Multi open — roll all, save all, show full grid
-            const results = Array.from({ length: count }, () => openCrate(selectedCase));
+            const results = Array.from({ length: count }, () => {
+                let r = openCrate(selectedCase);
+                if (typeof isShopItemUnlocked === 'function' && isShopItemUnlocked('perk_lucky_break') && r.rarity === 'Blue') {
+                    if (Math.random() < 0.15) {
+                        const reroll = openCrate(selectedCase);
+                        if ((RARITY_RANKS[reroll.rarity] || 0) > (RARITY_RANKS[r.rarity] || 0)) r = reroll;
+                    }
+                }
+                return r;
+            });
 
             // Save every item to inventory and update stats
             results.forEach(r => {
@@ -347,6 +370,16 @@ function saveItem(result) {
     if (document.getElementById('page-inventory') && !document.getElementById('page-inventory').classList.contains('hidden')) renderInventory();
 }
 
+// Returns combined sell multiplier from prestige shop perks
+function getSellMultiplier() {
+    let mult = 1;
+    if (typeof isShopItemUnlocked === 'function') {
+        if (isShopItemUnlocked('perk_coin_surge'))    mult += 0.10;
+        if (isShopItemUnlocked('perk_fortunes_edge')) mult += 0.20;
+    }
+    return mult;
+}
+
 function sellItem(index) {
     const inv  = getInventory();
     const favs = getFavourites();
@@ -356,10 +389,13 @@ function sellItem(index) {
         alert('This item is favourited. Unfavourite it first to sell it.');
         return;
     }
-    if (!confirm(`Sell ${item.fullItem} for ${item.coins.toLocaleString()} coins?`)) return;
+    const mult  = getSellMultiplier();
+    const coins = Math.round((item.coins || 0) * mult);
+    const label = mult > 1 ? ` (x${mult.toFixed(2)} perk bonus)` : '';
+    if (!confirm(`Sell ${item.fullItem} for ${coins.toLocaleString()} coins?${label}`)) return;
     inv.splice(index, 1);
     localStorage.setItem('csgo_inventory', JSON.stringify(inv));
-    addCoins(item.coins);
+    addCoins(coins);
     SFX.sell();
     renderInventory();
 }
@@ -377,10 +413,12 @@ function sellAll() {
         return;
     }
 
-    const total = toSell.reduce((sum, item) => sum + (item.coins || 0), 0);
+    const mult  = getSellMultiplier();
+    const total = toSell.reduce((sum, item) => sum + Math.round((item.coins || 0) * mult), 0);
+    const bonusNote = mult > 1 ? ` (includes x${mult.toFixed(2)} perk bonus)` : '';
     const msg   = favCount > 0
-        ? `Sell ${toSell.length} items for ${total.toLocaleString()} coins? (${favCount} favourited item${favCount > 1 ? 's' : ''} will be kept)`
-        : `Sell all ${inv.length} items for ${total.toLocaleString()} coins?`;
+        ? `Sell ${toSell.length} items for ${total.toLocaleString()} coins?${bonusNote} (${favCount} favourited item${favCount > 1 ? 's' : ''} will be kept)`
+        : `Sell all ${inv.length} items for ${total.toLocaleString()} coins?${bonusNote}`;
 
     if (!confirm(msg)) return;
 
@@ -508,6 +546,9 @@ function renderInventory() {
     invList.innerHTML = pageItems.map(item => {
         const isFav       = item.id && favs.includes(item.id);
         const rarityColor = (RARITY_ODDS[item.rarity] || {}).colour || '#c6d4df';
+        const sellMult    = getSellMultiplier();
+        const sellCoins   = Math.round((item.coins || 0) * sellMult);
+        const bonusMark   = sellMult > 1 ? ' ✦' : '';
         return `
             <div class="inventory-item ${isFav ? 'is-favourite' : ''}">
                 <button class="fav-btn ${isFav ? 'faved' : ''}"
@@ -520,7 +561,7 @@ function renderInventory() {
                     <div class="inventory-item-detail">${item.tier} · ${item.type} · Float: ${item.float} · ~$${item.price}</div>
                 </div>
                 <button class="sell-btn" onclick="sellItem(${item._origIndex})">
-                    Sell<br>${item.coins.toLocaleString()} coins
+                    Sell<br>${sellCoins.toLocaleString()} coins${bonusMark}
                 </button>
             </div>
         `;
@@ -666,7 +707,10 @@ function updateAcctPanelName() {
     if (typeof isGuest === 'function' && isGuest()) {
         el.textContent = 'Guest';
     } else {
-        el.textContent = getUsername() || 'Account';
+        const title = (typeof getActiveTitle === 'function') ? getActiveTitle() : null;
+        el.textContent = title
+            ? `[${title}] ${getUsername() || 'Account'}`
+            : (getUsername() || 'Account');
     }
 }
 
@@ -676,7 +720,10 @@ function updateAccountBtn() {
     if (typeof isGuest === 'function' && isGuest()) {
         el.textContent = 'Guest';
     } else {
-        el.textContent = getUsername() || 'Account';
+        const title = (typeof getActiveTitle === 'function') ? getActiveTitle() : null;
+        el.textContent = title
+            ? `[${title}] ${getUsername() || 'Account'}`
+            : (getUsername() || 'Account');
     }
 }
 

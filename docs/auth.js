@@ -11,8 +11,9 @@
 // Force wipe — bump this string to wipe all users'
 // localStorage on their next visit.
 // v3: migrated to Firebase Authentication
+// v4: prestige shop added — clean wipe for fresh start
 // -------------------------------------------------------
-const RESET_VERSION = 'v3';
+const RESET_VERSION = 'v4';
 
 (function enforceReset() {
     if (localStorage.getItem('csgo_reset_version') !== RESET_VERSION) {

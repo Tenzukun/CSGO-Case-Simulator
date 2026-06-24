@@ -267,3 +267,196 @@
     margin-right: 5px;
     white-space: nowrap;
 }
+
+/* -------------------------------------------------------
+   Prestige Shop
+------------------------------------------------------- */
+
+.shop-balance {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(228,174,57,0.08);
+    border: 1px solid rgba(228,174,57,0.25);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 24px;
+}
+
+.shop-balance-label {
+    font-size: 0.82rem;
+    color: #8f98a0;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.shop-balance-pts {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #e4ae39;
+}
+
+.shop-no-prestige {
+    font-size: 0.83rem;
+    color: #8f98a0;
+    text-align: center;
+    padding: 10px 0 20px;
+    font-style: italic;
+}
+
+.shop-section {
+    margin-bottom: 28px;
+}
+
+.shop-section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.shop-section-icon { font-size: 1rem; }
+
+.shop-section-label {
+    font-size: 0.78rem;
+    font-weight: bold;
+    color: #4b69ff;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+.shop-section-desc {
+    font-size: 0.78rem;
+    color: #8f98a0;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.shop-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+/* Base card */
+.shop-card {
+    background: #1b2838;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: border-color 0.2s;
+}
+
+.shop-card-available  { border-color: #2a3f5f; }
+.shop-card-available:hover { border-color: #4b69ff; }
+.shop-card-owned      { border-color: rgba(78,199,140,0.4); background: rgba(78,199,140,0.04); }
+.shop-card-locked     { opacity: 0.55; }
+.shop-card-cant-afford { opacity: 0.7; }
+
+.shop-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.shop-card-name {
+    font-size: 0.88rem;
+    font-weight: bold;
+    color: #c6d4df;
+    line-height: 1.3;
+}
+
+.shop-card-cost {
+    display: flex;
+    gap: 2px;
+    flex-shrink: 0;
+    padding-top: 1px;
+}
+
+.shop-cost-pip {
+    font-size: 0.7rem;
+}
+
+.pip-have { color: #e4ae39; }
+.pip-need { color: #2a3f5f; }
+
+.shop-card-desc {
+    font-size: 0.76rem;
+    color: #8f98a0;
+    line-height: 1.4;
+    flex: 1;
+}
+
+.shop-card-action { margin-top: 4px; }
+
+.shop-unlock-btn {
+    width: 100%;
+    padding: 6px 10px;
+    background: #4b69ff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.78rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: inherit;
+}
+
+.shop-unlock-btn:hover:not(:disabled) { background: #3a56d4; }
+
+.shop-unlock-disabled {
+    background: #2a3f5f !important;
+    cursor: not-allowed !important;
+    color: #8f98a0 !important;
+}
+
+.shop-equip-btn {
+    width: 100%;
+    padding: 6px 10px;
+    background: transparent;
+    border: 1px solid #4ec78c;
+    border-radius: 5px;
+    color: #4ec78c;
+    font-size: 0.78rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.shop-equip-btn:hover { background: rgba(78,199,140,0.1); }
+
+.shop-equip-active {
+    background: rgba(78,199,140,0.15) !important;
+}
+
+.shop-owned-badge {
+    font-size: 0.75rem;
+    color: #4ec78c;
+    font-weight: bold;
+}
+
+.shop-req-badge {
+    font-size: 0.75rem;
+    color: #8f98a0;
+}
+
+/* Title badge shown next to username */
+.lb-player-title {
+    font-size: 0.68rem;
+    font-weight: bold;
+    color: #e4ae39;
+    background: rgba(228,174,57,0.12);
+    border: 1px solid rgba(228,174,57,0.3);
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin-right: 5px;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+}

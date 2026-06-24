@@ -4,6 +4,21 @@
 
 const CHANGELOG = [
     {
+        version: 'v0.21',
+        title: 'Prestige Shop',
+        date: 'June 2026',
+        changes: [
+            { type: 'new',      text: 'Prestige Shop added as a third tab in the Upgrades page. Spend prestige points on titles, exclusive cases, and passive perks.' },
+            { type: 'new',      text: '5 titles to unlock and equip: Veteran, High Roller, Shadow Operative (P3), The Untouchable (P5), and Apex Predator (P7). Active title shows next to your name everywhere in the app.' },
+            { type: 'new',      text: '2 exclusive prestige-only cases: Obsidian Case (2pts) and Phantom Protocol (3pts). Both unlock in the Cases page once purchased.' },
+            { type: 'new',      text: 'Coin Surge perk (1pt): +10% coins when selling any item.' },
+            { type: 'new',      text: 'Lucky Break perk (2pts): Blue drops have a 15% chance to automatically re-roll for a higher rarity.' },
+            { type: 'new',      text: 'XP Overdrive perk (1pt): +15% XP from all sources.' },
+            { type: 'new',      text: "Fortune's Edge perk (3pts): +20% coins when selling any item. Stacks with Coin Surge for +30% total." },
+            { type: 'improved', text: 'Sell prices in inventory now reflect active perk bonuses with a ✦ indicator on boosted items.' },
+        ]
+    },
+    {
         version: 'v0.20',
         title: 'Firebase Authentication',
         date: 'June 2026',

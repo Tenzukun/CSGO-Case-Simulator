@@ -177,3 +177,180 @@ function initPrestige() {
     updatePrestigeButton();
     renderBestEver();
 }
+
+// -------------------------------------------------------
+// Prestige Shop
+// -------------------------------------------------------
+
+const PRESTIGE_SHOP = [
+    // Titles
+    { id: 'title_veteran',      category: 'title', name: 'Veteran',          cost: 1, minPrestige: 1, desc: 'A seasoned player who knows the grind.' },
+    { id: 'title_high_roller',  category: 'title', name: 'High Roller',      cost: 1, minPrestige: 1, desc: 'Big spender, bigger returns.' },
+    { id: 'title_shadow_op',    category: 'title', name: 'Shadow Operative', cost: 2, minPrestige: 3, desc: 'Operating in the shadows since Prestige 3.' },
+    { id: 'title_untouchable',  category: 'title', name: 'The Untouchable',  cost: 2, minPrestige: 5, desc: 'Five prestiges in and still going.' },
+    { id: 'title_apex',         category: 'title', name: 'Apex Predator',    cost: 3, minPrestige: 7, desc: 'The pinnacle of case opening mastery.' },
+    // Cases
+    { id: 'case_obsidian',      category: 'case',  name: 'Obsidian Case',    cost: 2, minPrestige: 1, desc: 'Dark ultra-rare finishes with a generous rarity boost. Unlocks in the Cases page.' },
+    { id: 'case_phantom_proto', category: 'case',  name: 'Phantom Protocol', cost: 3, minPrestige: 1, desc: 'Spy-themed skins with the highest gold drop rate in the game. Unlocks in the Cases page.' },
+    // Perks
+    { id: 'perk_coin_surge',    category: 'perk',  name: 'Coin Surge',       cost: 1, minPrestige: 1, desc: '+10% coins when selling any case drop.' },
+    { id: 'perk_lucky_break',   category: 'perk',  name: 'Lucky Break',      cost: 2, minPrestige: 1, desc: 'Blue drops have a 15% chance to automatically re-roll for a higher rarity.' },
+    { id: 'perk_xp_overdrive',  category: 'perk',  name: 'XP Overdrive',     cost: 1, minPrestige: 1, desc: '+15% XP from all sources.' },
+    { id: 'perk_fortunes_edge', category: 'perk',  name: "Fortune's Edge",   cost: 3, minPrestige: 1, desc: '+20% coins when selling any item.' },
+];
+
+const SHOP_CATEGORY_META = {
+    title: { label: 'Titles',          icon: '🏷️', desc: 'Equip a title to show it next to your name on the leaderboard, nav, and account panel.' },
+    case:  { label: 'Exclusive Cases', icon: '📦', desc: 'Prestige-only cases with premium loot. Appear in the Cases page once unlocked.' },
+    perk:  { label: 'Passive Perks',   icon: '⚡', desc: 'Permanent bonuses that apply automatically while owned. Perks stack with each other.' },
+};
+
+// -------------------------------------------------------
+// Shop storage
+// -------------------------------------------------------
+
+function getPrestigeShopData() {
+    return JSON.parse(localStorage.getItem('csgo_prestige_shop') || '{"unlocked":[],"activeTitle":null}');
+}
+
+function savePrestigeShopData(data) {
+    localStorage.setItem('csgo_prestige_shop', JSON.stringify(data));
+}
+
+function isShopItemUnlocked(id) {
+    return getPrestigeShopData().unlocked.includes(id);
+}
+
+function getActiveTitle() {
+    const data = getPrestigeShopData();
+    if (!data.activeTitle) return null;
+    const item = PRESTIGE_SHOP.find(i => i.id === data.activeTitle && i.category === 'title');
+    return item ? item.name : null;
+}
+
+// -------------------------------------------------------
+// Shop actions
+// -------------------------------------------------------
+
+function setActiveTitle(id) {
+    const data = getPrestigeShopData();
+    data.activeTitle = (data.activeTitle === id) ? null : id; // toggle off if already equipped
+    savePrestigeShopData(data);
+    renderPrestigeShop('prestigeShopContainer');
+    if (typeof updateAcctPanelName === 'function') updateAcctPanelName();
+    if (typeof updateAccountBtn    === 'function') updateAccountBtn();
+    if (typeof schedulePush        === 'function') schedulePush();
+}
+
+function unlockShopItem(id) {
+    const item = PRESTIGE_SHOP.find(i => i.id === id);
+    if (!item) return;
+
+    const shopData = getPrestigeShopData();
+    if (shopData.unlocked.includes(id)) return;
+
+    const pData = getPrestigeData();
+    if ((pData.points || 0) < item.cost) {
+        alert('Not enough prestige points.');
+        return;
+    }
+    if (getPrestigeLevel() < item.minPrestige) {
+        alert(`This item requires Prestige ${item.minPrestige}.`);
+        return;
+    }
+    if (!confirm(`Unlock "${item.name}" for ${item.cost} prestige point${item.cost !== 1 ? 's' : ''}?`)) return;
+
+    pData.points -= item.cost;
+    savePrestigeData(pData);
+
+    shopData.unlocked.push(id);
+    savePrestigeShopData(shopData);
+
+    renderPrestigeShop('prestigeShopContainer');
+    if (typeof schedulePush   === 'function') schedulePush();
+    if (item.category === 'case' && typeof renderCaseGrid === 'function') renderCaseGrid();
+}
+
+// -------------------------------------------------------
+// Shop rendering
+// -------------------------------------------------------
+
+function renderPrestigeShop(containerId) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+
+    const pData    = getPrestigeData();
+    const shopData = getPrestigeShopData();
+    const pLevel   = getPrestigeLevel();
+    const points   = pData.points || 0;
+
+    const sections = ['title', 'case', 'perk'].map(cat => {
+        const meta  = SHOP_CATEGORY_META[cat];
+        const items = PRESTIGE_SHOP.filter(i => i.category === cat);
+
+        const cards = items.map(item => {
+            const owned         = shopData.unlocked.includes(item.id);
+            const meetsPrestige = pLevel >= item.minPrestige;
+            const canAfford     = points >= item.cost;
+            const isActive      = shopData.activeTitle === item.id;
+
+            let statusHtml = '';
+            let cardClass  = 'shop-card';
+
+            if (owned) {
+                cardClass += ' shop-card-owned';
+                if (item.category === 'title') {
+                    statusHtml = `
+                        <button class="shop-equip-btn ${isActive ? 'shop-equip-active' : ''}"
+                                onclick="setActiveTitle('${item.id}')">
+                            ${isActive ? '✓ Equipped' : 'Equip'}
+                        </button>`;
+                } else {
+                    statusHtml = `<div class="shop-owned-badge">✓ Active</div>`;
+                }
+            } else if (!meetsPrestige) {
+                cardClass += ' shop-card-locked';
+                statusHtml = `<div class="shop-req-badge">🔒 Requires Prestige ${item.minPrestige}</div>`;
+            } else {
+                cardClass += canAfford ? ' shop-card-available' : ' shop-card-cant-afford';
+                statusHtml = `
+                    <button class="shop-unlock-btn ${!canAfford ? 'shop-unlock-disabled' : ''}"
+                            onclick="unlockShopItem('${item.id}')" ${!canAfford ? 'disabled' : ''}>
+                        Unlock — ${item.cost} pt${item.cost !== 1 ? 's' : ''}
+                    </button>`;
+            }
+
+            const costPips = Array.from({ length: item.cost }, (_, i) =>
+                `<span class="shop-cost-pip ${i < points || owned ? 'pip-have' : 'pip-need'}">✦</span>`
+            ).join('');
+
+            return `
+                <div class="${cardClass}">
+                    <div class="shop-card-top">
+                        <span class="shop-card-name">${item.name}</span>
+                        <span class="shop-card-cost">${costPips}</span>
+                    </div>
+                    <div class="shop-card-desc">${item.desc}</div>
+                    <div class="shop-card-action">${statusHtml}</div>
+                </div>`;
+        }).join('');
+
+        return `
+            <div class="shop-section">
+                <div class="shop-section-header">
+                    <span class="shop-section-icon">${meta.icon}</span>
+                    <span class="shop-section-label">${meta.label}</span>
+                </div>
+                <div class="shop-section-desc">${meta.desc}</div>
+                <div class="shop-cards">${cards}</div>
+            </div>`;
+    }).join('');
+
+    el.innerHTML = `
+        <div class="shop-balance">
+            <span class="shop-balance-label">Prestige Points Available</span>
+            <span class="shop-balance-pts">✦ ${points} pt${points !== 1 ? 's' : ''}</span>
+        </div>
+        ${pLevel === 0 ? '<div class="shop-no-prestige">Reach max level and prestige to earn points and unlock shop items.</div>' : ''}
+        ${sections}`;
+}

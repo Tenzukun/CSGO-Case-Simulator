@@ -216,6 +216,48 @@ const CASES = [
         }
     },
     {
+        id: 'obsidian', name: 'Obsidian Case', icon: '🖤', cost: 100000,
+        unlockLevel: 1, prestigeOnly: true, shopItemId: 'case_obsidian',
+        desc: 'Dark ultra-rare finishes. Prestige Shop exclusive.',
+        skins: {
+            'GOLD':       ['★ Karambit | Black Laminate', '★ M9 Bayonet | Night'],
+            'Rare (Red)': ['AK-47 | Nightwish', 'AWP | Void Gradient'],
+            'Pink':       ['M4A1-S | Black Lily', 'Glock-18 | Midnight Protocol'],
+            'Purple':     ['P90 | Darkness Falls', 'MP7 | Abyss Watch', 'Desert Eagle | Dark Water'],
+            'Blue':       ['Tec-9 | Dark Matter', 'P250 | Shadow', 'Nova | Blackout', 'CZ75-Auto | Obsidian']
+        },
+        prices: {
+            '★ Karambit | Black Laminate': 900,  '★ M9 Bayonet | Night': 750,
+            'AK-47 | Nightwish': 380,             'AWP | Void Gradient': 320,
+            'M4A1-S | Black Lily': 130,           'Glock-18 | Midnight Protocol': 100,
+            'P90 | Darkness Falls': 55,           'MP7 | Abyss Watch': 45,
+            'Desert Eagle | Dark Water': 40,      'Tec-9 | Dark Matter': 250,
+            'P250 | Shadow': 230,                 'Nova | Blackout': 220,
+            'CZ75-Auto | Obsidian': 210
+        }
+    },
+    {
+        id: 'phantom_proto', name: 'Phantom Protocol', icon: '🕵️', cost: 150000,
+        unlockLevel: 1, prestigeOnly: true, shopItemId: 'case_phantom_proto',
+        desc: 'Spy-themed skins with the highest gold rate in the game. Prestige Shop exclusive.',
+        skins: {
+            'GOLD':       ['★ Butterfly Knife | Gamma Doppler', '★ Talon Knife | Doppler', '★ Skeleton Knife | Crimson Web'],
+            'Rare (Red)': ['AK-47 | Phantom Protocol', 'AWP | Ghost Crusade'],
+            'Pink':       ['M4A4 | Classified', 'USP-S | Phantom Circuit'],
+            'Purple':     ['P90 | Spectral Flow', 'MP9 | Ghost Protocol', 'SCAR-20 | Phantom'],
+            'Blue':       ['Five-SeveN | Phantom Sig', 'P250 | Ghost Light', 'SG 553 | Protocol', 'MP5-SD | Shadow Strike']
+        },
+        prices: {
+            '★ Butterfly Knife | Gamma Doppler': 1400, '★ Talon Knife | Doppler': 1100,
+            '★ Skeleton Knife | Crimson Web': 900,     'AK-47 | Phantom Protocol': 550,
+            'AWP | Ghost Crusade': 480,                'M4A4 | Classified': 230,
+            'USP-S | Phantom Circuit': 190,            'P90 | Spectral Flow': 80,
+            'MP9 | Ghost Protocol': 65,                'SCAR-20 | Phantom': 60,
+            'Five-SeveN | Phantom Sig': 330,           'P250 | Ghost Light': 310,
+            'SG 553 | Protocol': 300,                  'MP5-SD | Shadow Strike': 290
+        }
+    },
+    {
         id: 'classified', name: 'Classified Case', icon: '⭐', cost: 75000,
         unlockLevel: 40,
         desc: 'The endgame case. Unlocks at Level 40.',
@@ -296,4 +338,4 @@ const COINS_PER_DOLLAR = 100;
 // Firebase
 // -------------------------------------------------------
 const FIREBASE_URL     = 'https://leaderboard-f47dd-default-rtdb.firebaseio.com/';
-const FIREBASE_API_KEY = 'BPmAb2z5E0eQzxh3kXSikKaQ5SbScDPjB2U7gR0eAzNBt7hFCeNo5UNRd0tbomArj3eGLuVllXnx15K8u9NXvTw';
+const FIREBASE_API_KEY = 'YOUR_FIREBASE_WEB_API_KEY';

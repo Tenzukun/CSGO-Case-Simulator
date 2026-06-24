@@ -16,6 +16,7 @@ function switchUpgradeTab(tabId) {
 
     if (tabId === 'cases')   renderCaseSkillTree('caseSkillContainer');
     if (tabId === 'fishing') renderFishingSkillTree('fishSkillContainer');
+    if (tabId === 'prestige') renderPrestigeShop('prestigeShopContainer');
 }
 
 function initUpgradesPage() {
@@ -38,6 +39,7 @@ function initUpgradesPage() {
 }
 
 function renderUpgradesPage() {
-    if (activeUpgradeTab === 'cases')   renderCaseSkillTree('caseSkillContainer');
-    if (activeUpgradeTab === 'fishing') renderFishingSkillTree('fishSkillContainer');
+    if (activeUpgradeTab === 'cases')    renderCaseSkillTree('caseSkillContainer');
+    if (activeUpgradeTab === 'fishing')  renderFishingSkillTree('fishSkillContainer');
+    if (activeUpgradeTab === 'prestige') renderPrestigeShop('prestigeShopContainer');
 }
