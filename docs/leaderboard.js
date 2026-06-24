@@ -134,6 +134,7 @@ async function pushLeaderboard() {
         level:      getLevel(),
         prestige:   (typeof getPrestigeLevel === 'function') ? getPrestigeLevel() : 0,
         title:      (typeof getActiveTitle   === 'function') ? getActiveTitle()   : null,
+        betaTester: localStorage.getItem('csgo_beta_tester') === 'true',
         updated:    Date.now()
     };
 
@@ -191,6 +192,7 @@ function applyCloudData(username, data) {
     if (data.weeklyState  !== undefined) localStorage.setItem('csgo_weekly',        data.weeklyState);
     if (data.favourites   !== undefined) localStorage.setItem('csgo_favourites',    data.favourites);
     if (data.shopData     !== undefined) localStorage.setItem('csgo_prestige_shop', data.shopData);
+    if (data.betaTester   === true)      localStorage.setItem('csgo_beta_tester',   'true');
 
     // Rebuild lb_stats
     const lb = {
@@ -292,10 +294,14 @@ async function renderLeaderboard() {
             ? `<span class="lb-player-title">${entry.title}</span>`
             : '';
 
+        const betaHtml = entry.betaTester
+            ? `<span class="lb-beta-badge">🧪 BETA</span>`
+            : '';
+
         return `
             <div class="lb-entry ${entry.username === me ? 'is-me' : ''}">
                 ${rankHtml}
-                <span class="lb-name">${lvBadge} ${prestigeHtml}${titleHtml}${entry.username}</span>
+                <span class="lb-name">${lvBadge} ${prestigeHtml}${betaHtml}${titleHtml}${entry.username}</span>
                 ${valueHtml}
             </div>
         `;
@@ -337,6 +343,7 @@ function applySyncData(data) {
     if (data.weeklyState  != null) localStorage.setItem('csgo_weekly',        data.weeklyState);
     if (data.favourites   != null) localStorage.setItem('csgo_favourites',    data.favourites);
     if (data.shopData     != null) localStorage.setItem('csgo_prestige_shop', data.shopData);
+    if (data.betaTester   === true) localStorage.setItem('csgo_beta_tester',  'true');
 
     const lb = getLbStats();
     if (data.coins      != null) lb.coins      = data.coins;

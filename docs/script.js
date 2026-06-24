@@ -705,12 +705,13 @@ function updateAcctPanelName() {
     const el = document.getElementById('acctPanelName');
     if (!el) return;
     if (typeof isGuest === 'function' && isGuest()) {
-        el.textContent = 'Guest';
+        el.innerHTML = 'Guest';
     } else {
         const title = (typeof getActiveTitle === 'function') ? getActiveTitle() : null;
-        el.textContent = title
-            ? `[${title}] ${getUsername() || 'Account'}`
-            : (getUsername() || 'Account');
+        const isBeta = localStorage.getItem('csgo_beta_tester') === 'true';
+        const betaHtml  = isBeta  ? `<span class="lb-beta-badge">🧪 BETA</span> ` : '';
+        const titleHtml = title   ? `<span class="lb-player-title">${title}</span> ` : '';
+        el.innerHTML = `${betaHtml}${titleHtml}${getUsername() || 'Account'}`;
     }
 }
 
@@ -720,10 +721,12 @@ function updateAccountBtn() {
     if (typeof isGuest === 'function' && isGuest()) {
         el.textContent = 'Guest';
     } else {
-        const title = (typeof getActiveTitle === 'function') ? getActiveTitle() : null;
+        const title  = (typeof getActiveTitle === 'function') ? getActiveTitle() : null;
+        const isBeta = localStorage.getItem('csgo_beta_tester') === 'true';
+        const prefix = isBeta ? '🧪 ' : '';
         el.textContent = title
-            ? `[${title}] ${getUsername() || 'Account'}`
-            : (getUsername() || 'Account');
+            ? `${prefix}[${title}] ${getUsername() || 'Account'}`
+            : `${prefix}${getUsername() || 'Account'}`;
     }
 }
 

@@ -4,6 +4,14 @@
 
 const CHANGELOG = [
     {
+        version: 'v0.23',
+        title: 'Beta Tester Badge',
+        date: 'June 2026',
+        changes: [
+            { type: 'new', text: 'Beta tester badge added. Players granted beta tester status will see a 🧪 BETA badge next to their name on the leaderboard, in the account panel, and in the nav bar.' },
+        ]
+    },
+    {
         version: 'v0.22',
         title: 'Progressive Web App',
         date: 'June 2026',

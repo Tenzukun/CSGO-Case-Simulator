@@ -460,3 +460,19 @@
     white-space: nowrap;
     letter-spacing: 0.3px;
 }
+
+/* --- Beta Tester badge --- */
+.lb-beta-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.65rem;
+    font-weight: bold;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-right: 4px;
+    background: rgba(0, 210, 200, 0.12);
+    color: #00d2c8;
+    border: 1px solid rgba(0, 210, 200, 0.35);
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+}
