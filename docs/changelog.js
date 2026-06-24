@@ -4,6 +4,15 @@
 
 const CHANGELOG = [
     {
+        version: 'v0.19',
+        title: 'README Update & Header Resize',
+        date: 'June 2026',
+        changes: [
+            { type: 'improved', text: 'README updated to reflect current project state: added prestige, upgrade skill trees, sound effects, and changelog to the features list; all 11 cases now listed in the unlock table; project file structure updated to include changelog.js and changelog.css.' },
+            { type: 'improved', text: 'Top navigation bar increased in height for better visibility and easier interaction.' },
+        ]
+    },
+    {
         version: 'v0.18',
         title: 'Sign Out Fix & Instant Cross-Device Sync',
         date: 'June 2026',
