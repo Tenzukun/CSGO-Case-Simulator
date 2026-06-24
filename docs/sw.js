@@ -4,7 +4,7 @@
 // users get the latest files instead of stale cache.
 // -------------------------------------------------------
 
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const CACHE_NAME    = `csgo-case-sim-${CACHE_VERSION}`;
 const BASE          = '/CSGO-Case-Simulator';
 
