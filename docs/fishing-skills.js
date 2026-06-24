@@ -105,6 +105,7 @@ function unlockFishSkill(id) {
     unlocked.push(id);
     localStorage.setItem('csgo_fishing_skills', JSON.stringify(unlocked));
     spendCoins(skill.cost);
+    SFX.unlock();
     renderFishingSkillTree('fishSkillContainer');
 }
 

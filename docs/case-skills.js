@@ -105,6 +105,7 @@ function unlockCaseSkill(id) {
     unlocked.push(id);
     localStorage.setItem('csgo_case_skills', JSON.stringify(unlocked));
     spendCoins(skill.cost);
+    SFX.unlock();
     renderCaseSkillTree('caseSkillContainer');
 }
 

@@ -153,6 +153,7 @@ const multiResults = document.getElementById('multiResults');
 
 function animateRolling() {
     return new Promise(resolve => {
+        SFX.roll();
         let dots = 0, ticks = 0;
         rollingText.textContent = 'Rolling';
         const interval = setInterval(() => {
@@ -250,10 +251,13 @@ async function doOpen(count = 1) {
             // Single open — show full item card
             const result = openCrate(selectedCase);
             displayItem(result);
+            SFX.reveal(result.rarity);
             saveItem(result);
             updateStats(result);
             addLbCase(result);
+            const prevLevel = getLevel();
             addXP(Math.round((XP_PER_RARITY[result.rarity] || 10) * (cb.xpMult || 1)));
+            if (getLevel() > prevLevel) SFX.levelUp();
             checkCaseAchievements(result);
             if (result.rarity === 'GOLD') pushGoldAlert(result.fullItem, selectedCase.name);
             rollingText.textContent = getRarityMessage(result.rarity);
@@ -267,16 +271,19 @@ async function doOpen(count = 1) {
                 saveItem(r);
                 updateStats(r);
                 addLbCase(r);
+                const prevLv = getLevel();
                 addXP(Math.round((XP_PER_RARITY[r.rarity] || 10) * (cb.xpMult || 1)));
+                if (getLevel() > prevLv) SFX.levelUp();
                 checkCaseAchievements(r);
                 if (r.rarity === 'GOLD') pushGoldAlert(r.fullItem, selectedCase.name);
             });
 
-            // Show rarity message for the best roll
+            // Show rarity message and sound for the best roll
             const best = results.reduce((b, r) =>
                 (RARITY_RANKS[r.rarity] || 0) > (RARITY_RANKS[b.rarity] || 0) ? r : b
             , results[0]);
             rollingText.textContent = getRarityMessage(best.rarity);
+            SFX.reveal(best.rarity);
 
             // Build the full grid — all items, 5 per row
             multiResults.innerHTML = results.map(r => {
@@ -351,6 +358,7 @@ function sellItem(index) {
     inv.splice(index, 1);
     localStorage.setItem('csgo_inventory', JSON.stringify(inv));
     addCoins(item.coins);
+    SFX.sell();
     renderInventory();
 }
 
@@ -377,6 +385,7 @@ function sellAll() {
     const kept = inv.filter(item => item.id && favs.includes(item.id));
     localStorage.setItem('csgo_inventory', JSON.stringify(kept));
     addCoins(total);
+    if (total > 0) SFX.sell();
     renderInventory();
 }
 
