@@ -4,18 +4,14 @@
 
 const CHANGELOG = [
     {
-        version: 'v0.21',
-        title: 'Prestige Shop',
+        version: 'v0.22',
+        title: 'Progressive Web App',
         date: 'June 2026',
         changes: [
-            { type: 'new',      text: 'Prestige Shop added as a third tab in the Upgrades page. Spend prestige points on titles, exclusive cases, and passive perks.' },
-            { type: 'new',      text: '5 titles to unlock and equip: Veteran, High Roller, Shadow Operative (P3), The Untouchable (P5), and Apex Predator (P7). Active title shows next to your name everywhere in the app.' },
-            { type: 'new',      text: '2 exclusive prestige-only cases: Obsidian Case (2pts) and Phantom Protocol (3pts). Both unlock in the Cases page once purchased.' },
-            { type: 'new',      text: 'Coin Surge perk (1pt): +10% coins when selling any item.' },
-            { type: 'new',      text: 'Lucky Break perk (2pts): Blue drops have a 15% chance to automatically re-roll for a higher rarity.' },
-            { type: 'new',      text: 'XP Overdrive perk (1pt): +15% XP from all sources.' },
-            { type: 'new',      text: "Fortune's Edge perk (3pts): +20% coins when selling any item. Stacks with Coin Surge for +30% total." },
-            { type: 'improved', text: 'Sell prices in inventory now reflect active perk bonuses with a ✦ indicator on boosted items.' },
+            { type: 'new',      text: 'CS:GO Case Simulator is now installable as a Progressive Web App. On Android, tap "Add to Home Screen" in Chrome. On iOS, use the Share menu in Safari and select "Add to Home Screen".' },
+            { type: 'new',      text: 'App icon and splash screen added for home screen installs.' },
+            { type: 'new',      text: 'Service worker added — static assets are cached so the app loads faster and works offline. Firebase features (leaderboard, auth, sync) still require an internet connection.' },
+            { type: 'improved', text: 'Nav logo size increased for better visibility.' },
         ]
     },
     {
