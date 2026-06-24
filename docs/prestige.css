@@ -1,0 +1,269 @@
+/* -------------------------------------------------------
+   Prestige System
+------------------------------------------------------- */
+
+/* --- Prestige badges (leaderboard + UI) --- */
+.prestige-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.72rem;
+    font-weight: bold;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.prestige-badge-bronze  { background: rgba(205,127,50,0.2);  color: #cd7f32; border: 1px solid rgba(205,127,50,0.4); }
+.prestige-badge-silver  { background: rgba(170,169,173,0.2); color: #aaa9ad; border: 1px solid rgba(170,169,173,0.4); }
+.prestige-badge-gold    { background: rgba(228,174,57,0.2);  color: #e4ae39; border: 1px solid rgba(228,174,57,0.4); }
+.prestige-badge-diamond { background: rgba(75,105,255,0.2);  color: #7a9bff; border: 1px solid rgba(75,105,255,0.4); }
+
+/* --- Prestige button (in Levels tab) --- */
+.prestige-notice {
+    background: linear-gradient(135deg, rgba(228,174,57,0.1), rgba(228,174,57,0.05));
+    border: 1px solid rgba(228,174,57,0.3);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: 16px;
+    text-align: center;
+}
+
+.prestige-notice-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #e4ae39;
+    margin-bottom: 4px;
+}
+
+.prestige-notice-desc {
+    font-size: 0.78rem;
+    color: #8f98a0;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.prestige-btn {
+    padding: 8px 20px;
+    background: linear-gradient(135deg, #e4ae39, #c8922a);
+    color: #1b2838;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-family: inherit;
+}
+
+.prestige-btn:hover { opacity: 0.88; }
+
+/* --- Prestige confirmation modal --- */
+.prestige-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.prestige-modal-box {
+    background: #16202d;
+    border: 1px solid #2a3f5f;
+    border-radius: 12px;
+    padding: 28px;
+    max-width: 440px;
+    width: 100%;
+}
+
+.prestige-modal-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #e4ae39;
+    margin-bottom: 6px;
+    text-align: center;
+}
+
+.prestige-modal-sub {
+    font-size: 0.82rem;
+    color: #8f98a0;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.pm-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.pm-col-lose, .pm-col-keep {
+    background: #1b2838;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+}
+
+.pm-col-lose { border-top: 2px solid #eb4b4b; }
+.pm-col-keep { border-top: 2px solid #4ec78c; }
+
+.pm-col-label {
+    font-weight: bold;
+    margin-bottom: 6px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pm-col-lose .pm-col-label { color: #eb4b4b; }
+.pm-col-keep .pm-col-label { color: #4ec78c; }
+
+.pm-col li {
+    color: #8f98a0;
+    margin-bottom: 4px;
+    list-style: none;
+    padding-left: 0;
+}
+
+.pm-col li::before {
+    margin-right: 5px;
+}
+
+.pm-col-lose li::before { content: '✕'; color: #eb4b4b; }
+.pm-col-keep li::before { content: '✓'; color: #4ec78c; }
+
+.pm-reward-box {
+    background: rgba(228,174,57,0.08);
+    border: 1px solid rgba(228,174,57,0.2);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 0.82rem;
+}
+
+.pm-reward {
+    color: #c6d4df;
+    margin-bottom: 4px;
+    line-height: 1.5;
+}
+
+.pm-reward:last-child { margin-bottom: 0; }
+
+.pm-reward strong { color: #e4ae39; }
+
+.prestige-modal-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.prestige-modal-actions button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.88rem;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+    border: none;
+    transition: opacity 0.2s;
+}
+
+.prestige-confirm-btn {
+    background: linear-gradient(135deg, #e4ae39, #c8922a);
+    color: #1b2838;
+}
+
+.prestige-cancel-btn {
+    background: #2a3f5f;
+    color: #c6d4df;
+}
+
+.prestige-modal-actions button:hover { opacity: 0.85; }
+
+/* --- Best Ever display (Stats tab) --- */
+.best-ever-label {
+    font-size: 0.72rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #8f98a0;
+    margin-bottom: 6px;
+    margin-top: 14px;
+}
+
+.best-ever-card {
+    background: #1b2838;
+    border: 1px solid #2a3f5f;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+}
+
+.best-ever-name {
+    font-size: 0.88rem;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.best-ever-tier {
+    font-size: 0.72rem;
+    color: #8f98a0;
+    margin-bottom: 8px;
+}
+
+.best-ever-stats {
+    display: flex;
+    gap: 12px;
+    font-size: 0.75rem;
+    color: #8f98a0;
+    flex-wrap: wrap;
+}
+
+.best-ever-empty {
+    font-size: 0.82rem;
+    color: #8f98a0;
+    padding: 8px 0;
+}
+
+.prestige-level-display {
+    margin-top: 6px;
+}
+
+/* --- Prestige free-unlock button in skill trees --- */
+.fs-unlock-options {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.fs-prestige-unlock-btn {
+    width: 100%;
+    padding: 5px 8px;
+    background: rgba(228,174,57,0.12);
+    border: 1px solid rgba(228,174,57,0.35);
+    border-radius: 4px;
+    color: #e4ae39;
+    font-size: 0.72rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: inherit;
+}
+
+.fs-prestige-unlock-btn:hover {
+    background: rgba(228,174,57,0.22);
+}
+
+/* --- Leaderboard prestige badge --- */
+.lb-prestige-badge {
+    font-size: 0.65rem;
+    font-weight: bold;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-right: 5px;
+    white-space: nowrap;
+}

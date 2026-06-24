@@ -255,6 +255,7 @@ async function doOpen(count = 1) {
             saveItem(result);
             updateStats(result);
             addLbCase(result);
+            if (typeof updateBestEver === 'function') updateBestEver(result);
             const prevLevel = getLevel();
             addXP(Math.round((XP_PER_RARITY[result.rarity] || 10) * (cb.xpMult || 1)));
             if (getLevel() > prevLevel) SFX.levelUp();
@@ -271,6 +272,7 @@ async function doOpen(count = 1) {
                 saveItem(r);
                 updateStats(r);
                 addLbCase(r);
+                if (typeof updateBestEver === 'function') updateBestEver(r);
                 const prevLv = getLevel();
                 addXP(Math.round((XP_PER_RARITY[r.rarity] || 10) * (cb.xpMult || 1)));
                 if (getLevel() > prevLv) SFX.levelUp();
@@ -713,3 +715,4 @@ initAccountPanel();
 initFishingSkillTree();
 initUpgradesPage();
 initFeedbackPage();
+initPrestige();

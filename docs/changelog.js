@@ -4,6 +4,21 @@
 
 const CHANGELOG = [
     {
+        version: 'v0.12',
+        title: 'Prestige System',
+        date: 'June 2026',
+        changes: [
+            { type: 'new',      text: 'Prestige system added — reach the level cap to prestige, resetting progress in exchange for lasting rewards.' },
+            { type: 'new',      text: 'Max level starts at 50 and increases by 10 per prestige (P1 = Lv60 cap, P2 = Lv70, and so on).' },
+            { type: 'new',      text: 'Each prestige awards 1 Prestige Point, spendable in Upgrades to unlock any case or fishing skill for free.' },
+            { type: 'new',      text: 'All-time best skin display in the account panel Stats tab — shows the best skin ever rolled, survives every prestige and inventory wipe.' },
+            { type: 'new',      text: 'Prestige badge on the leaderboard next to your username: bronze (P1–2), silver (P3–5), gold (P6–9), diamond (P10+).' },
+            { type: 'new',      text: 'XP bar turns gold and shows "MAX LEVEL — Prestige Ready!" when the cap is hit.' },
+            { type: 'new',      text: 'Prestige confirmation modal clearly shows what is lost and what is kept before committing.' },
+            { type: 'improved', text: 'Career cases opened and total coins earned are preserved across prestiges on the leaderboard.' },
+        ]
+    },
+    {
         version: 'v0.11',
         title: 'Leaderboard Fix',
         date: 'June 2026',

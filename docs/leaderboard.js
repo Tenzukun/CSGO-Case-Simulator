@@ -132,6 +132,7 @@ async function pushLeaderboard() {
         bestRank:   stats.bestRank   || 0,
         bestValue:  stats.bestValue  || 0,
         level:      getLevel(),
+        prestige:   (typeof getPrestigeLevel === 'function') ? getPrestigeLevel() : 0,
         updated:    Date.now()
     };
 
@@ -276,10 +277,16 @@ async function renderLeaderboard() {
                 </span>`;
         }
 
+        const p          = entry.prestige || 0;
+        const tier       = p >= 10 ? 'diamond' : p >= 6 ? 'gold' : p >= 3 ? 'silver' : 'bronze';
+        const prestigeHtml = p > 0
+            ? `<span class="lb-prestige-badge prestige-badge prestige-badge-${tier}" title="Prestige ${p}">✦ P${p}</span>`
+            : '';
+
         return `
             <div class="lb-entry ${entry.username === me ? 'is-me' : ''}">
                 ${rankHtml}
-                <span class="lb-name">${lvBadge} ${entry.username}</span>
+                <span class="lb-name">${lvBadge} ${prestigeHtml}${entry.username}</span>
                 ${valueHtml}
             </div>
         `;

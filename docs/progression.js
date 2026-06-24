@@ -42,6 +42,15 @@ function getLevel() {
 }
 
 function addXP(amount) {
+    const maxLv = (typeof getMaxLevel === 'function') ? getMaxLevel() : 50;
+
+    // Already at cap — no more XP
+    if (getLevel() >= maxLv) {
+        updateLevelDisplay();
+        if (typeof updatePrestigeButton === 'function') updatePrestigeButton();
+        return;
+    }
+
     let xp    = getXP() + amount;
     let level = getLevel();
 
@@ -49,15 +58,20 @@ function addXP(amount) {
     showXPGain(amount);
 
     let xpIntoLevel = xp - totalXPForLevel(level);
-    while (xpIntoLevel >= xpForLevel(level)) {
+    while (xpIntoLevel >= xpForLevel(level) && level < maxLv) {
         xpIntoLevel -= xpForLevel(level);
         level++;
         localStorage.setItem('csgo_level', level);
-        showLevelUp(level);
+        if (level >= maxLv) {
+            showMaxLevel(level);
+        } else {
+            showLevelUp(level);
+        }
         if (typeof checkLevelAchievements === 'function') checkLevelAchievements(level);
     }
 
     updateLevelDisplay();
+    if (typeof updatePrestigeButton === 'function') updatePrestigeButton();
 }
 
 // Weekly reward multiplier (scales coin payouts by level)
@@ -79,18 +93,31 @@ function getFishXP(xpType) {
 
 function updateLevelDisplay() {
     const level  = getLevel();
+    const maxLv  = (typeof getMaxLevel === 'function') ? getMaxLevel() : 50;
+    const atMax  = level >= maxLv;
     const xp     = getXP();
     const needed = xpForLevel(level);
     const xpInto = xp - totalXPForLevel(level);
-    const pct    = Math.min((xpInto / needed) * 100, 100).toFixed(1);
+    const pct    = atMax ? 100 : Math.min((xpInto / needed) * 100, 100).toFixed(1);
 
     const labelEl = document.getElementById('levelLabel');
     const fillEl  = document.getElementById('xpBarFill');
     const textEl  = document.getElementById('xpText');
 
     if (labelEl) labelEl.textContent = `Lv.${level}`;
-    if (fillEl)  fillEl.style.width  = `${pct}%`;
-    if (textEl)  textEl.textContent  = `${xpInto.toLocaleString()} / ${needed.toLocaleString()} XP`;
+    if (fillEl)  { fillEl.style.width = `${pct}%`; fillEl.style.background = atMax ? '#e4ae39' : ''; }
+    if (textEl)  textEl.textContent  = atMax ? '✦ MAX LEVEL — Prestige Ready!' : `${xpInto.toLocaleString()} / ${needed.toLocaleString()} XP`;
+}
+
+function showMaxLevel(level) {
+    const overlay = document.getElementById('levelUpOverlay');
+    const numEl   = document.getElementById('levelUpNumber');
+    const perkEl  = document.getElementById('levelUpPerk');
+    if (!overlay) return;
+    numEl.textContent  = `Level ${level} — MAX!`;
+    perkEl.textContent = 'You\'ve hit the level cap. Open your account panel to Prestige!';
+    overlay.classList.remove('hidden');
+    if (typeof renderCaseGrid === 'function') renderCaseGrid();
 }
 
 function getLevelPerkText(level) {

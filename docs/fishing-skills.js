@@ -91,6 +91,18 @@ function hasFishSkill(id) {
     return getFishSkillsUnlocked().includes(id);
 }
 
+function unlockFishSkillFree(id) {
+    const skill = FISHING_SKILLS.find(s => s.id === id);
+    if (!skill || hasFishSkill(id)) return;
+    if (skill.requires && !hasFishSkill(skill.requires)) return;
+    if (!spendPrestigePoint()) { alert('No prestige points available.'); return; }
+    const unlocked = getFishSkillsUnlocked();
+    unlocked.push(id);
+    localStorage.setItem('csgo_fishing_skills', JSON.stringify(unlocked));
+    SFX.unlock();
+    renderFishingSkillTree('fishSkillContainer');
+}
+
 function unlockFishSkill(id) {
     const skill = FISHING_SKILLS.find(s => s.id === id);
     if (!skill || hasFishSkill(id)) return;
@@ -162,10 +174,15 @@ function renderFishingSkillTree(containerId = 'fishSkillTree') {
         const s    = state(skill);
         const req  = FISHING_SKILLS.find(x => x.id === skill.requires);
 
+        const ppCount = (typeof getPrestigePoints === 'function') ? getPrestigePoints() : 0;
+
         const footer = s === 'unlocked'
             ? `<div class="fs-unlocked">✓ Unlocked</div>`
             : s === 'available'
-            ? `<button class="fs-unlock-btn" onclick="unlockFishSkill('${skill.id}')">🔓 ${skill.cost.toLocaleString()} coins</button>`
+            ? `<div class="fs-unlock-options">
+                 <button class="fs-unlock-btn" onclick="unlockFishSkill('${skill.id}')">🔓 ${skill.cost.toLocaleString()} coins</button>
+                 ${ppCount > 0 ? `<button class="fs-prestige-unlock-btn" onclick="unlockFishSkillFree('${skill.id}')">✦ Free (${ppCount} pt${ppCount !== 1 ? 's' : ''})</button>` : ''}
+               </div>`
             : `<div class="fs-locked">🔒 Requires ${req?.name || '?'}</div>`;
 
         return `

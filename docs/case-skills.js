@@ -91,6 +91,18 @@ function hasCaseSkill(id) {
     return getCaseSkillsUnlocked().includes(id);
 }
 
+function unlockCaseSkillFree(id) {
+    const skill = CASE_SKILLS.find(s => s.id === id);
+    if (!skill || hasCaseSkill(id)) return;
+    if (skill.requires && !hasCaseSkill(skill.requires)) return;
+    if (!spendPrestigePoint()) { alert('No prestige points available.'); return; }
+    const unlocked = getCaseSkillsUnlocked();
+    unlocked.push(id);
+    localStorage.setItem('csgo_case_skills', JSON.stringify(unlocked));
+    SFX.unlock();
+    renderCaseSkillTree('caseSkillContainer');
+}
+
 function unlockCaseSkill(id) {
     const skill = CASE_SKILLS.find(s => s.id === id);
     if (!skill || hasCaseSkill(id)) return;
@@ -176,10 +188,15 @@ function renderCaseSkillTree(containerId = 'caseSkillContainer') {
         const s   = state(skill);
         const req = CASE_SKILLS.find(x => x.id === skill.requires);
 
+        const ppCount = (typeof getPrestigePoints === 'function') ? getPrestigePoints() : 0;
+
         const footer = s === 'unlocked'
             ? `<div class="fs-unlocked-badge">✓ Unlocked</div>`
             : s === 'available'
-            ? `<button class="fs-unlock-btn" onclick="unlockCaseSkill('${skill.id}')">🔓 ${skill.cost.toLocaleString()} coins</button>`
+            ? `<div class="fs-unlock-options">
+                 <button class="fs-unlock-btn" onclick="unlockCaseSkill('${skill.id}')">🔓 ${skill.cost.toLocaleString()} coins</button>
+                 ${ppCount > 0 ? `<button class="fs-prestige-unlock-btn" onclick="unlockCaseSkillFree('${skill.id}')">✦ Free (${ppCount} pt${ppCount !== 1 ? 's' : ''})</button>` : ''}
+               </div>`
             : `<div class="fs-locked">🔒 Requires ${req?.name || '?'}</div>`;
 
         return `

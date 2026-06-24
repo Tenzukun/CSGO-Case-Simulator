@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="alerts.css">
     <link rel="stylesheet" href="auth.css">
     <link rel="stylesheet" href="fishing-skills.css">
+    <link rel="stylesheet" href="prestige.css">
     <link rel="stylesheet" href="feedback.css">
     <link rel="stylesheet" href="changelog.css">
     <link rel="stylesheet" href="mobile.css">
@@ -407,11 +408,17 @@
         <!-- Stats Tab -->
         <div class="acct-tab-content active" id="accountTab-stats">
             <div class="stats-grid" id="statsGrid"></div>
+            <div id="bestEverContainer"></div>
         </div>
 
         <!-- Levels Tab -->
         <div class="acct-tab-content" id="accountTab-levels">
             <div id="levelDetailsContent"></div>
+            <div id="prestigeNotice" class="prestige-notice hidden">
+                <div class="prestige-notice-title">✦ Max Level Reached!</div>
+                <div class="prestige-notice-desc">You've hit the level cap. Prestige to reset your progress, earn a prestige badge, and unlock a free skill upgrade.</div>
+                <button class="prestige-btn" id="prestigeBtn">✦ Prestige Now</button>
+            </div>
         </div>
 
         <!-- Settings Tab -->
@@ -466,6 +473,44 @@
     <script src="progression.js"></script>
     <script src="leaderboard.js"></script>
     <script src="auth.js"></script>
+    <!-- Prestige Confirmation Modal -->
+    <div class="prestige-modal-overlay hidden" id="prestigeModal">
+        <div class="prestige-modal-box">
+            <div class="prestige-modal-title">✦ Prestige</div>
+            <div class="prestige-modal-sub">This will reset your progress in exchange for lasting rewards.</div>
+
+            <div class="pm-columns">
+                <div class="pm-col pm-col-lose">
+                    <div class="pm-col-label">You Lose</div>
+                    <ul>
+                        <li>All coins</li>
+                        <li>Entire inventory</li>
+                        <li>Level &amp; XP</li>
+                        <li>All skill upgrades</li>
+                        <li>Achievements</li>
+                        <li>Weekly progress</li>
+                    </ul>
+                </div>
+                <div class="pm-col pm-col-keep">
+                    <div class="pm-col-label">You Keep</div>
+                    <ul>
+                        <li>All-time best skin</li>
+                        <li>Career cases count</li>
+                        <li>Total coins earned</li>
+                        <li>Prestige badge</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pm-reward-box" id="prestigeModalInfo"></div>
+
+            <div class="prestige-modal-actions">
+                <button class="prestige-confirm-btn" id="prestigeConfirmBtn">✦ Prestige</button>
+                <button class="prestige-cancel-btn"  id="prestigeCancelBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script src="sounds.js"></script>
     <script src="fishing.js"></script>
     <script src="fishing-skills.js"></script>
@@ -473,6 +518,7 @@
     <script src="upgrades.js"></script>
     <script src="feedback.js"></script>
     <script src="changelog.js"></script>
+    <script src="prestige.js"></script>
     <script src="achievements.js"></script>
     <script src="weekly.js"></script>
     <script src="alerts.js"></script>
