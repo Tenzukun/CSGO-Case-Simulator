@@ -338,4 +338,4 @@ const COINS_PER_DOLLAR = 100;
 // Firebase
 // -------------------------------------------------------
 const FIREBASE_URL     = 'https://leaderboard-f47dd-default-rtdb.firebaseio.com/';
-const FIREBASE_API_KEY = 'YOUR_FIREBASE_WEB_API_KEY';
+const FIREBASE_API_KEY = 'AIzaSyBsX_cprBpdqmQayawBQY274s9BkvISMAI';
