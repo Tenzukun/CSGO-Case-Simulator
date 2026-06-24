@@ -184,3 +184,49 @@
     border-color: #eb4b4b;
     color: #eb4b4b;
 }
+/* -------------------------------------------------------
+   Forgot Password
+------------------------------------------------------- */
+
+.auth-forgot-wrap {
+    text-align: right;
+    margin-top: 8px;
+}
+
+.auth-forgot-link {
+    background: none;
+    border: none;
+    color: #8f98a0;
+    font-size: 0.78rem;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    transition: color 0.2s;
+    font-family: inherit;
+}
+
+.auth-forgot-link:hover { color: #c6d4df; }
+
+.auth-forgot-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #c6d4df;
+    margin-bottom: 6px;
+    text-align: left;
+}
+
+.auth-forgot-desc {
+    font-size: 0.82rem;
+    color: #8f98a0;
+    margin-bottom: 16px;
+    line-height: 1.5;
+    text-align: left;
+}
+
+.auth-success {
+    font-size: 0.8rem;
+    color: #4caf50;
+    min-height: 18px;
+    margin-bottom: 6px;
+    text-align: left;
+}

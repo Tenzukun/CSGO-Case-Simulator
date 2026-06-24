@@ -63,26 +63,44 @@
                 <div class="auth-title">🎰 CS:GO Case Simulator</div>
                 <div class="auth-subtitle">Sign in to save your progress and appear on the leaderboard</div>
             </div>
-            <div class="auth-tabs">
+            <div class="auth-tabs" id="authTabsRow">
                 <button class="auth-tab active" id="authSignInTab">Sign In</button>
                 <button class="auth-tab" id="authSignUpTab">Create Account</button>
             </div>
+            <!-- Sign In Form -->
             <div id="authSignInForm">
-                <input type="text" id="authSignInUsername" placeholder="Username" maxlength="20" autocomplete="off">
+                <input type="email" id="authSignInEmail" placeholder="Email address" autocomplete="email">
                 <input type="password" id="authSignInPassword" placeholder="Password" maxlength="50">
                 <div class="auth-error" id="authSignInError"></div>
                 <button class="auth-btn" id="authSignInBtn">Sign In</button>
+                <div class="auth-forgot-wrap">
+                    <button class="auth-forgot-link" id="authForgotLink">Forgot password?</button>
+                </div>
             </div>
+            <!-- Create Account Form -->
             <div id="authSignUpForm" class="hidden">
+                <input type="email" id="authSignUpEmail" placeholder="Email address" autocomplete="email">
                 <input type="text" id="authSignUpUsername" placeholder="Username (3–20 chars, letters/numbers/_)" maxlength="20" autocomplete="off">
-                <input type="password" id="authSignUpPassword" placeholder="Password (min 4 characters)" maxlength="50">
+                <input type="password" id="authSignUpPassword" placeholder="Password (min 6 characters)" maxlength="50">
                 <input type="password" id="authSignUpConfirm" placeholder="Confirm password" maxlength="50">
                 <div class="auth-error" id="authSignUpError"></div>
                 <button class="auth-btn" id="authSignUpBtn">Create Account</button>
             </div>
-            <div class="auth-divider"><span>or</span></div>
+            <!-- Forgot Password Form -->
+            <div id="authForgotForm" class="hidden">
+                <div class="auth-forgot-title">Reset Your Password</div>
+                <div class="auth-forgot-desc">Enter your email and we'll send you a reset link.</div>
+                <input type="email" id="authForgotEmail" placeholder="Email address" autocomplete="email">
+                <div class="auth-error" id="authForgotError"></div>
+                <div class="auth-success" id="authForgotSuccess"></div>
+                <button class="auth-btn" id="authForgotBtn">Send Reset Email</button>
+                <div class="auth-forgot-wrap">
+                    <button class="auth-forgot-link" id="authBackLink">← Back to Sign In</button>
+                </div>
+            </div>
+            <div class="auth-divider" id="authDivider"><span>or</span></div>
             <button class="auth-guest-btn" id="authGuestBtn">Play as Guest</button>
-            <p class="auth-guest-note">Guest progress won't be saved and won't appear on the leaderboard</p>
+            <p class="auth-guest-note" id="authGuestNote">Guest progress won't be saved and won't appear on the leaderboard</p>
         </div>
     </div>
 

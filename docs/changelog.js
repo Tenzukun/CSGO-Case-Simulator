@@ -4,6 +4,18 @@
 
 const CHANGELOG = [
     {
+        version: 'v0.20',
+        title: 'Firebase Authentication',
+        date: 'June 2026',
+        changes: [
+            { type: 'new',      text: 'Accounts now use Firebase Authentication (email + password) instead of the custom SHA-256 system. Passwords are managed entirely by Firebase.' },
+            { type: 'new',      text: 'Forgot password flow added to the sign-in form. Enter your email and Firebase sends a reset link directly to your inbox.' },
+            { type: 'improved', text: 'Sign-up form now requires an email address in addition to a username. The username is still what appears on the leaderboard and in the app.' },
+            { type: 'improved', text: 'Password minimum length increased from 4 to 6 characters to meet Firebase Auth requirements.' },
+            { type: 'improved', text: 'Error messages on sign-in and sign-up are now more specific, covering cases like invalid email, account already exists, and too many attempts.' },
+        ]
+    },
+    {
         version: 'v0.19',
         title: 'README Update & Header Resize',
         date: 'June 2026',

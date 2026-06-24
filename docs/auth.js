@@ -1,16 +1,18 @@
 // -------------------------------------------------------
-// Auth System
+// Auth System — Firebase Authentication
 // -------------------------------------------------------
-// NOTE: Passwords are hashed with SHA-256 client-side
-// before storing in Firebase. This is a fun web game,
-// not a banking app — don't use a real password here.
+// Uses the Firebase Auth REST API (no SDK required).
+// Passwords are managed entirely by Firebase Auth.
+// Each account stores a UID→username mapping in the
+// Realtime Database so the rest of the app is unchanged.
 // -------------------------------------------------------
 
 // -------------------------------------------------------
 // Force wipe — bump this string to wipe all users'
 // localStorage on their next visit.
+// v3: migrated to Firebase Authentication
 // -------------------------------------------------------
-const RESET_VERSION = 'v2';
+const RESET_VERSION = 'v3';
 
 (function enforceReset() {
     if (localStorage.getItem('csgo_reset_version') !== RESET_VERSION) {
@@ -22,23 +24,37 @@ const RESET_VERSION = 'v2';
 })();
 
 // -------------------------------------------------------
-// Helpers
+// Firebase Auth REST helper
 // -------------------------------------------------------
 
-async function sha256(str) {
-    const buf  = new TextEncoder().encode(str);
-    const hash = await crypto.subtle.digest('SHA-256', buf);
-    return Array.from(new Uint8Array(hash))
-        .map(b => b.toString(16).padStart(2, '0'))
-        .join('');
+async function firebaseAuthRequest(endpoint, body) {
+    const res = await fetch(
+        `https://identitytoolkit.googleapis.com/v1/accounts:${endpoint}?key=${FIREBASE_API_KEY}`,
+        {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(body)
+        }
+    );
+    const data = await res.json();
+    if (!res.ok) throw data.error || { message: 'Unknown error' };
+    return data;
 }
+
+// -------------------------------------------------------
+// Helpers
+// -------------------------------------------------------
 
 function isGuest() {
     return localStorage.getItem('csgo_guest') === 'true';
 }
 
 function isLoggedIn() {
-    return !isGuest() && !!localStorage.getItem('csgo_username');
+    return !isGuest() && !!localStorage.getItem('csgo_uid');
+}
+
+function getUsername() {
+    return localStorage.getItem('csgo_username');
 }
 
 function setAuthError(elId, msg) {
@@ -47,8 +63,29 @@ function setAuthError(elId, msg) {
 }
 
 function clearAuthErrors() {
-    setAuthError('authSignInError', '');
-    setAuthError('authSignUpError', '');
+    setAuthError('authSignInError',  '');
+    setAuthError('authSignUpError',  '');
+    setAuthError('authForgotError',  '');
+    setAuthError('authForgotSuccess', '');
+}
+
+// Maps Firebase Auth error codes to friendly messages
+function getFirebaseErrorMessage(error) {
+    const code = (error?.message || '').toUpperCase();
+    if (code.includes('INVALID_LOGIN_CREDENTIALS') ||
+        code.includes('WRONG_PASSWORD') ||
+        code.includes('EMAIL_NOT_FOUND') ||
+        code.includes('INVALID_PASSWORD')) {
+        return 'Incorrect email or password.';
+    }
+    if (code.includes('EMAIL_EXISTS'))         return 'An account with this email already exists.';
+    if (code.includes('INVALID_EMAIL'))        return 'Please enter a valid email address.';
+    if (code.includes('WEAK_PASSWORD'))        return 'Password must be at least 6 characters.';
+    if (code.includes('USER_DISABLED'))        return 'This account has been disabled.';
+    if (code.includes('TOO_MANY_ATTEMPTS') ||
+        code.includes('TOO_MANY_REQUESTS'))    return 'Too many attempts. Please try again later.';
+    if (code.includes('NETWORK'))              return 'Connection error. Check your internet.';
+    return 'Something went wrong. Please try again.';
 }
 
 // -------------------------------------------------------
@@ -56,10 +93,10 @@ function clearAuthErrors() {
 // -------------------------------------------------------
 
 async function authSignIn() {
-    const username = document.getElementById('authSignInUsername').value.trim();
+    const email    = document.getElementById('authSignInEmail').value.trim();
     const password = document.getElementById('authSignInPassword').value;
 
-    if (!username || !password) {
+    if (!email || !password) {
         setAuthError('authSignInError', 'Please fill in all fields.');
         return;
     }
@@ -69,37 +106,43 @@ async function authSignIn() {
     btn.textContent = 'Signing in...';
 
     try {
-        const res  = await fetch(`${FIREBASE_URL}/users/${encodeURIComponent(username)}.json`);
-        const user = await res.json();
+        // Authenticate with Firebase Auth
+        const authData = await firebaseAuthRequest('signInWithPassword', {
+            email, password, returnSecureToken: true
+        });
 
-        if (!user) {
-            setAuthError('authSignInError', 'Username not found.');
+        const uid = authData.localId;
+
+        // Look up the username mapped to this UID
+        const mapRes  = await fetch(`${FIREBASE_URL}/auth_users/${uid}.json`);
+        const mapData = await mapRes.json();
+        const username = mapData?.username;
+
+        if (!username) {
+            setAuthError('authSignInError', 'Account data not found. Please contact support.');
             btn.disabled = false; btn.textContent = 'Sign In';
             return;
         }
 
-        const hash = await sha256(password);
-        if (hash !== user.passwordHash) {
-            setAuthError('authSignInError', 'Incorrect password.');
-            btn.disabled = false; btn.textContent = 'Sign In';
-            return;
-        }
+        // Load saved player data from Firebase
+        const pRes  = await fetch(`${FIREBASE_URL}/players/${encodeURIComponent(username)}.json`);
+        const pData = await pRes.json();
 
-        // Load saved player data
-        const pRes   = await fetch(`${FIREBASE_URL}/players/${encodeURIComponent(username)}.json`);
-        const pData  = await pRes.json();
         if (pData) {
             applyCloudData(username, pData);
         } else {
             localStorage.setItem('csgo_username', username);
         }
 
+        localStorage.setItem('csgo_uid', uid);
+        localStorage.setItem('csgo_refresh_token', authData.refreshToken);
         localStorage.removeItem('csgo_guest');
+
         document.getElementById('authOverlay').classList.add('hidden');
         location.reload();
 
     } catch (e) {
-        setAuthError('authSignInError', 'Connection error. Try again.');
+        setAuthError('authSignInError', getFirebaseErrorMessage(e));
         btn.disabled = false; btn.textContent = 'Sign In';
     }
 }
@@ -109,11 +152,12 @@ async function authSignIn() {
 // -------------------------------------------------------
 
 async function authSignUp() {
+    const email    = document.getElementById('authSignUpEmail').value.trim();
     const username = document.getElementById('authSignUpUsername').value.trim();
     const password = document.getElementById('authSignUpPassword').value;
     const confirm  = document.getElementById('authSignUpConfirm').value;
 
-    if (!username || !password) {
+    if (!email || !username || !password) {
         setAuthError('authSignUpError', 'Please fill in all fields.');
         return;
     }
@@ -125,8 +169,8 @@ async function authSignUp() {
         setAuthError('authSignUpError', 'Username can only contain letters, numbers, and underscores.');
         return;
     }
-    if (password.length < 4) {
-        setAuthError('authSignUpError', 'Password must be at least 4 characters.');
+    if (password.length < 6) {
+        setAuthError('authSignUpError', 'Password must be at least 6 characters.');
         return;
     }
     if (password !== confirm) {
@@ -139,30 +183,79 @@ async function authSignUp() {
     btn.textContent = 'Creating...';
 
     try {
-        const res  = await fetch(`${FIREBASE_URL}/users/${encodeURIComponent(username)}.json`);
-        const user = await res.json();
-
-        if (user) {
+        // Check username availability
+        const nameRes  = await fetch(`${FIREBASE_URL}/auth_usernames/${encodeURIComponent(username)}.json`);
+        const nameData = await nameRes.json();
+        if (nameData) {
             setAuthError('authSignUpError', 'Username already taken.');
             btn.disabled = false; btn.textContent = 'Create Account';
             return;
         }
 
-        const hash = await sha256(password);
-        await fetch(`${FIREBASE_URL}/users/${encodeURIComponent(username)}.json`, {
-            method:  'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ passwordHash: hash, createdAt: Date.now() })
+        // Create Firebase Auth account
+        const authData = await firebaseAuthRequest('signUp', {
+            email, password, returnSecureToken: true
         });
 
+        const uid = authData.localId;
+
+        // Store UID → username + email mapping
+        await fetch(`${FIREBASE_URL}/auth_users/${uid}.json`, {
+            method:  'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ username, email, createdAt: Date.now() })
+        });
+
+        // Store username → UID for uniqueness checks on future sign-ups
+        await fetch(`${FIREBASE_URL}/auth_usernames/${encodeURIComponent(username)}.json`, {
+            method:  'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(uid)
+        });
+
+        localStorage.setItem('csgo_uid', uid);
         localStorage.setItem('csgo_username', username);
+        localStorage.setItem('csgo_refresh_token', authData.refreshToken);
         localStorage.removeItem('csgo_guest');
+
         document.getElementById('authOverlay').classList.add('hidden');
         schedulePush();
 
     } catch (e) {
-        setAuthError('authSignUpError', 'Connection error. Try again.');
+        setAuthError('authSignUpError', getFirebaseErrorMessage(e));
         btn.disabled = false; btn.textContent = 'Create Account';
+    }
+}
+
+// -------------------------------------------------------
+// Forgot Password
+// -------------------------------------------------------
+
+async function authForgotPassword() {
+    const email = document.getElementById('authForgotEmail').value.trim();
+
+    if (!email) {
+        setAuthError('authForgotError', 'Please enter your email address.');
+        return;
+    }
+
+    const btn = document.getElementById('authForgotBtn');
+    btn.disabled    = true;
+    btn.textContent = 'Sending...';
+
+    try {
+        await firebaseAuthRequest('sendOobCode', {
+            requestType: 'PASSWORD_RESET',
+            email
+        });
+
+        setAuthError('authForgotError', '');
+        setAuthError('authForgotSuccess', 'Reset email sent! Check your inbox.');
+        btn.textContent = 'Sent!';
+
+    } catch (e) {
+        setAuthError('authForgotError', getFirebaseErrorMessage(e));
+        btn.disabled = false; btn.textContent = 'Send Reset Email';
     }
 }
 
@@ -173,6 +266,7 @@ async function authSignUp() {
 function playAsGuest() {
     localStorage.setItem('csgo_guest', 'true');
     localStorage.removeItem('csgo_username');
+    localStorage.removeItem('csgo_uid');
     document.getElementById('authOverlay').classList.add('hidden');
 }
 
@@ -186,6 +280,34 @@ function signOut() {
         .filter(k => k.startsWith('csgo_') && k !== 'csgo_reset_version')
         .forEach(k => localStorage.removeItem(k));
     location.reload();
+}
+
+// -------------------------------------------------------
+// Forgot password view helpers
+// -------------------------------------------------------
+
+function showForgotPassword() {
+    document.getElementById('authTabsRow').classList.add('hidden');
+    document.getElementById('authSignInForm').classList.add('hidden');
+    document.getElementById('authSignUpForm').classList.add('hidden');
+    document.getElementById('authForgotForm').classList.remove('hidden');
+    document.getElementById('authDivider').classList.add('hidden');
+    document.getElementById('authGuestBtn').classList.add('hidden');
+    document.getElementById('authGuestNote').classList.add('hidden');
+    clearAuthErrors();
+}
+
+function showSignInTab() {
+    document.getElementById('authTabsRow').classList.remove('hidden');
+    document.getElementById('authForgotForm').classList.add('hidden');
+    document.getElementById('authDivider').classList.remove('hidden');
+    document.getElementById('authGuestBtn').classList.remove('hidden');
+    document.getElementById('authGuestNote').classList.remove('hidden');
+    document.getElementById('authSignInTab').classList.add('active');
+    document.getElementById('authSignUpTab').classList.remove('active');
+    document.getElementById('authSignInForm').classList.remove('hidden');
+    document.getElementById('authSignUpForm').classList.add('hidden');
+    clearAuthErrors();
 }
 
 // -------------------------------------------------------
@@ -217,19 +339,26 @@ function initAuth() {
         clearAuthErrors();
     });
 
+    // Form buttons
     document.getElementById('authSignInBtn').addEventListener('click', authSignIn);
     document.getElementById('authSignUpBtn').addEventListener('click', authSignUp);
     document.getElementById('authGuestBtn').addEventListener('click', playAsGuest);
+    document.getElementById('authForgotBtn').addEventListener('click', authForgotPassword);
+    document.getElementById('authForgotLink').addEventListener('click', showForgotPassword);
+    document.getElementById('authBackLink').addEventListener('click', showSignInTab);
 
     // Enter key support
-    ['authSignInUsername', 'authSignInPassword'].forEach(id => {
+    ['authSignInEmail', 'authSignInPassword'].forEach(id => {
         document.getElementById(id)?.addEventListener('keydown', e => {
             if (e.key === 'Enter') authSignIn();
         });
     });
-    ['authSignUpUsername', 'authSignUpPassword', 'authSignUpConfirm'].forEach(id => {
+    ['authSignUpEmail', 'authSignUpUsername', 'authSignUpPassword', 'authSignUpConfirm'].forEach(id => {
         document.getElementById(id)?.addEventListener('keydown', e => {
             if (e.key === 'Enter') authSignUp();
         });
+    });
+    document.getElementById('authForgotEmail')?.addEventListener('keydown', e => {
+        if (e.key === 'Enter') authForgotPassword();
     });
 }
