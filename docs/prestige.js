@@ -129,6 +129,9 @@ function doPrestige() {
     data.points = (data.points || 0) + 1;
     savePrestigeData(data);
 
+    // Award prestige badges
+    checkPrestigeBadges();
+
     // Reset progress (best_ever and lb_stats intentionally kept)
     localStorage.setItem('csgo_xp',             '0');
     localStorage.setItem('csgo_level',          '1');
@@ -266,6 +269,7 @@ function unlockShopItem(id) {
     shopData.unlocked.push(id);
     savePrestigeShopData(shopData);
 
+    checkShopBadges();
     renderPrestigeShop('prestigeShopContainer');
     if (typeof schedulePush   === 'function') schedulePush();
     if (item.category === 'case' && typeof renderCaseGrid === 'function') renderCaseGrid();
@@ -353,4 +357,94 @@ function renderPrestigeShop(containerId) {
         </div>
         ${pLevel === 0 ? '<div class="shop-no-prestige">Reach max level and prestige to earn points and unlock shop items.</div>' : ''}
         ${sections}`;
+}
+
+// -------------------------------------------------------
+// Badge System
+// -------------------------------------------------------
+
+const BADGES = [
+    // Prestige
+    { id: 'badge_first_prestige',  icon: '🌟', name: 'Ascended',        display: '🌟 Ascended',    desc: 'Prestige for the first time.',               color: '#e4ae39' },
+    { id: 'badge_prestige_5',      icon: '💫', name: 'Legend',           display: '💫 Legend',      desc: 'Reach Prestige 5.',                          color: '#e4ae39' },
+    { id: 'badge_prestige_10',     icon: '✨', name: 'Immortal',         display: '✨ Immortal',    desc: 'Reach Prestige 10.',                         color: '#7a9bff' },
+    // Shop
+    { id: 'badge_first_purchase',  icon: '🛒', name: 'Shopkeeper',       display: '🛒 Shopper',     desc: 'Make your first prestige shop purchase.',    color: '#4ec78c' },
+    { id: 'badge_title_collector', icon: '🏷️', name: 'Title Collector',  display: '🏷️ Collector',  desc: 'Unlock all 5 titles in the prestige shop.',  color: '#4b69ff' },
+    { id: 'badge_power_user',      icon: '⚡', name: 'Power User',       display: '⚡ Power User',  desc: 'Unlock all 4 passive perks.',                color: '#4b69ff' },
+    // Leaderboard
+    { id: 'badge_top_10',          icon: '📊', name: 'Rising Star',      display: '📊 Top 10',      desc: 'Reach top 10 on any leaderboard tab.',       color: '#8847ff' },
+    { id: 'badge_podium',          icon: '🥉', name: 'On the Podium',    display: '🥉 Podium',      desc: 'Reach top 3 on any leaderboard tab.',        color: '#cd7f32' },
+    { id: 'badge_number_one',      icon: '🥇', name: 'The Best',         display: '🥇 #1',          desc: 'Reach #1 on any leaderboard tab.',           color: '#e4ae39' },
+    // Playstyle
+    { id: 'badge_mass_opener',     icon: '💥', name: 'Mass Opener',      display: '💥 Mass Opener', desc: 'Open 10 cases at once.',                     color: '#eb4b4b' },
+    { id: 'badge_clear_out',       icon: '🗑️', name: 'Clear Out',        display: '🗑️ Clear Out',  desc: 'Use Sell All to clear your inventory.',      color: '#8f98a0' },
+    { id: 'badge_vault',           icon: '🖤', name: 'Beyond the Vault', display: '🖤 Vault',       desc: 'Open a prestige-exclusive case.',            color: '#c6d4df' },
+    // Special
+    { id: 'badge_developer',       icon: '⚙️', name: 'Developer',        display: '⚙️ DEV',         desc: 'The person behind the simulator.',           color: '#c084fc' },
+    { id: 'badge_beta_tester',     icon: '🧪', name: 'Beta Tester',      display: '🧪 BETA',        desc: 'Helped shape the game during early access.', color: '#00d2c8' },
+    { id: 'badge_founder',         icon: '🌱', name: 'Founder',          display: '🌱 Founder',     desc: 'Joined during the early access period.',     color: '#4ec78c' },
+];
+
+// -------------------------------------------------------
+// Badge storage
+// -------------------------------------------------------
+
+function getEarnedBadges() {
+    const stored  = JSON.parse(localStorage.getItem('csgo_earned_badges') || '[]');
+    const special = [];
+    if (localStorage.getItem('csgo_developer')   === 'true') special.push('badge_developer');
+    if (localStorage.getItem('csgo_beta_tester') === 'true') special.push('badge_beta_tester');
+    if (localStorage.getItem('csgo_founder')     === 'true') special.push('badge_founder');
+    return [...new Set([...stored, ...special])];
+}
+
+function earnBadge(id) {
+    if (getEarnedBadges().includes(id)) return;
+    const stored = JSON.parse(localStorage.getItem('csgo_earned_badges') || '[]');
+    stored.push(id);
+    localStorage.setItem('csgo_earned_badges', JSON.stringify(stored));
+    if (typeof schedulePush === 'function') schedulePush();
+    // Refresh badges tab if it's currently open
+    const badgesTab = document.getElementById('accountTab-badges');
+    if (badgesTab && badgesTab.classList.contains('active') && typeof renderBadgesTab === 'function') {
+        renderBadgesTab();
+    }
+}
+
+function getActiveBadge() {
+    return localStorage.getItem('csgo_active_badge') || null;
+}
+
+function setActiveBadge(id) {
+    const current = getActiveBadge();
+    if (current === id) {
+        localStorage.removeItem('csgo_active_badge'); // toggle off
+    } else {
+        localStorage.setItem('csgo_active_badge', id);
+    }
+    if (typeof renderBadgesTab  === 'function') renderBadgesTab();
+    if (typeof updateAccountBtn === 'function') updateAccountBtn();
+    if (typeof schedulePush     === 'function') schedulePush();
+}
+
+// -------------------------------------------------------
+// Badge checks
+// -------------------------------------------------------
+
+function checkPrestigeBadges() {
+    const p = getPrestigeLevel();
+    if (p >= 1)  earnBadge('badge_first_prestige');
+    if (p >= 5)  earnBadge('badge_prestige_5');
+    if (p >= 10) earnBadge('badge_prestige_10');
+}
+
+function checkShopBadges() {
+    const shopData = getPrestigeShopData();
+    const unlocked = shopData.unlocked || [];
+    if (unlocked.length >= 1) earnBadge('badge_first_purchase');
+    const titleIds = ['title_veteran', 'title_high_roller', 'title_shadow_op', 'title_untouchable', 'title_apex'];
+    if (titleIds.every(id => unlocked.includes(id))) earnBadge('badge_title_collector');
+    const perkIds  = ['perk_coin_surge', 'perk_lucky_break', 'perk_xp_overdrive', 'perk_fortunes_edge'];
+    if (perkIds.every(id => unlocked.includes(id)))  earnBadge('badge_power_user');
 }

@@ -254,6 +254,11 @@ async function doOpen(count = 1) {
     try {
         if (!quickOpen) await animateRolling();
 
+        // Badge: mass opener (10x open)
+        if (count === 10 && typeof earnBadge === 'function') earnBadge('badge_mass_opener');
+        // Badge: beyond the vault (prestige case open)
+        if (selectedCase.prestigeOnly && typeof earnBadge === 'function') earnBadge('badge_vault');
+
         if (count === 1) {
             // Single open — show full item card
             let result = openCrate(selectedCase);
@@ -425,6 +430,7 @@ function sellAll() {
     const kept = inv.filter(item => item.id && favs.includes(item.id));
     localStorage.setItem('csgo_inventory', JSON.stringify(kept));
     addCoins(total);
+    if (typeof earnBadge === 'function') earnBadge('badge_clear_out');
     if (total > 0) SFX.sell();
     renderInventory();
 }
@@ -718,10 +724,13 @@ function updateAccountBtn() {
     if (typeof isGuest === 'function' && isGuest()) {
         el.textContent = 'Guest';
     } else {
-        const title = (typeof getActiveTitle === 'function') ? getActiveTitle() : null;
+        const title         = (typeof getActiveTitle  === 'function') ? getActiveTitle()  : null;
+        const activeBadgeId = (typeof getActiveBadge  === 'function') ? getActiveBadge()  : null;
+        const badge         = activeBadgeId && typeof BADGES !== 'undefined' ? BADGES.find(b => b.id === activeBadgeId) : null;
+        const badgePrefix   = badge ? `${badge.icon} ` : '';
         el.textContent = title
-            ? `[${title}] ${getUsername() || 'Account'}`
-            : (getUsername() || 'Account');
+            ? `${badgePrefix}[${title}] ${getUsername() || 'Account'}`
+            : `${badgePrefix}${getUsername() || 'Account'}`;
     }
 }
 
@@ -729,76 +738,51 @@ function renderBadgesTab() {
     const el = document.getElementById('accountTab-badges');
     if (!el) return;
 
-    const isBeta         = localStorage.getItem('csgo_beta_tester') === 'true';
-    const isDev          = localStorage.getItem('csgo_developer')   === 'true';
-    const pLevel         = (typeof getPrestigeLevel    === 'function') ? getPrestigeLevel()    : 0;
-    const shopData       = (typeof getPrestigeShopData === 'function') ? getPrestigeShopData() : { unlocked: [], activeTitle: null };
-    const shop           = (typeof PRESTIGE_SHOP !== 'undefined') ? PRESTIGE_SHOP : [];
-    const unlockedTitles = shop.filter(i => i.category === 'title' && shopData.unlocked.includes(i.id));
-    const hasBadges      = isBeta || isDev || pLevel > 0 || unlockedTitles.length > 0;
-
-    if (!hasBadges) {
-        el.innerHTML = `<p class="badges-empty">No badges earned yet. Prestige, unlock a title from the shop, or become a beta tester to earn badges here.</p>`;
+    if (typeof BADGES === 'undefined' || typeof getEarnedBadges === 'undefined') {
+        el.innerHTML = '<p class="badges-empty">Loading...</p>';
         return;
     }
 
-    let html = '';
+    const earned      = getEarnedBadges();
+    const activeBadge = (typeof getActiveBadge === 'function') ? getActiveBadge() : null;
 
-    // Special badges (DEV / BETA)
-    if (isDev || isBeta) {
-        html += `<div class="badges-section-label">Special</div><div class="badges-grid">`;
-        if (isDev) {
-            html += `
-                <div class="badge-card">
-                    <span class="lb-dev-badge" style="font-size:0.82rem;padding:3px 9px;">⚙️ DEV</span>
-                    <div class="badge-card-name">Developer</div>
-                    <div class="badge-card-desc">The person behind the simulator.</div>
-                </div>`;
-        }
-        if (isBeta) {
-            html += `
-                <div class="badge-card">
-                    <span class="lb-beta-badge" style="font-size:0.82rem;padding:3px 9px;">🧪 BETA</span>
-                    <div class="badge-card-name">Beta Tester</div>
-                    <div class="badge-card-desc">Helped shape the game during early access.</div>
-                </div>`;
-        }
-        html += `</div>`;
+    if (earned.length === 0) {
+        el.innerHTML = `<p class="badges-empty">No badges earned yet. Prestige, explore the prestige shop, reach the leaderboard top 10, and play to earn badges here.</p>`;
+        return;
     }
 
-    // Prestige badge
-    if (pLevel > 0) {
-        const tier = (typeof getBadgeTier === 'function') ? getBadgeTier(pLevel) : 'bronze';
-        const tierLabel = tier.charAt(0).toUpperCase() + tier.slice(1);
-        html += `
-            <div class="badges-section-label">Prestige</div>
-            <div class="badges-grid">
-                <div class="badge-card">
-                    <span class="prestige-badge prestige-badge-${tier}" style="font-size:0.82rem;padding:3px 9px;">✦ P${pLevel}</span>
-                    <div class="badge-card-name">Prestige ${pLevel}</div>
-                    <div class="badge-card-desc">${tierLabel} tier — prestiged ${pLevel === 1 ? 'once' : pLevel + ' times'}.</div>
-                </div>
-            </div>`;
-    }
+    const categories = [
+        { label: 'Prestige',    ids: ['badge_first_prestige', 'badge_prestige_5', 'badge_prestige_10'] },
+        { label: 'Shop',        ids: ['badge_first_purchase', 'badge_title_collector', 'badge_power_user'] },
+        { label: 'Leaderboard', ids: ['badge_top_10', 'badge_podium', 'badge_number_one'] },
+        { label: 'Playstyle',   ids: ['badge_mass_opener', 'badge_clear_out', 'badge_vault'] },
+        { label: 'Special',     ids: ['badge_developer', 'badge_beta_tester', 'badge_founder'] },
+    ];
 
-    // Unlocked titles
-    if (unlockedTitles.length > 0) {
-        html += `<div class="badges-section-label">Titles</div><div class="badges-grid">`;
-        unlockedTitles.forEach(item => {
-            const isActive = shopData.activeTitle === item.id;
+    let html = `<div class="badges-equipped-note">Equip a badge to show it next to your name on the leaderboard.</div>`;
+
+    categories.forEach(cat => {
+        const catEarned = cat.ids.filter(id => earned.includes(id));
+        if (catEarned.length === 0) return;
+
+        html += `<div class="badges-section-label">${cat.label}</div><div class="badges-grid">`;
+        catEarned.forEach(id => {
+            const badge    = BADGES.find(b => b.id === id);
+            if (!badge) return;
+            const isActive = activeBadge === id;
             html += `
-                <div class="badge-card">
-                    <span class="lb-player-title" style="font-size:0.78rem;padding:3px 8px;">${item.name}</span>
-                    <div class="badge-card-name">${item.name}</div>
-                    <div class="badge-card-desc">${item.desc}</div>
+                <div class="badge-card ${isActive ? 'badge-card-active' : ''}">
+                    <span class="lb-equipped-badge" style="background:${badge.color}18;color:${badge.color};border-color:${badge.color}55;font-size:0.8rem;padding:3px 8px;">${badge.display}</span>
+                    <div class="badge-card-name">${badge.name}</div>
+                    <div class="badge-card-desc">${badge.desc}</div>
                     <button class="badge-equip-btn ${isActive ? 'badge-equip-active' : ''}"
-                            onclick="setActiveTitle('${item.id}'); renderBadgesTab(); updateAccountBtn();">
+                            onclick="setActiveBadge('${id}')">
                         ${isActive ? '✓ Equipped' : 'Equip'}
                     </button>
                 </div>`;
         });
         html += `</div>`;
-    }
+    });
 
     el.innerHTML = html;
 }

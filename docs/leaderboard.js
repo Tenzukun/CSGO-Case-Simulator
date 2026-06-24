@@ -136,6 +136,8 @@ async function pushLeaderboard() {
         title:      (typeof getActiveTitle   === 'function') ? getActiveTitle()   : null,
         betaTester: localStorage.getItem('csgo_beta_tester') === 'true',
         developer:  localStorage.getItem('csgo_developer')   === 'true',
+        founder:    localStorage.getItem('csgo_founder')     === 'true',
+        activeBadge: localStorage.getItem('csgo_active_badge') || null,
         updated:    Date.now()
     };
 
@@ -149,7 +151,8 @@ async function pushLeaderboard() {
         alltimeStats: JSON.stringify(getAllTimeStats()),
         weeklyState:  JSON.stringify(getWeeklyState ? getWeeklyState() : {}),
         favourites:   JSON.stringify(getFavourites ? getFavourites() : []),
-        shopData:     localStorage.getItem('csgo_prestige_shop') || '{"unlocked":[],"activeTitle":null}'
+        shopData:     localStorage.getItem('csgo_prestige_shop') || '{"unlocked":[],"activeTitle":null}',
+        earnedBadges: localStorage.getItem('csgo_earned_badges') || '[]'
     };
 
     // Set timestamp BEFORE push so the SSE echo from Firebase is ignored
@@ -195,6 +198,9 @@ function applyCloudData(username, data) {
     if (data.shopData     !== undefined) localStorage.setItem('csgo_prestige_shop', data.shopData);
     if (data.betaTester   === true)      localStorage.setItem('csgo_beta_tester',   'true');
     if (data.developer    === true)      localStorage.setItem('csgo_developer',      'true');
+    if (data.founder      === true)      localStorage.setItem('csgo_founder',        'true');
+    if (data.earnedBadges !== undefined) localStorage.setItem('csgo_earned_badges',  data.earnedBadges);
+    if (data.activeBadge  != null)       localStorage.setItem('csgo_active_badge',   data.activeBadge);
 
     // Rebuild lb_stats
     const lb = {
@@ -261,6 +267,22 @@ async function renderLeaderboard() {
     const medalClass = ['gold', 'silver', 'bronze'];
     const me         = getUsername();
 
+    // Helper: build equipped badge HTML from a badge ID
+    function getBadgeDisplayHtml(badgeId) {
+        if (!badgeId || typeof BADGES === 'undefined') return '';
+        const badge = BADGES.find(b => b.id === badgeId);
+        if (!badge) return '';
+        return `<span class="lb-equipped-badge" style="background:${badge.color}18;color:${badge.color};border-color:${badge.color}55">${badge.display}</span>`;
+    }
+
+    // Check leaderboard rank badges for the current user
+    const myRank = sorted.findIndex(e => e.username === me);
+    if (myRank !== -1 && typeof earnBadge === 'function') {
+        if (myRank < 10) earnBadge('badge_top_10');
+        if (myRank < 3)  earnBadge('badge_podium');
+        if (myRank === 0) earnBadge('badge_number_one');
+    }
+
     listEl.innerHTML = sorted.map((entry, i) => {
         const rankHtml = i < 3
             ? `<span class="lb-rank ${medalClass[i]}">${medals[i]}</span>`
@@ -304,10 +326,12 @@ async function renderLeaderboard() {
             ? `<span class="lb-dev-badge">⚙️ DEV</span>`
             : '';
 
+        const equippedBadgeHtml = getBadgeDisplayHtml(entry.activeBadge);
+
         return `
             <div class="lb-entry ${entry.username === me ? 'is-me' : ''}">
                 ${rankHtml}
-                <span class="lb-name">${lvBadge} ${prestigeHtml}${devHtml}${betaHtml}${titleHtml}${entry.username}</span>
+                <span class="lb-name">${lvBadge} ${prestigeHtml}${devHtml}${betaHtml}${equippedBadgeHtml}${titleHtml}${entry.username}</span>
                 ${valueHtml}
             </div>
         `;
@@ -350,7 +374,10 @@ function applySyncData(data) {
     if (data.favourites   != null) localStorage.setItem('csgo_favourites',    data.favourites);
     if (data.shopData     != null) localStorage.setItem('csgo_prestige_shop', data.shopData);
     if (data.betaTester   === true) localStorage.setItem('csgo_beta_tester',  'true');
-    if (data.developer    === true) localStorage.setItem('csgo_developer',     'true');
+    if (data.developer    === true) localStorage.setItem('csgo_developer',    'true');
+    if (data.founder      === true) localStorage.setItem('csgo_founder',      'true');
+    if (data.earnedBadges != null)  localStorage.setItem('csgo_earned_badges', data.earnedBadges);
+    if (data.activeBadge  != null)  localStorage.setItem('csgo_active_badge',  data.activeBadge);
 
     const lb = getLbStats();
     if (data.coins      != null) lb.coins      = data.coins;

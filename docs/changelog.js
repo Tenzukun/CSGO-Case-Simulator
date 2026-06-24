@@ -4,6 +4,20 @@
 
 const CHANGELOG = [
     {
+        version: 'v0.24',
+        title: 'Equippable Badge System',
+        date: 'June 2026',
+        changes: [
+            { type: 'new',      text: '15 earnable badges added across 5 categories: Prestige, Shop, Leaderboard, Playstyle, and Special.' },
+            { type: 'new',      text: 'Badges are now equippable — select one from the Badges tab in your account panel to show it next to your name on the leaderboard. Your badge icon also appears as a prefix in the nav button.' },
+            { type: 'new',      text: 'Prestige badges: Ascended (P1), Legend (P5), Immortal (P10).' },
+            { type: 'new',      text: 'Shop badges: Shopkeeper (first purchase), Title Collector (all 5 titles), Power User (all 4 perks).' },
+            { type: 'new',      text: 'Leaderboard badges: Top 10, Podium (top 3), The Best (#1) — earned automatically when you reach those ranks.' },
+            { type: 'new',      text: 'Playstyle badges: Mass Opener (10x open), Clear Out (Sell All), Beyond the Vault (open a prestige case).' },
+            { type: 'new',      text: 'Special badges: Developer, Beta Tester, Founder — granted manually to eligible players.' },
+        ]
+    },
+    {
         version: 'v0.23',
         title: 'Badges Tab and Special Badges',
         date: 'June 2026',
