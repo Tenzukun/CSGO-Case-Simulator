@@ -148,6 +148,9 @@ async function pushLeaderboard() {
         favourites:   JSON.stringify(getFavourites ? getFavourites() : [])
     };
 
+    // Set timestamp BEFORE push so the SSE echo from Firebase is ignored
+    localStorage.setItem('csgo_last_push_time', lbData.updated.toString());
+
     try {
         await Promise.all([
             fetch(`${FIREBASE_URL}/leaderboard/${encodeURIComponent(username)}.json`, {
@@ -157,8 +160,6 @@ async function pushLeaderboard() {
                 method: 'PUT', body: JSON.stringify(playerData)
             })
         ]);
-        // Record when we last pushed so sync can detect remote changes
-        localStorage.setItem('csgo_last_push_time', lbData.updated.toString());
     } catch (e) {
         console.warn('Cloud save failed:', e);
     }
@@ -309,17 +310,16 @@ document.querySelectorAll('.lb-tab').forEach(tab => {
     });
 });
 // -------------------------------------------------------
-// Cross-Device Sync
-// Poll Firebase every 30s; if another device pushed more
-// recently than we did, pull and apply their state.
+// Cross-Device Sync — Firebase Server-Sent Events (SSE)
+// Firebase pushes changes instantly over a persistent
+// connection; no polling needed.
 // -------------------------------------------------------
 
-let _syncInterval = null;
+let _syncSource = null;
 
 function applySyncData(data) {
     if (!data) return;
 
-    // Core stats
     if (data.balance      != null) localStorage.setItem('csgo_coins',         String(data.balance));
     if (data.xp           != null) localStorage.setItem('csgo_xp',            String(data.xp));
     if (data.level        != null) localStorage.setItem('csgo_level',         String(data.level));
@@ -330,7 +330,6 @@ function applySyncData(data) {
     if (data.weeklyState  != null) localStorage.setItem('csgo_weekly',        data.weeklyState);
     if (data.favourites   != null) localStorage.setItem('csgo_favourites',    data.favourites);
 
-    // Rebuild lb_stats from synced data
     const lb = getLbStats();
     if (data.coins      != null) lb.coins      = data.coins;
     if (data.cases      != null) lb.cases      = data.cases;
@@ -340,7 +339,6 @@ function applySyncData(data) {
     if (data.bestValue  != null) lb.bestValue  = data.bestValue;
     saveLbStats(lb);
 
-    // Refresh displays
     if (typeof updateBalanceDisplay === 'function') updateBalanceDisplay();
     if (typeof updateLevelDisplay   === 'function') updateLevelDisplay();
     if (typeof updatePrestigeButton === 'function') updatePrestigeButton();
@@ -353,35 +351,44 @@ function showSyncIndicator() {
     const el = document.getElementById('syncIndicator');
     if (!el) return;
     el.classList.remove('hidden', 'sync-fade');
-    // Force reflow then fade out
-    void el.offsetWidth;
+    void el.offsetWidth; // force reflow
     el.classList.add('sync-fade');
 }
 
-async function pollForSync() {
+function startCrossDeviceSync() {
     const username = getUsername();
     if (!username || (typeof isGuest === 'function' && isGuest())) return;
+    if (!FIREBASE_URL) return;
 
-    try {
-        const res  = await fetch(`${FIREBASE_URL}/players/${encodeURIComponent(username)}.json`);
-        const data = await res.json();
-        if (!data || !data.updated) return;
+    // Close any existing connection
+    if (_syncSource) { _syncSource.close(); _syncSource = null; }
 
-        const lastPush = parseInt(localStorage.getItem('csgo_last_push_time') || '0');
+    const url = `${FIREBASE_URL}/players/${encodeURIComponent(username)}.json`;
+    _syncSource = new EventSource(url);
 
-        // Only apply if another device pushed more recently than we did
-        if (data.updated > lastPush) {
+    _syncSource.addEventListener('put', e => {
+        try {
+            const payload = JSON.parse(e.data);
+            const data    = payload.data;
+            if (!data || !data.updated) return;
+
+            const lastPush = parseInt(localStorage.getItem('csgo_last_push_time') || '0');
+
+            // Skip if this is our own push echoed back
+            if (data.updated <= lastPush) return;
+
             localStorage.setItem('csgo_last_push_time', String(data.updated));
             applySyncData(data);
-        }
-    } catch (_) {
-        // Silent — don't interrupt gameplay on network error
-    }
-}
+        } catch (_) {}
+    });
 
-function startCrossDeviceSync() {
-    if (_syncInterval) clearInterval(_syncInterval);
-    // Initial pull after a short delay, then every 30s
-    setTimeout(pollForSync, 5000);
-    _syncInterval = setInterval(pollForSync, 30000);
+    // patch events carry partial updates
+    _syncSource.addEventListener('patch', e => {
+        try {
+            const payload = JSON.parse(e.data);
+            if (payload.data) applySyncData(payload.data);
+        } catch (_) {}
+    });
+
+    // EventSource auto-reconnects on error — no manual handling needed
 }
