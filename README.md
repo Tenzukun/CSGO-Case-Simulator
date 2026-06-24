@@ -2,7 +2,7 @@
 
 A CS:GO case opening simulator available in three versions: a Java terminal app, a web app, and a Discord bot. Open crates, roll rarities, and see what skin you get, all based on real CS:GO drop rates.
 
-**Update:** Added weekly rewards system, cross-device data sync, favourite skins, all-time stats, economy rebalancing, level details panel, and various quality-of-life fixes.
+**Update:** Added prestige system, upgrade skill trees (case and fishing), sound effects via Web Audio API, in-app changelog with full version history, weekly rewards, cross-device sync, and many quality-of-life improvements.
 
 ---
 
@@ -25,16 +25,20 @@ A CS:GO case opening simulator available in three versions: a Java terminal app,
 - StatTrak kill counter when applicable
 - Open 1x, 5x, or 10x at once with Quick Open toggle
 - Multi-result grid highlighting the best item from a batch
-- 8 cases with level-gated progression (Starter through Classified)
+- 11 cases with level-gated progression (Starter through Classified)
 - Weekly reward system with 7 day-by-day claims including mid-week and end-of-week case rewards
 - Cross-device data sync: enter the same username on any device to load your progress
 - Favourite skins so Sell All never removes starred items
 - All-time persistent stats panel
 - Fishing minigame with tiered catch outcomes and level-scaled payouts
 - Level and XP system with level-up popup and perks
+- Prestige system: reach the level cap to reset in exchange for prestige badges and a higher cap
 - Level Details panel showing every milestone and its perks
+- Case and fishing upgrade skill trees (13 skills each across 3 branches)
+- Sound effects via Web Audio API: roll ticks, rarity fanfares, fishing sounds, level-up chimes, and more
 - 35 achievements with badge grid and auto-dismissing popup notifications
 - Shared leaderboard via Firebase Realtime Database (Total Earned, Cases, Best Item, Level)
+- In-app changelog with full version history
 - Fully mobile responsive
 
 ### Discord bot
@@ -84,8 +88,11 @@ A CS:GO case opening simulator available in three versions: a Java terminal app,
 | Clutch Case     | 1              | 1,000 coins   |
 | Dragon Case     | 1              | 2,500 coins   |
 | Spectrum Case   | 5              | 5,000 coins   |
+| Recoil Case     | 10             | 8,500 coins   |
 | Prisma Case     | 15             | 15,000 coins  |
+| Phantom Case    | 20             | 22,000 coins  |
 | Glove Case      | 25             | 35,000 coins  |
+| Revolution Case | 32             | 50,000 coins  |
 | Classified Case | 40             | 75,000 coins  |
 
 ---
@@ -104,6 +111,7 @@ CSGO-Case-Simulator/
 │   ├── progression.css
 │   ├── achievements.css
 │   ├── weekly.css
+│   ├── changelog.css
 │   ├── mobile.css
 │   ├── data.js
 │   ├── rolls.js
@@ -112,6 +120,7 @@ CSGO-Case-Simulator/
 │   ├── fishing.js
 │   ├── achievements.js
 │   ├── weekly.js
+│   ├── changelog.js
 │   └── script.js
 ├── discord-bot/
 │   ├── index.js
