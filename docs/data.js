@@ -339,3 +339,8 @@ const COINS_PER_DOLLAR = 100;
 // -------------------------------------------------------
 const FIREBASE_URL     = 'https://leaderboard-f47dd-default-rtdb.firebaseio.com/';
 const FIREBASE_API_KEY = 'AIzaSyBsX_cprBpdqmQayawBQY274s9BkvISMAI';
+
+// EmailJS — feedback notification emails
+const EMAILJS_PUBLIC_KEY  = 'uULlW-kPQiqwiE45c';
+const EMAILJS_SERVICE_ID  = 'service_i8r390n';
+const EMAILJS_TEMPLATE_ID = 'template_iptaqa4';

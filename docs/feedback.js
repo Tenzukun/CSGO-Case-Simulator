@@ -54,6 +54,17 @@ async function fbSubmit() {
                 body:    JSON.stringify(entry)
             });
         }
+
+        // Send email notification via EmailJS (silent fail — don't block submission)
+        if (typeof emailjs !== 'undefined' && typeof EMAILJS_SERVICE_ID !== 'undefined') {
+            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                username: entry.username,
+                rating:   entry.rating,
+                message:  entry.message,
+                category: entry.category
+            }).catch(e => console.warn('EmailJS notification failed:', e));
+        }
+
         document.getElementById('fbForm')?.classList.add('hidden');
         document.getElementById('fbSuccess')?.classList.remove('hidden');
     } catch (e) {
@@ -67,6 +78,11 @@ function renderFeedbackPage() {
 }
 
 function initFeedbackPage() {
+    // Initialise EmailJS with public key
+    if (typeof emailjs !== 'undefined' && typeof EMAILJS_PUBLIC_KEY !== 'undefined') {
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+    }
+
     // Star rating interactivity
     document.querySelectorAll('.fb-star').forEach((star, i) => {
         star.addEventListener('mouseenter', () => fbHighlightStars(i + 1));
