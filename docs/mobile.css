@@ -54,6 +54,26 @@
 
     /* Balance bar wraps */
     .topnav-balance { padding: 5px 8px; font-size: 0.82rem; }
+
+    /* Leaderboard: allow long item names to wrap on mobile */
+    .lb-entry {
+        flex-wrap: wrap;
+    }
+
+    .lb-name {
+        min-width: 0;
+    }
+
+    .lb-best-item {
+        white-space: normal;
+        word-break: break-word;
+        max-width: 100%;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
 }
 
 @media (max-width: 400px) {
